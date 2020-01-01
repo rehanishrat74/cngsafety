@@ -221,7 +221,7 @@ div.sticky {
                                                     <div class="col-lg-12"  >
                                                         <div class="input-group">
                                                             <p class="submit">
-                                                                <input type="button" name="wp-button" id="wp-button" class="btn btn-primary btn-block float-right" value="Sign Up" style="background-color: #31A4DD; " 
+                                                                <input type="button" name="wp-button" id="wp-button" class="btn btn-primary btn-block float-right" value="Sign In" style="background-color: #31A4DD; " 
                                                                 onclick="document.location.href= '{{route('login')}}' ;"/>
                                                             </p>                        
                                                         </div>

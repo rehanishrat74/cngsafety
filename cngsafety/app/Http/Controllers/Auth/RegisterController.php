@@ -221,7 +221,8 @@ B     for balochistan.
                 'ownername'=>$data['ownername'],
                 'encpwd' => $encryptedpwd,
                 'activated'=> 0, //false                           
-                ]);            
+                ]);           
+                $mobile= $data['cellnoforinspection'];
 
         }
         else if ($data['regtype']=="laboratory")
@@ -267,6 +268,7 @@ B     for balochistan.
                 'encpwd' => $encryptedpwd,
                 'activated'=> 0, //false                           
                 ]);            
+            $mobile= $data['mobileno'];
 
         }
 
@@ -298,6 +300,26 @@ B     for balochistan.
          
 
         // Mail::to($data['email'])->send(new WelcomeMail($user,$msg)); //and temporary blocking
+
+        /*sending sms*/
+  // send sms to the user mobile number
+               // $mobile = $r['mobile']; //Recepient Mobile Number
+                $sender = "iBex";
+                $message = "Thankyou to register with CNG Safety Pakistan. We will email you the login credentials after due dilligence. For further querries dial 051-4901444 or email us at cng.safety.taskforce@gmail.com";
+     
+                //sending sms
+                $post = "sender=".urlencode($sender)."&mobile=".urlencode($mobile)."&message=".urlencode($message)."";
+                $url = "https://sendpk.com/api/sms.php?username=923065353533&password=4619";
+                $ch = curl_init();
+                $timeout = 30; // set to zero for no timeout
+                curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
+                curl_setopt($ch, CURLOPT_URL,$url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                $result = curl_exec($ch); 
+               // $response['response'] = 'valid';        
 
         return $user;
     }

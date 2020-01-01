@@ -45,6 +45,7 @@ if (Auth::user()->regtype =='admin')
   $users = DB::table('users')
         ->select('users.*')
         ->where('deleted','!=',1)
+        ->orderby('id','desc')
         ->paginate(10);
 
 }else if (Auth::user()->regtype =='hdip' || Auth::user()->regtype =='apcng')
@@ -53,6 +54,7 @@ if (Auth::user()->regtype =='admin')
         ->select('users.*')
         ->where('deleted','!=',1)
         ->where('regtype','=','laboratory')
+        ->orderby('id','desc')
         ->paginate(10);
 
 }
@@ -268,17 +270,21 @@ public function dologinaccess(Request $data){
                                 ]);   
 
         $credentials=DB::table('users')
-          ->select(['email','encpwd','regtype','name'])
+          ->select(['email','encpwd','regtype','name','cellnoforinspection','mobileno'])
           ->where(['id'=> $id])
           ->get();                
 
         $pwd= Crypt::decryptString($credentials[0]->encpwd);
-        $msg ="Your login credentials are: login id = ".$credentials[0]->email. " and password=".$pwd ;                 
+        $msg ="Please login at cngsafetypakistan.com. Your login credentials are: login id = ".$credentials[0]->email. " and password=".$pwd ;                 
 
         if ($credentials[0]->regtype=="workshop")
         {
-        $msg ="Your login credentials are: login id = ".$credentials[0]->email. " and password=".$pwd.". You can download the app from ".env('App_Link') ;
+        $msg ="Please login at cngsafetypakistan.com. Your login credentials are: login id = ".$credentials[0]->email. " and password=".$pwd.". You can download the app from ".env('App_Link') ;
+        $mobile =$credentials[0]->cellnoforinspection;
         } 
+        else {
+          $mobile =$credentials[0]->mobileno;
+        }
 
     }
     
@@ -287,6 +293,23 @@ public function dologinaccess(Request $data){
     $myuser=array("name"=>$credentials[0]->name,"email"=>$credentials[0]->email);
           
     Mail::to($credentials[0]->email)->send(new WelcomeMail($myuser,$msg));
+
+     $sender = "iBex";
+     
+                $message = "Congratulation. Your Login has been activated. Kindly check your email ".$credentials[0]->email." for login credentials. For further querries dial 051-4901444 or email us at cng.safety.taskforce@gmail.com";
+     
+                //sending sms
+                $post = "sender=".urlencode($sender)."&mobile=".urlencode($mobile)."&message=".urlencode($message)."";
+                $url = "https://sendpk.com/api/sms.php?username=923065353533&password=4619";
+                $ch = curl_init();
+                $timeout = 30; // set to zero for no timeout
+                curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
+                curl_setopt($ch, CURLOPT_URL,$url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                $result = curl_exec($ch); 
     
     return response()->json("login credentials sent at ".$credentials[0]->email, 200);
 }
