@@ -3,7 +3,6 @@
 <html class=" " lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
     <head>
-        
         <!-- 
          * @Package: Complete Admin - Responsive Theme
          * @Subpackage: Bootstrap

@@ -251,7 +251,7 @@
                                 @endif                            
 
                                <!--<label for="cellnoforinspection">Cell No To Be Used For Inspection</label><br />-->
-                                <input type="text" name="cellnoforinspection" id="cellnoforinspection" class=" text-dark form-control{{ $errors->has('cellnoforinspection') ? ' is-invalid' : '' }}" value="{{ old('cellnoforinspection') }}"  required size="20" autocomplete="off" placeholder="Cell To Be Used For Inspection" 
+                                <input type="text" name="cellnoforinspection" id="cellnoforinspection" class=" text-dark form-control{{ $errors->has('cellnoforinspection') ? ' is-invalid' : '' }}" value="{{ old('cellnoforinspection') }}"  required size="20" autocomplete="off" placeholder="Inspection e.g 923324446248" 
                                 style="border: 0.5px solid #e1e1e1 !important" 
                                 />    
                                 @if ($errors->has('cellnoforinspection'))

@@ -70,7 +70,7 @@ class RegisterController extends Controller
             'address' => ['required','string','max:191'],
             'regtype'=> ['required','string','max:45'],
             'contactno' => ['required','string','max:191'],
-            'cellnoforinspection' => ['required','string','max:191'],
+            'cellnoforinspection' => ['required','string','max:191','regex:/^\+?[92](\d+)$/'],
             'technician' => ['required','string','max:191'],
             'ownercellno' => ['required','string','max:45'],
             'ownername' => ['required','string','max:191'],
@@ -293,7 +293,7 @@ B     for balochistan.
 
             
         //$user= User::create([$fields]); //temporary blocking creating table.
-        // Mail::to($data['email'])->send(new WelcomeMail($user,$msg));
+         //Mail::to($data['email'])->send(new WelcomeMail($user,$msg));
          //Mail::to('rehanishrat74@gmail.com')->send(new WelcomeMail($user,$msg)); 
          
 

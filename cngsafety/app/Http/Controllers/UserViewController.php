@@ -157,7 +157,7 @@ if (Auth::user()->regtype =='admin')
                 DB::table('users')
                 ->where('id','=', $data->useridhidden)                
                 ->update([ 'cellverified' =>$cellverified,
-                  'cellnoforinspection' => $data->usercellnoforinspection
+                'cellnoforinspection' => $data->usercellnoforinspection
                  ]);                          
 
                 }
@@ -286,7 +286,7 @@ public function dologinaccess(Request $data){
     
     $myuser=array("name"=>$credentials[0]->name,"email"=>$credentials[0]->email);
           
-    //Mail::to($credentials[0]->email)->send(new WelcomeMail($myuser,$msg));
+    Mail::to($credentials[0]->email)->send(new WelcomeMail($myuser,$msg));
     
     return response()->json("login credentials sent at ".$credentials[0]->email, 200);
 }

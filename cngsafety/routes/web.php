@@ -11,6 +11,19 @@
 |
 */
 
+
+/*-----------------------------*/
+Route::post('/do-login', 'apiController@doLogin');
+Route::post('/do-generate-pin', 'apiController@doGeneratePin');
+Route::post('/do-verify-pin', 'apiController@doVerifyPin');
+Route::post('/do-verify-code', 'apiController@doVerifyCode');
+Route::post('/do-update-particulars', 'apiController@doUpdateParticulars');
+Route::post('/do-update-cylinders', 'apiController@doUpdateCylinders');
+Route::post('/do-update-cng-kit', 'apiController@doUpdateCngKit');
+Route::post('/do-get-codes', 'apiController@doGetCodes');
+Route::post('/do-upload-image', 'apiController@uploadFiles');
+Route::post('/do-get-details','apiController@doGetInspectionDetails');
+/*-----------------------------*/
 Route::get('/', function () {
     return view('welcome');
 });
@@ -21,14 +34,8 @@ Route::get('/logout', function(){
     //return redirect()->route('');
 });
 
-Route::get('/testmethods/getcodes', 'Test@doGetCodes');
-Route::get('/testmethods/GetInspectionDetails', 'Test@doGetInspectionDetails');
-Route::get('/testmethods/UpdateParticulars', 'Test@doUpdateParticulars');
-Route::get('/testmethods/TestKit', 'Test@doUpdateCngKit');
-Route::get('/testmethods/TestCylinders', 'Test@doUpdateCylinders');
-
-
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/testmail', 'UserViewController@testmail')->name('testmail');
 //Route::get('/view-records','UserViewController@index')->name('view-records');
 
 /*Route::get('ajax',function() {
@@ -41,6 +48,9 @@ Route::get('/signup_laboratory','multiregistrationController@registerLaboratory'
 Route::get('/signup_ogra','multiregistrationController@registerOgra')->name('ogralogin');
 //Route::get('/signup_laboratory','dashboardController@index')->name('laboratorylogin');
 
+    Route::get('/showuser/{id}','UserViewController@showuser')->name('showuser');
+    Route::post('/edituser','UserViewController@edituser')->name('edituser');
+    
 /* login routes */
 Route::get('/login_workshop','multiregistrationController@preworkshoplogin')->name('preworkshoplogin');
 Route::get('/login_lab','multiregistrationController@prelablogin')->name('prelablogin');
@@ -53,6 +63,7 @@ Route::get('/searchSticker/{stickerNo}','PublicController@searchSticker')->name(
 
 Route::post('/dologindenied','PublicController@DisableLoginAccess')->name('disableuser');
 
+Route::get('/searchkccode','PublicController@searchKCcode')->name('searchkccode');
 Auth::routes();
 
 
@@ -66,8 +77,6 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::post('/deleteuser','UserViewController@delete')->name('deleteuser');
     Route::post('/dologinaccess','UserViewController@dologinaccess')->name('dologinaccess');
   //Route::get('/ajax','UserViewController@AjaxSearch')->name('view-records');
-    Route::get('/showuser/{id}','UserViewController@showuser')->name('showuser');
-    Route::post('/edituser','UserViewController@edituser')->name('edituser');
 
 
     Route::get('/categories','vehicleCategoryController@index')->name('view-categories');

@@ -18,7 +18,7 @@ class HttpsProtocol
         
             if (!$request->secure()) {
 
-                //return redirect()->secure($request->getRequestUri());
+               // return redirect()->secure($request->getRequestUri());
 
             }
 

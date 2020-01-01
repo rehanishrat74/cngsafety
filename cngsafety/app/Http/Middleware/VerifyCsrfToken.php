@@ -20,5 +20,16 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
+        '/do-login', 
+        '/do-generate-pin',
+        '/do-verify-pin',
+        '/do-verify-code',
+        '/do-update-particulars',
+        '/do-update-cylinders',
+        '/do-update-cng-kit',
+        '/do-get-codes',
+        '/do-upload-image',
+        '/do-get-details'
+
     ];
 }

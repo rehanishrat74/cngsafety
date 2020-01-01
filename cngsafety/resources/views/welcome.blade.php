@@ -244,7 +244,7 @@ div.sticky {
                                                 <div class="form-group row "  >
                                                     <div class="col-lg-12"  >
                                                         <!--<a href="{{route('preworkshoplogin')}}">-->
-                                                        <a href="http://cngsafety.test/signup_workshop">
+                                                        <a href="http://cngsafetypakistan.com/signup_workshop">
                                                         <div class="workshopsignup">          
                                                         </div>
                                                         </a>

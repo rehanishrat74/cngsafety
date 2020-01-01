@@ -11,6 +11,8 @@ use DateTime;
 use App\Mail\WelcomeMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Input;
+use Response;
 
 class PublicController extends Controller
 {
@@ -24,6 +26,77 @@ class PublicController extends Controller
     {
         //
     }
+    public function  searchKCcode() {
+           // echo 'hello';
+             $kezzler_code = Input::get('kezzler_code');
+            // echo $kezzler_code;
+            if (!empty($kezzler_code)) 
+            {
+              $record = DB::table('vehicle_particulars')
+                        ->select ('*')
+                        ->where('stickerSerialNo', '=', $kezzler_code)
+                        ->get();
+               // print_r($record);
+               
+               
+              if (sizeof($record) == 0) {
+                $response_array = array('success' => false, 'message' => 'Following Kezzler Code Not Found, Please Try Again');
+                $response_code = 200;
+                $response = Response::json($response_array, $response_code);
+                return $response;
+              } else {
+                  //print_r($record);
+                  
+                   $data = array();
+                    $data['station'] = $record[0]->stationno;
+                    $data['cnic'] = $record[0]->OwnerCnic;
+                    $data['kezzler_code'] = $kezzler_code;
+                    $data['registeration'] = $record[0]->Registration_no;
+                    $data['make_model'] = $record[0]->Make_type;
+                    $data['chassis_no'] = $record[0]->Chasis_no;
+              
+                     $recordowner = DB::table('owner__particulars')
+                        ->select ('*')
+                        ->where('cnic', '=',$record[0]->OwnerCnic)
+                        ->where ('VehicleReg_No','=', $record[0]->Registration_no)
+                        ->get();                    
+                    $data['name'] =$recordowner[0]->Owner_name;
+                    
+                    $inspection = DB::table('cng_kit')
+                        ->select ('*')
+                        ->where('formid', '=',$record[0]->lastinspectionid)
+                        ->get();   
+
+                    $data['inspection_date']=$inspection[0]->InspectionDate;  
+                    $data['token_expiry'] =$inspection[0]->InspectionExpiry;
+   
+                     $cylinders  = DB::table('kit_cylinders')
+                        ->select ('*')
+                        ->where('formid', '=',$record[0]->lastinspectionid)
+                        ->get();   
+   
+                    $cylindersarr = array();
+                    foreach ($cylinders as $cylinder) {
+                        $cylinderobj = array();
+                        $cylinderobj['serial'] = $cylinder->Cylinder_SerialNo;
+                        $cylinderobj['inspection_expiry'] = $cylinder->ExpiryDate;
+                        array_push($cylindersarr, $cylinderobj);
+                    }
+                    $data['cylinders'] = $cylindersarr;
+                    
+                    $response_array = array('success' => true, 'data' => $data);
+                    $response_code = 200;
+                    $response = Response::json($response_array, $response_code);
+                    return $response;
+                    
+                }
+            }else {
+            $response_array = array('success' => false, 'message' => 'Kezzler Code Not provided, Please Try Again');
+            $response_code = 200;
+            $response = Response::json($response_array, $response_code);
+            return $response;
+                    }
+        }
   public function getcities(Request $data) {
       //print_r($data);
     //alert('in function');

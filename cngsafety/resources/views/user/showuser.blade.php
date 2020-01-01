@@ -356,7 +356,7 @@
                                                             <div class="controls">
                                                                 
                                                                 <input type="text" value="{{$userdetails[0]->cellnoforinspection}}" class="form-control{{ $errors->has('usercellnoforinspection') ? ' is-invalid' : '' }}" 
-                                                                id="usercellnoforinspection" name="usercellnoforinspection" placeholder="Cell No For Inspection" autocomplete="off"  
+                                                                id="usercellnoforinspection" name="usercellnoforinspection" placeholder="Inspection e.g 923324447635" autocomplete="off"  
                                                                 >
 
                                               @if ($errors->has('usercellnoforinspection'))
