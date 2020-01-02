@@ -193,7 +193,7 @@
 
 
                                  <input type="text" name="mobileno" id="mobileno" class=" text-dark form-control{{ $errors->has('mobileno') ? ' is-invalid' : '' }}" value="{{ old('mobileno') }}"  required size="20" autocomplete="off" 
-                                style="border: 0.5px solid #e1e1e1 !important" placeholder="Mobile No" 
+                                style="border: 0.5px solid #e1e1e1 !important" placeholder="Mobile No e.g. 923334346576" 
                                 />    
                                 @if ($errors->has('mobileno'))
                                     <span class="invalid-feedback" role="alert">

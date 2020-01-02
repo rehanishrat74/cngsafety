@@ -1,0 +1,42 @@
+git clone git@github.com:rehanishrat74/cngsafety.git
+
+$ git clone git://github.com/SpringSource/spring-data-graph-examples.git
+
+git clone git://github.com/rehanishrat74/cngsafety/cngsafety.git
+
+pk@tinGBGaMitMoG
+
+Incorrect786*
+
+$ ssh-keygen -t rsa -b 4096 -C "rehanishrat74@gmail.com"
+==========================================================
+$ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+> Enter a file in which to save the key (/c/Users/you/.ssh/id_rsa):[Press enter]
+> Enter passphrase (empty for no passphrase): [Type a passphrase]
+$ eval $(ssh-agent -s)
+$ ssh-add ~/.ssh/id_rsa
+clip < ~/.ssh/id_rsa.pub
+
+https://github.com/settings/keys and add newly created key
+git clone git@github.com:rehanishrat74/cngsafety.git
+
+========================
+https://getcomposer.org/download/
+create directory as
+E:\xampp\htdocs\laravel
+E:\xampp\htdocs\laravel\composer create-project laravel/laravel cngsafety --prefer-dist 
+
+http://localhost/laravel/cngsafety/public/
+
+https://chocolatey.org/install
+choco install notepadplusplus
+choco install bootstrap
+composer require twbs/bootstrap:4.1.0
+===========================
+//pushing a project
+git status
+git init
+git remote add origin git@github.com:rehanishrat74/cngsafety.git
+git add .
+git commit -m "first commit"
+git push -u origin master

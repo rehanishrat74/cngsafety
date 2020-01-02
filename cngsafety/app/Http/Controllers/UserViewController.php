@@ -80,7 +80,7 @@ if (Auth::user()->regtype =='admin')
 
 
 
-      $userdetails =DB::select('select id,name,email,address,regtype,labname,contactno,hdip_lic_no,cellnoforinspection,technician,ownercellno,ownername,mobileno,landlineno,engineername,companyname,cellverified,imei,latitude,longitude,stationno,city,province from users where id =?',[$userid]);
+      $userdetails =DB::select('select id,name,email,address,regtype,labname,contactno,hdip_lic_no,cellnoforinspection,technician,ownercellno,ownername,mobileno,landlineno,engineername,companyname,cellverified,imei,device_id,latitude,longitude,stationno,city,province from users where id =?',[$userid]);
 
       
 

@@ -107,7 +107,7 @@ class RegisterController extends Controller
 //            'hdip_lic_no'=> ['required','string','max:191', new ValidateHDIP($data['hdip_loginid'],$data['hdip_password'])],    
 
             'hdip_lic_no'=> ['required','string','max:191'],                                
-            'mobileno' =>['required','string','max:45'],
+            'mobileno' =>['required','string','max:45','regex:/^\+?[92](\d+)$/'],
             'landlineno' =>['required','string','max:45'],
             'engineername' =>['required','string','max:191'],
             'companyname' =>['required','string','max:191'],

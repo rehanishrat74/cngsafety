@@ -386,16 +386,16 @@
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                            <label class="form-label" >IMEI</label>
+                                                            <label class="form-label" >Device Id</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <input type="text" value="{{$userdetails[0]->imei}}" class="form-control{{ $errors->has('userimei') ? ' is-invalid' : '' }}" 
-                                                                id="userimei" name="userimei" placeholder="IMEI No" autocomplete="off"  disabled 
+                                                                <input type="text" value="{{$userdetails[0]->device_id}}" class="form-control{{ $errors->has('device_id') ? ' is-invalid' : '' }}" 
+                                                                id="device_id" name="device_id" placeholder="Device Id" autocomplete="off"  disabled 
                                                                 >
 
-                                                                <input type ="hidden" id ="userimeihidden" name= "userimeihidden" value="{{$userdetails[0]->imei}}">
+                                                                <input type ="hidden" id ="userimeihidden" name= "userimeihidden" value="{{$userdetails[0]->device_id}}">
 
                                                                 <input type ="hidden" value="{{$userdetails[0]->latitude}}" id="userlatitude" name="userlatitude">
 

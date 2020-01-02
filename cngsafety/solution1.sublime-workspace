@@ -41,11 +41,29 @@
 	"expanded_folders":
 	[
 		"/E/xampp/htdocs/laravel/cngsafety",
-		"/E/xampp/htdocs/laravel/cngsafety/public",
+		"/E/xampp/htdocs/laravel/cngsafety/app",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Auth",
+		"/E/xampp/htdocs/laravel/cngsafety/resources",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/auth",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user",
 		"/E/xampp/htdocs/laravel/cngsafety/routes"
 	],
 	"file_history":
 	[
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/ApiController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user/showuser.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/routes/web.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/UserViewController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Auth/RegisterController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/auth/register.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/welcome.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user/user_view.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Middleware/HttpsProtocol.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/home.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Middleware/VerifyCsrfToken.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Auth/LoginController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Kernel.php",
 		"/E/xampp/htdocs/laravel/cngsafety/composer.json",
@@ -54,7 +72,7 @@
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -68,6 +86,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"mobile",
+			"form",
+			"Administrator",
+			"route",
+			"view-records"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -92,7 +115,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 0.0
+		"height": 27.0
 	},
 	"input":
 	{
@@ -129,7 +152,7 @@
 	"project": "solution1.sublime-project",
 	"replace":
 	{
-		"height": 0.0
+		"height": 50.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -167,7 +190,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 232.0,
+	"side_bar_width": 374.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

@@ -82,7 +82,7 @@ class apiController extends Controller
                 */
                 
                 
-                $inspection = DB::SELECT('SELECT count(vehicle_particulars.record_no) as recordfound, beta.Record_no FROM vehicle_particulars where vehicle_particulars.stickerSerialNo=? and Inspection_Status="pending"',[$scan_code]);
+                $inspection = DB::SELECT('SELECT count(vehicle_particulars.record_no) as recordfound, beta.Record_no FROM vehicle_particulars where vehicle_particulars.stickerSerialNo=? and Inspection_Status="pending" and vehicle_particulars.OwnerCnic=? and vehicle_particulars.Registration_no=?',[$scan_code,$o_cnic,$registration_no]);
                 if ($inspection[0]->recordfound ==1)
                 {
                     $trace=$trace."/ last inspection found.";
