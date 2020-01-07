@@ -3,6 +3,18 @@
 	{
 		"selected_items":
 		[
+			[
+				"Insp",
+				"Inspection_Status"
+			],
+			[
+				"user",
+				"user_id"
+			],
+			[
+				"Final",
+				"FinalMessage"
+			]
 		]
 	},
 	"buffers":
@@ -44,22 +56,22 @@
 		"/E/xampp/htdocs/laravel/cngsafety/app",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers",
-		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Auth",
 		"/E/xampp/htdocs/laravel/cngsafety/resources",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views",
-		"/E/xampp/htdocs/laravel/cngsafety/resources/views/auth",
-		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user",
-		"/E/xampp/htdocs/laravel/cngsafety/routes"
+		"/E/xampp/htdocs/laravel/cngsafety/routes",
+		"/E/xampp/htdocs/laravel/cngsafety/tests",
+		"/E/xampp/htdocs/laravel/cngsafety/vendor"
 	],
 	"file_history":
 	[
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/ApiController.php",
-		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user/showuser.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/routes/web.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/welcome.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/PublicController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user/showuser.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/UserViewController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Auth/RegisterController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/auth/register.blade.php",
-		"/E/xampp/htdocs/laravel/cngsafety/resources/views/welcome.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user/user_view.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Middleware/HttpsProtocol.php",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/home.blade.php",
@@ -86,6 +98,22 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"here",
+			"doUpdateCngKit",
+			"updated",
+			"incomplete",
+			"completed",
+			"incomplete",
+			" if ($isproduction==1)",
+			"getdetails",
+			"Invalid Sticker against this vehicle",
+			"details",
+			"vehicleParticularMsg",
+			"Invalid Sticker",
+			"All cngkit valves are not tested.",
+			"\"message\":\"All cngkit valves are not tested.",
+			"doUpdateCngKit",
+			"do-update-cng-kit",
 			"mobile",
 			"form",
 			"Administrator",
@@ -98,6 +126,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			" if ($isproduction==0)"
 		],
 		"reverse": false,
 		"show_context": true,

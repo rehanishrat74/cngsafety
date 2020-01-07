@@ -65,21 +65,7 @@ class apiController extends Controller
                     );
                 }
                 $trace=$trace."/ finding last inspection.";
-                /*$inspection = DB::SELECT('SELECT count(vehicle_particulars.record_no) as recordfound, beta.Record_no,beta.lastinspectionid,beta.Inspection_Status FROM `vehicle_particulars` LEFT join vehicle_particulars beta on vehicle_particulars.Record_no = beta.Record_no and vehicle_particulars.Registration_no=beta.Registration_no and vehicle_particulars.OwnerCnic=beta.OwnerCnic and vehicle_particulars.stickerSerialNo=beta.stickerSerialNo where vehicle_particulars.stickerSerialNo=? and vehicle_particulars.stationno=? and vehicle_particulars.Registration_no=? and vehicle_particulars.OwnerCnic=? and beta.Inspection_Status="pending"',[$scan_code,$stationno,$registration_no,$o_cnic]);
-                //we cannot modify the images once inspection is completed.
-                if ($inspection[0]->recordfound ==1)
-                {
-                    $trace=$trace."/ last inspection found.";
-                    $where = array('scan_code' => $scan_code,
-                        'Record_no' =>$inspection[0]->Record_no,
-                        'lastinspectionid'=>$inspection[0]->lastinspectionid
-                    );
-                    DB::table('cng_kit')->where($where)->update($image);
-                    $finalResponse = "valid";
-                    $msg="File Uploaded";            
-                }
-                commented this set since sohail cannot pass vehicle reg no and cnic
-                */
+                
                 
                 
                 $inspection = DB::SELECT('SELECT count(vehicle_particulars.record_no) as recordfound, beta.Record_no FROM vehicle_particulars where vehicle_particulars.stickerSerialNo=? and Inspection_Status="pending" and vehicle_particulars.OwnerCnic=? and vehicle_particulars.Registration_no=?',[$scan_code,$o_cnic,$registration_no]);
@@ -161,12 +147,14 @@ class apiController extends Controller
                             $response['longitude'] = Auth::user()->longitude;
                             $response['is_mobile_verified'] = Auth::user()->is_mobile_verified;
                         } else {
-                            $response['response'] = 'invalid-device';
-                            $response['device_id'] = Auth::user()->device_id;
+                            $response['response'] = 'invalid';
+                            $response['message'] ="invalid device id";// Auth::user()->device_id;
                         }
                     }
                 } else {
                     $response['response'] = 'invalid';
+                    $response['message'] = 'invalid credentials';
+
                 }
                 echo json_encode($response);
             // else {
@@ -217,6 +205,7 @@ class apiController extends Controller
                 $response['response'] = 'valid';
             } else {
                 $response['response'] = 'invalid';
+                $response['message'] = 'invalid user id or mobileno';
             }
             echo json_encode($response);
         }
@@ -243,6 +232,7 @@ class apiController extends Controller
                 $response['response'] = 'valid';
             } else {
                 $response['response'] = 'invalid';
+                $response['message'] = 'invalid userid or pin';
             }
             echo json_encode($response);
         }
@@ -256,15 +246,40 @@ class apiController extends Controller
             // if(!Agent::isMobile()) {
                 $stationno = $r['stationno']; //Additional Field
                 $scan_code = $r['code']; //Additional Field
-                $responsecode = "x";
-                $responsemsg="Error in processing";
+                $responsecode = "null";
+                $responsemsg="null";
+                $isproduction=0;
+                if ($r['isproduction'] )
+                {
+                    $isproduction =$r['isproduction'];
+                    
+                }
                 //$dbsticker = DB::SELECT('SELECT count(CodeRollsSecondary.batchid) as validShopSticker ,ifnull(beta.cnic,0) as cnic,ifnull(beta.vehicleRegNo,0) as vehicleRegNo FROM CodeRollsSecondary LEFT JOIN users on CodeRollsSecondary.allotedto = users.email LEFT JOIN CodeRollsSecondary beta on CodeRollsSecondary.serialno=beta.serialno WHERE CodeRollsSecondary.serialno = ? and users.stationno=?',[$scan_code,$stationno]);
                 $validShopsticker =DB::SELECT('SELECT count(CodeRollsSecondary.batchid) as validShopSticker from CodeRollsSecondary WHERE CodeRollsSecondary.serialno = ?',[$scan_code]);
+                if (empty($validShopsticker ))
+                {
+                $response['response']="invalid";
+                $response['message']="Invalid sticker";
+                echo json_encode($response);
+                return;
+                }
+
                 $dbsticker = DB::SELECT('SELECT ifnull(beta.cnic,0) as cnic,ifnull(beta.vehicleRegNo,0) as vehicleRegNo FROM CodeRollsSecondary LEFT JOIN users on CodeRollsSecondary.allotedto = users.email LEFT JOIN CodeRollsSecondary beta on CodeRollsSecondary.serialno=beta.serialno WHERE CodeRollsSecondary.serialno = ? and users.stationno=?',[$scan_code,$stationno]);
-		
+              if (empty($dbsticker ))
+                {
+                $response['response']="invalid";
+                $response['message']="Invalid sticker for this station";
+                echo json_encode($response);
+                return;
+                }
+
                 if ($validShopsticker[0]->validShopSticker==0){
                     $responsecode = "invalid";
                     $responsemsg="Invalid sticker for this shop.";
+                     $response['response'] = 'invalid';
+                    $response['message'] = 'invalid sticker or station no.';
+                    echo json_encode($response);
+                    return; 
                 }
                 else if ($validShopsticker[0]->validShopSticker==1)
                 {  
@@ -276,17 +291,23 @@ class apiController extends Controller
                     if ($dbsticker[0]->cnic!="0"){
                         $dbstickerstatus = DB::SELECT('SELECT Inspection_Status FROM vehicle_particulars WHERE stickerserialno=? and stationno = ?',[$scan_code,$stationno]);
                         if ($dbstickerstatus[0]->Inspection_Status =="completed") {
-                            $responsecode ="no-reissue-completed";
+                            $responsecode ="valid";
+                            $responsemsg="no-reissue-completed";;
                         }
                         else {
-                            $responsecode ="no-reissue-pending";
+                            $responsecode ="valid";
+                            $responsemsg="no-reissue-pending";
                         }
-                        $responsemsg="valid sticker to retrieve details of the vehicle.";
+                        //$responsemsg="valid sticker to retrieve details of the vehicle.";
                     }
                 }
 
-                //$response = array('responsecode'=>$responsecode,'responsemsg'=>$responsemsg);	 
+                //$response = array('responsecode'=>$responsecode,'responsemsg'=>$responsemsg);  
                 $response['response'] = $responsecode;
+                $response['message'] = $responsemsg;
+                //if ($isproduction==1) {
+
+                //}
                 echo json_encode($response);
             // } else {
             //     echo 'Inspection API is available for only Mobile Apps';
@@ -309,10 +330,22 @@ class apiController extends Controller
                 $per_page = 10;
                 if($page == 1) { $offset = 0; } else { $offset = ($page - 1) * $per_page; }
 
-                $codes = DB::SELECT('SELECT Registration_no,Inspection_Status,businesstype,vehicle_particulars.stickerSerialNo,vehicle_particulars.stationno,vehicle_particulars.lastinspectionid FROM vehicle_particulars LEFT JOIN owner__particulars on vehicle_particulars.Registration_no = owner__particulars.VehicleReg_No and vehicle_particulars.OwnerCnic = owner__particulars.CNIC AND vehicle_particulars.stickerSerialNo = owner__particulars.StickerSerialNo where vehicle_particulars.stationno = ? AND vehicle_particulars.Inspection_Status=?',[$stationno,$type]);
-                //querry changed.
-                foreach($codes as $c) { $response[] = $c; }
+                $codes = DB::SELECT('SELECT Registration_no,OwnerCnic,Inspection_Status,businesstype,vehicle_particulars.stickerSerialNo,vehicle_particulars.stationno,vehicle_particulars.lastinspectionid FROM vehicle_particulars LEFT JOIN owner__particulars on vehicle_particulars.Registration_no = owner__particulars.VehicleReg_No and vehicle_particulars.OwnerCnic = owner__particulars.CNIC AND vehicle_particulars.stickerSerialNo = owner__particulars.StickerSerialNo where vehicle_particulars.stationno = ? AND vehicle_particulars.Inspection_Status=?  and vehicle_particulars.stickerSerialNo is not null',[$stationno,$type]);
+
+                if (empty($codes)){
+                    $response['response']="invalid";
+                    $response['message']="No record found";
+                }
+                else
+                {
+                // $response['response']="valid";   
+                 //$response['message']=$codes;
+                    $response[]=$codes;
+                }
+               // foreach($codes as $c) { $response['message'] = $c; }
+                
                 echo json_encode($response);
+
             // } else {
             //     echo 'Inspection API is available for only Mobile Apps';
             // }
@@ -326,13 +359,24 @@ class apiController extends Controller
         } else {
             // if(!Agent::isMobile()) {
                 $inspection = array();
-                $userid = $r['user_id'];  //instead i need station no.
+                
+                $user_id = $r['user_id'];  //instead i need station no.
                 $scan_code = $r['scan_code'];
                 $stationno = $r['stationno']; //Additional fields
 
+                    //echo 'userid';
+                    //echo  intval($user_id);    
+                    //echo is_numeric($user_id);
+
+                /*if(!intval($user_id) =true) {
+                        $response['response']="invalid";
+                        $response['message']="invalid user";
+                        echo json_encode($response);
+                        return;
+                }*/
                 //$inspection = array('ResponseMsg'=>"Record not found");
-                $vehicle = collect(DB::SELECT('SELECT Registration_no, Chasis_no, Engine_no, Make_type, Inspection_Status, businesstype,vehicle_particulars.lastinspectionid, vehicle_particulars.stationno, vehicle_particulars.stickerSerialNo, vehicle_particulars.Record_no, vehicle_categories.category_name, owner__particulars.Owner_name, owner__particulars.CNIC, owner__particulars.Cell_No, owner__particulars.Address, vehicle_particulars.lastinspectionid, users.name as "workshopname",users.address as "workshopaddress" FROM vehicle_particulars LEFT JOIN vehicle_categories on vehicle_particulars.Vehicle_catid=vehicle_categories.category_id LEFT JOIN owner__particulars on vehicle_particulars.Registration_no = owner__particulars.VehicleReg_No and vehicle_particulars.OwnerCnic = owner__particulars.CNIC and vehicle_particulars.stickerSerialNo = owner__particulars.StickerSerialNo LEFT JOIN users on vehicle_particulars.stationno= users.stationno where vehicle_particulars.stickerSerialNo =?  and vehicle_particulars.stationno=?',[$scan_code,$stationno]))->first();
-                
+                $vehicle = collect(DB::SELECT('SELECT Registration_no, Chasis_no, Engine_no, Make_type, Inspection_Status, users.id,businesstype,vehicle_particulars.lastinspectionid, vehicle_particulars.stationno, vehicle_particulars.stickerSerialNo, vehicle_particulars.Record_no, vehicle_categories.category_name, owner__particulars.Owner_name, owner__particulars.CNIC, owner__particulars.Cell_No, owner__particulars.Address, vehicle_particulars.lastinspectionid, users.name as "workshopname",users.address as "workshopaddress" FROM vehicle_particulars LEFT JOIN vehicle_categories on vehicle_particulars.Vehicle_catid=vehicle_categories.category_id LEFT JOIN owner__particulars on vehicle_particulars.Registration_no = owner__particulars.VehicleReg_No and vehicle_particulars.OwnerCnic = owner__particulars.CNIC and vehicle_particulars.stickerSerialNo = owner__particulars.StickerSerialNo LEFT JOIN users on vehicle_particulars.stationno= users.stationno  where vehicle_particulars.stickerSerialNo =?  and vehicle_particulars.stationno=? and users.id=?',[$scan_code,$stationno,$user_id]))->first();
+                //print_r($vehicle);
                 if (!empty($vehicle)) {
                     $inspectionid  = $vehicle->lastinspectionid;  
                     $vehicleNumberPlate = $vehicle->Registration_no; 
@@ -340,7 +384,7 @@ class apiController extends Controller
 
                     $cngKit = collect(DB::SELECT('SELECT formid, Make_Model, CngKitSerialNo, InspectionDate, Cylinder_valve, Filling_valve, Reducer, HighPressurePipe, ExhaustPipe, Total_Cylinders, RegistrationPlate_Pic, WindScreen_Pic,InspectionExpiry,VehicleRecordNo FROM cng_kit where cng_kit.formid=? and cng_kit.VehiclerRegistrationNo=? and cng_kit.VehicleRecordNo=?',[$inspectionid,$vehicleNumberPlate,$vehicleDbRegistrationNo]))->first();                    
                     $cylinders = DB::SELECT('SELECT Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation, cylinder_locations.Location_name FROM kit_cylinders LEFT JOIN cylinder_locations on kit_cylinders.cylinderLocation = cylinder_locations.Location_id where formid=?',[$inspectionid]);
-
+                    $response['response'] = 'valid'; 
                     $response['scan_code'] = $scan_code;
                     $response['make_n_type'] = $vehicle->Make_type;
                     $response['registration_no'] = $vehicle->Registration_no;
@@ -382,9 +426,14 @@ class apiController extends Controller
                     $response['ck_is_exhaust_pipe'] = $cngKit->ExhaustPipe;
                     $response['wind_screen_image'] = $cngKit->WindScreen_Pic;
                     $response['number_plate_image'] = $cngKit->RegistrationPlate_Pic;
+                    
                 } else {
-                    $response['response'] = 'invalid';
+                    $response['response'] = 'invalid';                     
+                    $response['message'] = 'invalid sticker or station no';
+                    echo json_encode($response);
+                    return;                     
                 }
+
                 echo json_encode($response);
             // } else {
             //     echo 'Inspection API is available for only Mobile Apps';
@@ -421,18 +470,32 @@ class apiController extends Controller
                 $dt1=Carbon::today();
                 $created_at=date('Y-m-d', strtotime($dt1));    
                 $msgws ="Valid workstation";
-                $ownermsg="Invalid Owner";
-                $vehicleParticularMsg="Invalid Vehicle";
-                $msgResponse="Valid";
+                $ownermsg= "null"; //"Invalid Owner";
+                $vehicleParticularMsg="null"; //"Invalid Particular";
+                $msgResponse="null";
+                $isproduction ="0";
                 $vehicleRecordNo=0; 
                 $stickerCount=0;
                 $stickerCnic="0";
                 $stickervehicle="0";
                 $vehicleRecordNo=0;
+                $isvalid="Invalid";
+
+                 if ($r['isproduction'] )
+                {
+                    $isproduction =$r['isproduction'];
+                    
+                }
+
+        
                 //-------------------code below---------------------------------------
                 $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$stationno]);
                 if (!empty($vechicle))
                 {
+                    //$response['response'] = 'invalid';
+                    //$response['message'] = 'invalid userid or station no';
+                    //echo json_encode($response);
+                    //return; 
                     if ($vechicle[0]->recordfound ==1 and $vcat > 0) //valid work station
                     {
                         $msgws="Valid Workstation ". $stationno;
@@ -463,14 +526,35 @@ class apiController extends Controller
                                     $freesticker=$scan_code;
                                     DB::insert('insert into owner__particulars (Owner_name,CNIC,Cell_No,Address,VehicleReg_No,StickerSerialNo) values (?,?,?,?,?,?)', [$o_name, $o_cnic,$o_cell_no,$o_address,$registration_no,$scan_code]);
                                     $ownermsg="Owner Created";                
+                                    $isvalid="valid";
                                 } else {
                                     $ownermsg="Invalid Sticker. Sticker allocated to some other owner.";
-                                    $msgResponse="InValid";
+                                    $msgResponse=$ownermsg;
+                                    $isvalid="Invalid";
+                                    
                                     $response = array();
-                                    $response['response'] = strtolower($msgResponse);
-                                    $response['message'] = $ownermsg;
+                                    
+                                    $response['response'] = 'invalid';
+                                    $response['message'] = 'invalid sticker for this user';
                                     echo json_encode($response);
-                                    return;
+                                    return;                                     
+                                            
+
+                                    /*$response['response'] = $isvalid;
+                                    $response[] = $isvalid;                                    
+                                    if ($isproduction==0) {
+                                        
+                                        $response['FinalMessage'] = $isvalid;
+                                        $response['message'] = $ownermsg;
+                                        $response['vehicleparticulars']=$vehicleParticularMsg;
+                                        $response['Msgresponse'] =$msgResponse;
+                                        $response['msgws']=$msgws;
+                                        $response['owner'] =$ownermsg;
+
+                                    }
+                                    
+                                    echo json_encode($response);
+                                    return;*/
                                 }
                             }  //end of insert owner
                             else //update owner details
@@ -487,7 +571,9 @@ class apiController extends Controller
                                         'Address'=> $o_address,
                                         'VehicleReg_No'=>$registration_no
                                         ]);                             
-                                    $ownermsg="Owner Updated against sticker ".$scan_code;                
+                                    $ownermsg="Owner Updated against sticker ".$scan_code;
+                                    $isvalid="Valid";
+
                                 }
                             } // end of update owner            
                     
@@ -505,7 +591,8 @@ class apiController extends Controller
                                     ->update(['cnic' => $o_cnic,
                                         'vehicleRegNo' => $registration_no
                                     ]);
-                                    $vehicleParticularMsg ="Vehicle Record Created.";                        
+                                    $vehicleParticularMsg ="Vehicle Record Created.";
+                                    $isvalid="valid";                        
                                 }
                             } // end of insert vechicle
                             else  // update vehicle.
@@ -522,21 +609,47 @@ class apiController extends Controller
                                         'businesstype'=> $businesstype
                                         ]); 
                                 $vehicleParticularMsg ="Vehicle Record Updated.";       
+                                $isvalid="valid"; 
                             }   // end of update vechicle
                             $vehical = DB::select('select Record_no from vehicle_particulars where Registration_no = ? and OwnerCnic=? and stickerserialno=?', [$registration_no,$o_cnic,$scan_code]); 
                             if(!empty($vehical))
                             {
                                 $vehicleRecordNo = $vehical[0]->Record_no;} else {$vehicleRecordNo=0;
-                                $msgResponse="InValid";
+                                $msgResponse="Vehicle Particulars not updated for registrationno=".$registration_no." cnic=".$o_cnic." scancode=".$scan_code;
+                                $isvalid="invalid";  
+
+                                $response['response'] = 'invalid';
+                                $response['message'] = 'owner is not registered with this scancode and cnic';
+                                echo json_encode($response);
+                                return;                                 
                             }                
                         } // end of $stickerStatus
                         else
                         {
                             //$response =array('FinalResponse' => "Invalid Sticker",'VehicleResponse'=>$vehicleParticularMsg,'OwnerResponse'=> $ownermsg,'WorkstationResponse' => $msgws,'VehicleRecordNo' => $vehicleRecordNo);
-                            $msgResponse="InValid";
+                            
+                            $isvalid="invalid"; 
+                            $msgResponse="Sticker not updated in CodeRollsSecondary";
                             $response = array();
-                            $response['response'] = strtolower($msgResponse);
-                            $response['message'] = $ownermsg;
+
+                            $response['response'] = 'invalid';
+                            $response['message'] = 'sticker does not exists';
+                            echo json_encode($response);
+                            return; 
+
+                            $response[] = $isvalid;
+                           // $response['message'] = $ownermsg;
+                            if ($isproduction==0) {             
+                                
+                                        $response['FinalMessage'] = $isvalid;
+                                        $response['message'] = $ownermsg;
+                                        $response['vehicleparticulars']=$vehicleParticularMsg;
+                                        $response['Msgresponse'] =$msgResponse;
+                                        $response['msgws']=$msgws;
+                                        $response['owner'] =$ownermsg;
+                                        $response['response'] = $isvalid;
+
+                            }
                             echo json_encode($response);
                             return;                 
                         }
@@ -545,20 +658,47 @@ class apiController extends Controller
                     {
                         // invalid workstation
                         $msgws ="InValid workstation ".$stationno." or vehicle category ".$vcat." missing. Cannot update";  
-                        $msgResponse="InValid";             
+                        $isvalid="InValid";             
+                        $response['response'] = 'invalid';
+                        $response['message'] = 'invalid workstation or userid or vehicle category';
+                        echo json_encode($response);
+                        return; 
+
                     }
-                    if ($vehicleRecordNo <= 0)
+                    /*if ($vehicleRecordNo <= 0)
                     {
                         $vehicleParticularMsg =$vehicleParticularMsg.' Vehicle Record No  in table vehicle_particulars cannot be 0';
-                        $msgResponse="Invalid";
-                    }
+                        
+                        $isvalid="Invalid";
+                    }*/
                 }        
+                else {
+                    $ownermsg="record not found in users table. userid=".$userid." stationno=".$stationno;
+                    $response['response'] = 'invalid';
+                    $response['message'] = 'owner not registered';
+                    echo json_encode($response);
+                    return; 
+                }
                 
                 //$response = array('FinalResponse' => $msgResponse,'VehicleResponse'=>$vehicleParticularMsg,'OwnerResponse'=> $ownermsg,'WorkstationResponse' => $msgws,'VehicleRecordNo' => $vehicleRecordNo);
                 
                 $response = array();
-                $response['response'] = strtolower($msgResponse);
-                $response['message'] = $ownermsg;
+                $response['response'] = $isvalid;
+               // $response['message'] = $ownermsg;
+                if ($isproduction==0) {
+
+                                        $response['FinalMessage'] = $isvalid;
+                                        $response['message'] = $ownermsg;
+                                        $response['vehicleparticulars']=$vehicleParticularMsg;
+                                        $response['Msgresponse'] =$msgResponse;
+                                        $response['msgws']=$msgws;
+                                        $response['owner'] =$ownermsg;
+                                        $response['response'] = $isvalid;
+
+                                        
+                }
+               
+               if ($isvalid="valid"){$response['message'] = "Your inspection particulars updated successfully";}
                 echo json_encode($response);
             // } else {
             //     echo 'Inspection API is available for only Mobile Apps';
@@ -619,21 +759,29 @@ class apiController extends Controller
                 $makenmodel_6 = !empty($r['c6_make__model']) ? $r['c6_make__model'] : '';
                 $serialno_6 = !empty($r['c6_serial_no']) ? $r['c6_serial_no'] : '';
                 $importdate_6 = $r['c6_import_date']; //Additional field
-
+                $vehicleParticularMsg="null";
                 $finalResponse ="invalid";
-                $msg ="Error In doUpdateCylinders";	
+                $msg ="null";   
                 $record_no=0;
                 $cylinderserialnocount =0;
                 $inspectionStatus='pending';
-
+                $ownermsg="null";
+                $msgws="null";
                 $stickerCount=0;
                 $stickerCnic="0";
                 $stickervehicle="0";
+                $vehicleRecordNo=0;
 
                 $cylinderlist="";
                 $parameters=array();
                 $trace="checking sticker status,";
-
+                $isproduction="0";
+                 if ($r['isproduction'] )
+                {
+                    $isproduction =$r['isproduction'];
+                    
+                }
+  
                 $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$workstationid]);
                 if (!empty($vechicle))
                 {
@@ -668,8 +816,13 @@ class apiController extends Controller
 
                                             if ($inspection[0]->Inspection_Status=="completed")
                                             {
-                                                $finalResponse ="Invalid";
+                                                $finalResponse ="invalid"; //invalid
                                                 $inspectionStatus='completed';
+
+                                                $response['response'] = 'invalid'; //invalid
+                                                $response['message'] = 'cannot modify completed inspection';
+                                                echo json_encode($response);
+                                                return;                                                 
                                             }
                                             if ($inspection[0]->Inspection_Status=="pending" && $totalcylinders > 0 && $stickerCount > 0 && $stickerCnic == $o_cnic && $stickervehicle ==$registration_no) 
                                             {
@@ -733,13 +886,20 @@ class apiController extends Controller
                                                     if ($cylinderserialnocount==$totalcylinders) 
                                                     {   
                                                         $trace=$trace."/ cylinder count check ok. checking kit inspection";
+                                                        //stopping valves test upon request
                                                         //total cylinders data matched.
-                                                        $cngKitInspection = DB::SELECT('SELECT count(formid) as incompleteInspection FROM cng_kit WHERE formid =? and Cylinder_valve <> "on" or Filling_valve <> "on" or Reducer <> "on" or HighPressurePipe <> "on" or ExhaustPipe <> "on"',[$lastinspectionid]);
-                                                
-                                                        $msg="cng kit inspection not completed";
-                                                        $finalResponse ="Invalid";
-                                                        if ($cngKitInspection[0]->incompleteInspection ==0)
+                                                        //$cngKitInspection = DB::SELECT('SELECT count(formid) as incompleteInspection FROM cng_kit WHERE formid =? and Cylinder_valve <> "on" or Filling_valve <> "on" or Reducer <> "on" or HighPressurePipe <> "on" or ExhaustPipe <> "on"',[$lastinspectionid]);
+                                                        $cngKitInspection = DB::SELECT('SELECT count(formid) as incompleteInspection FROM cng_kit WHERE formid =? ',[$lastinspectionid]);                                                
+                                                        //$msg="All cngkit valves are not tested.";
+                                                        $msg="cngkit passed.";
+                                                        $finalResponse ="valid";  //incomplete
+                                                        $response['response']="valid"; //incomplete
+                                                        $response['message']=$msg;
+                                                        
+                                                        if ($cngKitInspection[0]->incompleteInspection ==1) //last value was 0. chanaged upon request
                                                         {
+                                                            
+
                                                             $trace=$trace."/ kit inspection completed. checking any unregistered cylinder";
                                                             //kit inspection is completed.
                                                             //Checking in registered cylinders, if import date is null then pending because testing record in the registered cylinder is missing. 
@@ -747,6 +907,7 @@ class apiController extends Controller
                                                             //RegisteredCylinders.Date = inspection date by labs
                                                             if ($Cylinders[0]->UnregisteredCylinders ==0)
                                                             {   
+                                                                
                                                                 //all cylinders have inspection dates
                                                                 //update stickerserialno in registered cylinders
                                                                 $trace=$trace."/ all cylinders are verified by labs";
@@ -757,18 +918,28 @@ class apiController extends Controller
                                                                 ->where('InspectionExpiryDate', '<', $inspectiondate)
                                                                 ->where('SerialNumber', 'in', $cylinderlist)
                                                                 ->get();
+                                                              
+
                                                                 $UnregisteredCylindersCount=0;
                                                                 if (!empty($UnregisteredCylinders) && !$UnregisteredCylinders->isempty() )
                                                                 {
+                                                                    
+                                                                    
                                                                     if ($UnregisteredCylinders[0]->cylinderscount>0) 
                                                                     {
+                                                                        
                                                                         $inspectionStatus='pending';
-                                                                        $finalResponse ="Invalid";
+                                                                        $finalResponse ="valid"; //incomplete
                                                                         $msg="Cylinder Inspection id required by the approved labs";
+                                                        $finalResponse ="invalid";  //incomplete
+                                                        $response['response']="invalid"; //incomplete
+                                                        $response['message']=$msg;
+
                                                                     }
                                                                     else
                                                                     {
-                                                                        $trace=$trace."/ updateing cylinders";                                                      
+                                                                        
+                                                                        $trace=$trace."/ updating cylinders";                                                      
                                                                         DB::table('vehicle_particulars')
                                                                         ->where(['Registration_no' => $registration_no])
                                                                         ->where(['OwnerCnic' => $o_cnic])
@@ -787,14 +958,23 @@ class apiController extends Controller
                                                                         ->update(['stickerserialno' => $scan_code]); 
 
                                                                         $finalResponse ="valid";
-                                                                        $msg ="valid inspection id ".$lastinspectionid." to process ".$totalcylinders." cylinders against vehicle ".$registration_no." with scancode ".$scan_code." with inspection status as ".$inspectionStatus;    
+                                                    //                    $msg ="valid inspection id ".$lastinspectionid." to process ".$totalcylinders." cylinders against vehicle ".$registration_no." with scancode ".$scan_code." with inspection status as ".$inspectionStatus;
+$msg="Inspection status is completed against vehicle ".$registration_no."  and inspectionid ".$lastinspectionid;
+                                                        
+                                                        $finalResponse ="valid";  //incomplete
+                                                        $response['response']="valid"; //incomplete
+                                                        $response['message']=$msg;
+                                                                           
                                                                     }
                                                                 } // end of unregistered cylinders empty check
                                                             }  // end of unregistered cylinders
                                                             else
                                                             {
-                                                                $finalResponse ="invalid";
+                                                                
+                                                                $finalResponse ="invalid"; //incomplete
                                                                 $msg ="Inspection cannot complete because cylinders are not approved by labs";
+                                                                $response['message']="Not all cylinders are tested by labs";
+                                                                
                                                             }
                                                         } //end of incomplete inspections         
                                                     }//cylinder count check
@@ -803,42 +983,97 @@ class apiController extends Controller
                                             else {
                                                 if ($inspectionStatus=="completed") {
                                                    $msg="vechicle inspection completed. cannot continue";
+                                                    
+                                                    $response['response']="invalid"; //completed
+                                                    $response['message']="Cannot modify completed inspection";
+                                                   echo json_encode($response);
+                                                   return;
                                                 } else {
-                                                    $msg="Not enough parameters to continue continue cylinder inspection";
+                                                   
+                                                   if ($totalcylinders < 0 ) { 
+                                                    $response['response']="invalid";
+                                                    $response['message'] ="Total cylinders must be >=1 ";                
+                                                   return;
+
+                                                    }
+                                                    if ($stickerCount  <= 0 ) { 
+                                                        $response['response']="invalid";
+                                                        $response['message'] ="Invalid sticker against this vehicle"; 
+                                                        echo json_encode($response);
+                                                        return;
+                                                    }
+                                                    if ($stickerCnic != $o_cnic ) { 
+                                                        $response['response']="invalid";
+                                                        $response['message'] ="Vehicle not registered for this NIC ";            
+                                                        echo json_encode($response);
+                                                        return;
+                                                    }
+
                                                 }
                                             }
                                         }
                                         else {
-                                            $response =array('FinalResponse' => "Invalid Sticker",'VehicleResponse'=>$vehicleParticularMsg,'OwnerResponse'=> $ownermsg,'WorkstationResponse' => $msgws,'VehicleRecordNo' => $vehicleRecordNo);
-                                            $msgResponse="invalid";
+
+                                            if ($isproduction==0) {
+                                                    $response =array('FinalResponse' => "invalid Sticker",
+                                                        'VehicleResponse'=>$vehicleParticularMsg,
+                                                        'OwnerResponse'=> $ownermsg,'WorkstationResponse' => $msgws,'VehicleRecordNo' => $vehicleRecordNo);
+                                                    $msgResponse="invalid";
                                             
-                                            $response = array();
-                                            $response['response'] = $finalResponse;
-                                            $response['message'] = $msg;
-                                            echo json_encode($response);
-                                            return;                                     
+                                                    $response = array();
+                                                    $response['response'] = $finalResponse;
+
+
+                                                     $response['message'] = $msg;
+                                            } else {
+                                                        $response['response']="invalid";
+                                                        $response['message'] ="No inspection exists against this Sticker,nic and vehicle";
+                                                        echo json_encode($response);
+                                                        return;
+
+                                            }
+
+                                            
+                                            //echo json_encode($response);
+                                            //return;                                     
                                         }
                                     }
                                     else
                                     {
-                                        $trace=$trace."/ last inspection not found";    
-                                        $msg="inspection not found";
+                                        //$trace=$trace."/ last inspection not found";    
+                                        //$msg="inspection not found";
                                         $finalResponse="invalid";
+                                        $response['response']="invalid";
+                                        $response['message'] ="Invalid Sticker against this vehicle";
+                                        echo json_encode($response);
+                                        return;                                        
                                     }
                                 } 
                             } else {
-                                echo 'sticker count is 0';
-                                $msg="Sticker count is 0. not found";
+                                //echo 'sticker count is 0';
+                                //$msg="Sticker count is 0. not found";
+                                    $response['response']="invalid";
+                                    $response['message'] ="Invalid Sticker against this vehicle.";
+                                    echo json_encode($response);
+                                    return;                                
                             }
                         } else {
-                            echo 'sticker not found';
-                            $msg="Sticker not found";
+                            //echo 'sticker not found';
+                            //$msg="Sticker not found";
+                                $response['response']="invalid";
+                                $response['message'] ="Invalid Sticker against this NIC..";
+                                echo json_encode($response);
+                                return;                            
                         }
                     }
                     else {       
-                        $trace=$trace."/ Invalid workstation";  
-                        $msg="workstation not found";
-                        $finalResponse="invalid";
+                        //$trace=$trace."/ Invalid workstation";  
+                        //$msg="workstation not found";
+                        //$finalResponse="invalid";                        
+                        $response['response']="invalid";
+                        $response['message'] ="Invalid userid or workstation";
+                        echo json_encode($response);
+                        return;                        
                     }
                 }
 
@@ -860,12 +1095,18 @@ class apiController extends Controller
                     'passedcnic'=>$o_cnic,
                     'RegisteredStickerVehicle'=>$stickervehicle
                 );
-                $response =array(
+
+                if ($isproduction==0) {
+                     $response =array(
                     'response'=>$finalResponse,
                     'msg'=>$msg,
                     'inputparams'=>$parameters,
                     'trace' => $trace
-                );
+                    );
+                } else {
+                    // $response['response'] =$finalResponse;
+                }
+               
                 echo json_encode($response);
             //} else {
             //    echo 'Inspection API is available for only Mobile Apps';
@@ -908,6 +1149,16 @@ class apiController extends Controller
                 $finalResponse ="InValid";
                 $msg ="Error In CngKit Process";
                 $trace ="getting vechicle record no.";
+
+               $isproduction="0";
+                 if ($r['isproduction'] )
+                {
+                    $isproduction =$r['isproduction'];
+                    
+                }
+
+
+
                 $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$workstationid]);
                 if (!empty($vechicle))
                 {                
@@ -946,32 +1197,41 @@ class apiController extends Controller
                             //--------------------------
                             
                             if ($countkits==0 && !is_null($expiryDate) && $cylindernos >0 && !is_null($workstationid) &&
-                            !is_null($ck_serial_no) && !empty($ck_serial_no) && null !==$ck_serial_no)  {
+                            !is_null($ck_serial_no) && !empty($ck_serial_no) && null !==$ck_serial_no && $initinspection[0]->Inspection_Status=="completed")  //here inspection status was missing
+                             {
                                 $trace =$trace."/ No inspection found. creating first inspection in cng_kit.";
                                 DB::insert('insert into cng_kit(Make_Model,CngKitSerialNo,Cylinder_valve,Filling_valve,Reducer,HighPressurePipe,ExhaustPipe,Workshop_identity,Total_Cylinders,Inspection_Status,VehiclerRegistrationNo,InspectionDate,Location_cylinder,InspectionExpiry,VehicleRecordNo)
-                                values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[$ck_make_n_model,$ck_serial_no,$ck_is_cylinder_valve,$ck_is_filling_valve,$ck_is_reducer,$ck_is_high_pressure_pipe,$ck_is_exhaust_pipe,$workstationid,$cylindernos,'pending',$registration_no,$inspectiondate,1,$expiryDate,$vehicleRecordNo]);
+                                values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[$ck_make_n_model,$ck_serial_no,$ck_is_cylinder_valve,$ck_is_filling_valve,$ck_is_reducer,$ck_is_high_pressure_pipe,$ck_is_exhaust_pipe,$workstationid,$cylindernos,'pending',$registration_no,$inspectiondate,1,$expiryDate,$vehicleRecordNo]); //last value pending
 
-                                $inspection = DB::SELECT('select  formid from  cng_kit where  CngKitSerialNo =?  and  InspectionDate =?',[$ck_serial_no,$inspectiondate]);
+                                $inspection = DB::SELECT('select  formid from  cng_kit where  CngKitSerialNo =?  and  InspectionDate =? and Inspection_Status="pending"',[$ck_serial_no,$inspectiondate]);
                                 $inspectionId =$inspection[0]->formid; // it is the auto increament no. retrieving new inspection id
                                 DB::table('vehicle_particulars')
                                 ->where(['Registration_no'=> $registration_no])
                                 ->where(['Record_no'=> $vehicleRecordNo])
                                 ->update(['lastinspectionid' => $inspectionId,'Inspection_Status' => 'pending']);                             
                                 $finalResponse ="valid";
-                                $msg ="Inspection Created in cng kit";         
+                                    $msg ="Inspection Created in cng kit";   
+                                    
+                                    $response['response']="valid";
+                                    $response['message'] ="New inspection created";
+                                    echo json_encode($response);
+                                    return;                                                                
+                                    
                             }
                             elseif ($countkits > 0 && !is_null($expiryDate) && $cylindernos >0 && !is_null($workstationid) &&
                                 !is_null($ck_serial_no) && !empty($ck_serial_no) && null !== $ck_serial_no) {
                                 $trace =$trace."/ many inspections found. checking last completed inspection.";
-                                echo 'getting lastinspection';
-                                $lastinspection = DB::SELECT('SELECT lastinspectionid,cng_kit.Inspection_Status,cng_kit.formid FROM cng_kit LEFT JOIN vehicle_particulars on cng_kit.formid = vehicle_particulars.lastinspectionid and cng_kit.VehicleRecordNo = vehicle_particulars.Record_no where vehiclerRegistrationNo=? and vehicle_particulars.stationno=? and vehicle_particulars.stickerSerialNo=? and vehicle_particulars.OwnerCnic=?',[$registration_no,$workstationid,$scan_code,$o_cnic]);             
+                                //echo 'getting lastinspection';
+                                //$lastinspection = DB::SELECT('SELECT lastinspectionid,cng_kit.Inspection_Status,cng_kit.formid FROM cng_kit LEFT JOIN vehicle_particulars on cng_kit.formid = vehicle_particulars.lastinspectionid and cng_kit.VehicleRecordNo = vehicle_particulars.Record_no where vehiclerRegistrationNo=? and vehicle_particulars.stationno=? and vehicle_particulars.stickerSerialNo=? and vehicle_particulars.OwnerCnic=?',[$registration_no,$workstationid,$scan_code,$o_cnic]);     //switching inspection status to particulars
+                                $lastinspection = DB::SELECT('SELECT lastinspectionid,vehicle_particulars.Inspection_Status,cng_kit.formid FROM cng_kit LEFT JOIN vehicle_particulars on cng_kit.formid = vehicle_particulars.lastinspectionid and cng_kit.VehicleRecordNo = vehicle_particulars.Record_no where vehiclerRegistrationNo=? and vehicle_particulars.stationno=? and vehicle_particulars.stickerSerialNo=? and vehicle_particulars.OwnerCnic=?',[$registration_no,$workstationid,$scan_code,$o_cnic]);     
+
                                 if ($lastinspection[0]->Inspection_Status=="completed") {
                                     // we need to create new inspection
                                     $trace =$trace."/ creating new inspection after last completed inspection.";
                                     DB::insert('insert into cng_kit(Make_Model,CngKitSerialNo,Cylinder_valve,Filling_valve,Reducer,HighPressurePipe,ExhaustPipe,Workshop_identity,Total_Cylinders,Inspection_Status,VehiclerRegistrationNo,InspectionDate,Location_cylinder,InspectionExpiry,VehicleRecordNo)
-                                    values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[$ck_make_n_model,$ck_serial_no,$ck_is_cylinder_valve,$ck_is_filling_valve,$ck_is_reducer,$ck_is_high_pressure_pipe,$ck_is_exhaust_pipe,$workstationid,$cylindernos,'pending',$registration_no,$inspectiondate,1,$expiryDate,$vehicleRecordNo]);
+                                    values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[$ck_make_n_model,$ck_serial_no,$ck_is_cylinder_valve,$ck_is_filling_valve,$ck_is_reducer,$ck_is_high_pressure_pipe,$ck_is_exhaust_pipe,$workstationid,$cylindernos,'pending',$registration_no,$inspectiondate,1,$expiryDate,$vehicleRecordNo]); //pending
 
-                                    $inspection = DB::SELECT('select  formid from  cng_kit where  CngKitSerialNo =?  and  InspectionDate =?',[$ck_serial_no,$inspectiondate]);
+                                    $inspection = DB::SELECT('select  formid from  cng_kit where  CngKitSerialNo =?  and  InspectionDate =? and Inspection_Status="pending"',[$ck_serial_no,$inspectiondate]);
                                     // it is the auto increament no. getting newly created inspection id
                                     $inspectionId =$inspection[0]->formid; 
                                 
@@ -980,7 +1240,12 @@ class apiController extends Controller
                                     ->where(['Record_no'=> $vehicleRecordNo])
                                     ->update(['lastinspectionid' => $inspectionId,'Inspection_Status' => 'pending']);                             
                                     $finalResponse ="valid";
-                                    $msg ="new CngKit record created for new inspection";
+                                    $msg ="new inspection created..";
+
+                                    $response['response']="valid";
+                                    $response['message'] ="New inspection created.";
+                                    echo json_encode($response);
+                                    return;                                                                                           
                                 } 
                                 else 
                                 {
@@ -1007,27 +1272,58 @@ class apiController extends Controller
                                         ]);      
                                         $finalResponse ="valid";                       
                                         $msg ="CngKit for inspection ".$formid." updated";
+                                        
+                                        $response['response']="valid";
+                                        //$response['message'] ="inspection ".$formid." updated.";
+                                        $response['message'] ="Your inspection details for CNG Kit successfully updated";
+                                        echo json_encode($response);
+                                        return;                                                                                                                        
                                     } // end of cngkit_update                 
                                 } // end of last pending transaction           
                             } // last inspection
                         }
                         else  {
-                            $finalResponse ="Invalid";
-                            $msg ="Vechicle Record not found";                         
+                            $finalResponse ="invalid";
+                            $msg ="Vechicle Record not found";                    
+
+                            $response['response']="invalid";
+
+                            if ($cylindernos <=0 )
+                            {
+                                 $response['message'] ="Cylinders must be >=1";
+                            }
+                            else
+                            {
+                            $response['message'] ="Vehicle not registered against NIC and Sticker for this station";                                
+                            }
+                            echo json_encode($response);
+                            return;                                                   
+
+                            
                         }
                     }
                     else {           
-                        $finalResponse ="Invalid";
-                        $msg ="Invalid sticker ";                                               
+                        $finalResponse ="invalid";
+                        $msg ="Invalid sticker ";     
+                        $response['response']="invalid";
+                        $response['message'] ="Invalid userid or workstation against this sticker";         
+                        echo json_encode($response);
+                        return;                                                                                                                         
                     }                       
                 } else {
                         $finalResponse ="invalid";
-                        $msg ="Invalid workstation ";                                               
+                        $msg ="Invalid workstation ";
+
+                        $response['response']="invalid";
+                        $response['message'] ="Invalid userid or workstation against this sticker";         
+                        echo json_encode($response);
+                        return;                                                                        
                     }
                 }
 
                 //---------------------------------------
                 
+                if ($isproduction==0) {
                 $response = array(
                     'finalresponse' => $finalResponse,
                     'msg' => $msg,
@@ -1037,7 +1333,12 @@ class apiController extends Controller
 
                 $response = array();
                 $response['response'] = strtolower($finalResponse);
-                $response['message'] = $msg;
+                $response['message'] = $msg;                    
+                }
+                else {
+                    //$response['finalresponse'] = $finalResponse;
+                }
+
                 echo json_encode($response);
             //} else {
             //    echo 'Inspection API is available for only Mobile Apps';
