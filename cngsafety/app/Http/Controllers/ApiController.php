@@ -340,7 +340,8 @@ class apiController extends Controller
                 {
                 // $response['response']="valid";   
                  //$response['message']=$codes;
-                    $response[]=$codes;
+                   // $response[]=$codes;
+                    $response = $codes;
                 }
                // foreach($codes as $c) { $response['message'] = $c; }
                 
@@ -756,7 +757,8 @@ class apiController extends Controller
                 
                 $location_6 = !empty($r['c6_location']) ? $r['c6_location'] : ''; //Additional field
                 $standard_6 = !empty($r['c6_iso_model']) ? $r['c6_iso_model'] : '';        //Additional field
-                $makenmodel_6 = !empty($r['c6_make__model']) ? $r['c6_make__model'] : '';
+                $makenmodel_6 = !empty($r['c6_make_model']) ? $r['c6_make_model'] : '';
+                
                 $serialno_6 = !empty($r['c6_serial_no']) ? $r['c6_serial_no'] : '';
                 $importdate_6 = $r['c6_import_date']; //Additional field
                 $vehicleParticularMsg="null";
@@ -781,7 +783,16 @@ class apiController extends Controller
                     $isproduction =$r['isproduction'];
                     
                 }
-  
+                if (!$totalcylinders>=1)
+                {
+                    $finalResponse ="invalid"; //invalid
+                    $inspectionStatus='invalid';
+
+                    $response['response'] = 'invalid'; //invalid
+                    $response['message'] = 'There must be at least one cylinder. Invalid total cylinders';
+                    echo json_encode($response);
+                     return;                                
+                }
                 $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$workstationid]);
                 if (!empty($vechicle))
                 {
@@ -847,7 +858,7 @@ class apiController extends Controller
                                                     if (!is_null($serialno_2) && !empty($serialno_2) && isset($serialno_2) ) {   
                                                         $trace=$trace."/ in cylinder2";
                                                         DB::insert('insert into kit_cylinders
-                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_2,$kitserialno,$inspectiondate,$importdate_2,$standard_2,$makenmodel_2,$location_2]);
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 2 ,$serialno_2,$kitserialno,$inspectiondate,$importdate_2,$standard_2,$makenmodel_2,$location_2]);
                                                         $cylinderserialnocount=$cylinderserialnocount+1;
                                                         $cylinderlist=$cylinderlist.",".$serialno_2;
                                                     }
@@ -855,7 +866,7 @@ class apiController extends Controller
                                                     {                       
                                                         $trace=$trace."/ in cylinder3";
                                                         DB::insert('insert into kit_cylinders
-                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_3,$kitserialno,$inspectiondate,$importdate_3,$standard_3,$makenmodel_3,$location_3]);
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 3 ,$serialno_3,$kitserialno,$inspectiondate,$importdate_3,$standard_3,$makenmodel_3,$location_3]);
                                                         $cylinderserialnocount=$cylinderserialnocount+1;
                                                         $cylinderlist=$cylinderlist.",".$serialno_3;
                                                     }
@@ -863,7 +874,7 @@ class apiController extends Controller
                                                     {                        
                                                         $trace=$trace."/ in cylinder4";
                                                         DB::insert('insert into kit_cylinders
-                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_4,$kitserialno,$inspectiondate,$importdate_4,$standard_4,$makenmodel_4,$location_4]);
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 4 ,$serialno_4,$kitserialno,$inspectiondate,$importdate_4,$standard_4,$makenmodel_4,$location_4]);
                                                         $cylinderserialnocount=$cylinderserialnocount+1;
                                                         $cylinderlist=$cylinderlist.",".$serialno_4;
                                                     }
@@ -871,7 +882,7 @@ class apiController extends Controller
                                                     {                       
                                                         $trace=$trace."/ in cylinder5";
                                                         DB::insert('insert into kit_cylinders
-                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_5,$kitserialno,$inspectiondate,$importdate_5,$standard_5,$makenmodel_5,$location_5]);
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 5 ,$serialno_5,$kitserialno,$inspectiondate,$importdate_5,$standard_5,$makenmodel_5,$location_5]);
                                                         $cylinderserialnocount=$cylinderserialnocount+1;
                                                         $cylinderlist=$cylinderlist.",".$serialno_5;
                                                     }
@@ -879,7 +890,7 @@ class apiController extends Controller
                                                     {                        
                                                         $trace=$trace."/ in cylinder6";
                                                         DB::insert('insert into kit_cylinders
-                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_6,$kitserialno,$inspectiondate,$importdate_6,$standard_6,$makenmodel_6,$location_6]);
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 6 ,$serialno_6,$kitserialno,$inspectiondate,$importdate_6,$standard_6,$makenmodel_6,$location_6]);
                                                         $cylinderserialnocount=$cylinderserialnocount+1;
                                                         $cylinderlist=$cylinderlist.",".$serialno_6;
                                                     }
@@ -978,6 +989,13 @@ $msg="Inspection status is completed against vehicle ".$registration_no."  and i
                                                             }
                                                         } //end of incomplete inspections         
                                                     }//cylinder count check
+                                                    else {                                            $msg="Cylinders cound does not match";
+                                                        $finalResponse ="invalid";  //incomplete
+                                                        $response['response']="invalid"; //incomplete
+                                                        $response['message']=$msg;
+                                                        echo json_encode($response);
+                                                        return;                                                        
+                                                    }
                                                 } // end of inserting in kit_cylinders      
                                             } //valid inspection id found to process the inspection
                                             else {
@@ -992,7 +1010,8 @@ $msg="Inspection status is completed against vehicle ".$registration_no."  and i
                                                    
                                                    if ($totalcylinders < 0 ) { 
                                                     $response['response']="invalid";
-                                                    $response['message'] ="Total cylinders must be >=1 ";                
+                                                    $response['message'] ="Total cylinders must be >=1 ";     
+                                                    echo json_encode($response);           
                                                    return;
 
                                                     }
