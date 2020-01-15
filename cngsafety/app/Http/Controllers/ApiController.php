@@ -521,11 +521,20 @@ class apiController extends Controller
 
                             if($countowners ==0 ) //insert. no owner found
                             {
-                                if ($stickerCount ==1)  //sticker exists
+                                if ($stickerCount ==1 and $stickerCnic=="0" )  //sticker exists
                                 {
                                     //sticker is free to allocate to any vechicle.
                                     $freesticker=$scan_code;
+                                    
                                     DB::insert('insert into owner__particulars (Owner_name,CNIC,Cell_No,Address,VehicleReg_No,StickerSerialNo) values (?,?,?,?,?,?)', [$o_name, $o_cnic,$o_cell_no,$o_address,$registration_no,$scan_code]);
+                              
+                                   DB::table('CodeRollsSecondary')
+                                    ->where(['serialno'=> $scan_code])
+                                    ->update([
+                                        'cnic' => $o_cnic,
+                                        'vehicleRegNo' => $registration_no
+                                        ]);                                    
+
                                     $ownermsg="Owner Created";                
                                     $isvalid="valid";
                                 } else {

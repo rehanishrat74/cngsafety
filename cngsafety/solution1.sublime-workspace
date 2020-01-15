@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"print",
+				"print_r"
+			],
+			[
+				"code",
+				"CodeRollsSecondary"
+			],
+			[
+				"left",
+				"leftjoin"
+			],
+			[
+				"Sticker",
+				"StickerSerialNo"
+			],
+			[
 				"Insp",
 				"Inspection_Status"
 			],
@@ -19,6 +35,15 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "app/Rules/ValidStickerForWorkstation.php",
+			"settings":
+			{
+				"buffer_size": 3076,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -55,24 +80,32 @@
 		"/E/xampp/htdocs/laravel/cngsafety",
 		"/E/xampp/htdocs/laravel/cngsafety/app",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http",
-		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Rules",
 		"/E/xampp/htdocs/laravel/cngsafety/resources",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views",
-		"/E/xampp/htdocs/laravel/cngsafety/routes",
-		"/E/xampp/htdocs/laravel/cngsafety/tests",
-		"/E/xampp/htdocs/laravel/cngsafety/vendor"
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle",
+		"/E/xampp/htdocs/laravel/cngsafety/routes"
 	],
 	"file_history":
 	[
-		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/ApiController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/registrations.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/newVehicle.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Rules/ValidStickerForWorkstation.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Rules/Cnic.php",
 		"/E/xampp/htdocs/laravel/cngsafety/routes/web.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/editVehicle.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/NewVehicleController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/VehicleLogicController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/UserViewController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/ApiController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Rules/workstationno.php",
+		"/C/Users/DELL/Desktop/UserViewController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user/user_view.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/welcome.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/PublicController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user/showuser.blade.php",
-		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/UserViewController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Auth/RegisterController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/auth/register.blade.php",
-		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user/user_view.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Middleware/HttpsProtocol.php",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/home.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Middleware/VerifyCsrfToken.php",
@@ -84,7 +117,7 @@
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 46.0
 	},
 	"find_in_files":
 	{
@@ -98,6 +131,18 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"cellforinspection",
+			"update",
+			"hidden",
+			"update",
+			"edit",
+			"update",
+			"isnull",
+			"store",
+			"doupdatecngcylinders",
+			"test",
+			"dologinaccess",
+			"route",
 			"here",
 			"doUpdateCngKit",
 			"updated",
@@ -137,14 +182,45 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "app/Rules/ValidStickerForWorkstation.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3076,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2812,
+								2791
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 780.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 27.0
+		"height": 34.0
 	},
 	"input":
 	{
@@ -181,7 +257,7 @@
 	"project": "solution1.sublime-project",
 	"replace":
 	{
-		"height": 50.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -219,7 +295,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 374.0,
+	"side_bar_width": 277.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

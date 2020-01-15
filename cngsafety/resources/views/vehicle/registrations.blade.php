@@ -95,7 +95,7 @@
                                         >
                                                 <option value="Registration_no">Registration no</option>
                                                 <option value="CNIC">CNIC</option>
-                                                <option value="serialno">Serial no</option>
+                                                <option value="serialno">Sticker</option>
                                                 <option value="Owner_name">Owner</option>
                                                 <option value="stationno">Station no</option>
                                                 <option value="created_at">date</option>             
@@ -175,10 +175,28 @@
                                                  @foreach ($vehicles as $vehicle)                               
                                                    <tr>
                                                      <td>{{$vehicle->Record_no}}</td>
-                                                     <td>Reg: {{$vehicle->Registration_no}}<br>
+                                                     <!-- td starts here -->
+                                                        <?php 
+                                                        if (Auth::user()->regtype=="admin")
+                                                        {?>
+
+                                                     <td><a href="{{route('edit-vehicle',$vehicle->Record_no)}}">
+                                                        Reg: {{$vehicle->Registration_no}}<br>
                                                         Chasis: {{$vehicle->Chasis_no}}<br>Engine: {{$vehicle->Engine_no}}<br>
-        <?php if (isset($vehicle->StickerSerialNo)){echo "Sticker: ".$vehicle->StickerSerialNo;}?>
+                                                    <?php if (isset($vehicle->StickerSerialNo)){echo "Sticker: ".$vehicle->StickerSerialNo;}?>
+                                                        </a>
                                                      </td>
+                                                    <?php } else
+                                                    {?>
+                                                    <td>
+                                                        Reg: {{$vehicle->Registration_no}}<br>
+                                                        Chasis: {{$vehicle->Chasis_no}}<br>Engine: {{$vehicle->Engine_no}}<br>
+                                                        <?php if (isset($vehicle->StickerSerialNo)){echo "Sticker: ".$vehicle->StickerSerialNo;}?>    
+                                                    </td>
+                                                    <?php }
+                                                    ?>
+                                                    <!-- td ends  here -->
+                                                    
                                                      <td>{{$vehicle->Make_type}}</td>
                                                      <td>{{$vehicle->businesstype}}</td>
                                                      <td>{{$vehicle->Owner_name}}<br>Nic: {{$vehicle->OwnerCnic}}<br>Mob: {{$vehicle->Cell_No}}<br>Addr: {{$vehicle->Address}}</td>

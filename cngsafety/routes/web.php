@@ -87,6 +87,8 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
 
     Route::post('/newvehicle','NewVehicleController@store')->name('reg-vehicle');    
     Route::get('/newvehicle','NewVehicleController@index')->name('new-vehicle');
+    Route::get('/editvehicle/{id}','NewVehicleController@edit')->name('edit-vehicle');
+    Route::post('/editvehicle/{id}','NewVehicleController@update')->name('update-vehicle');      
 
     Route::get('/newcylinderreg/{id}','CylindersController@createcylinder')->name('newcylinderreg');  
     Route::post('/cylinders','CylindersController@store')->name('cylinders');    

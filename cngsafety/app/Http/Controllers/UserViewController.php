@@ -111,7 +111,7 @@ if (Auth::user()->regtype =='admin')
       } 
       elseif ($data->userregtypehidden=="workshop")
       {
-         $workshopfields =array('username' => 'required', 'useraddress' => 'required', 'usercontact' => 'required', 'userownercellno' => 'required' , 'userownername'=> 'required' , 'usertechnician'=>'required' );
+         $workshopfields =array('username' => 'required', 'useraddress' => 'required', 'usercontact' => 'required', 'userownercellno' => 'required' , 'userownername'=> 'required' , 'usertechnician'=>'required','usercellnoforinspection'=>'required_without:usercellnoforinspection|regex:/^\+?[92](\d+)$/' );
 
              $this->validate($data,$workshopfields);        
               
