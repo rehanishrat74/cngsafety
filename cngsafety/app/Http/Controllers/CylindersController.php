@@ -1354,16 +1354,19 @@ public function showUploadFile(Request $request) {
                     $inspectionStatus='pending';
                     if ($cylinderserialnocount == $cylindernos)
                     {   
-                        if ($cylindervalve=="on" && $fillingvalve=="on" && $Reducer =="on" && $hpp=="on" && $exhaustpipe=="on")
+                        /*if ($cylindervalve=="on" && $fillingvalve=="on" && $Reducer =="on" && $hpp=="on" && $exhaustpipe=="on")
                         {
                             if ($registeredserialno==1)
                             {
                                 $inspectionStatus='completed';    
                             }
                             
-                        }
+                        }*/
 
-                        
+                        if ($registeredserialno==1)
+                            {
+                                $inspectionStatus='completed';    
+                            }                        
                     }
      
 
