@@ -50,7 +50,7 @@
 
             <div class="float-left">
                 <!-- PAGE HEADING TAG - START -->
-                <h1 class="title">Cylinder Registrations</h1>
+                <h1 class="title">Inspection Form</h1>
                 <!-- PAGE HEADING TAG - END -->                            
             </div>
 
@@ -89,38 +89,41 @@
 <!--              ++++++++++++++++++++                      -->
 
                   <!--<div class="content-body">-->
-                      <div class="row" >
+                      <div class="row"  >
                         <!--class="col-lg-8 col-md-9 col-10"-->
 <!------------------------Inspection / expiry date ----------------------------------------------->
 <?php
 use Carbon\Carbon;
 $dt=Carbon::today();
 
-//print_r($newvehicle);
 ?>
 
 
-
-                                    <div class="form-group row" >
-                                      <div class="col-lg-12" style="text-align: center;">
-                                        <div class="form-group row">
-                                            <div class="col-lg-3">
+                                  <div class="col-lg-12" style="text-align: center">
+                                    <div class="form-group row"  >
+                                      <div class="col-lg-12" style="text-align: left;">
+                                        <div class="form-group row" >
+                                            <div class="col-lg-4">
                                                 <label class="font-weight-bold" >Inspection Date</label>
-                                            </div>                                      
-                                            <div class="col-lg-3">
-                                                 <!--<input type="text" class="form-control datepicker" data-format="mm/dd/yyyy" value="" name="inspectiondate_C1" id="inspectiondate_C1" placeholder="Inspection Date">-->
+
                                                 <input type="text" class="form-control text-dark"  value="<?php echo $dt;?>" name="inspectiondate" id="inspectiondate" placeholder="Inspection Date" data-format="mm/dd/yyyy" disabled>
                                                                                                  
                                             </div>
-                                            <div class="col-lg-3">
-                                                <label class="font-weight-bold" >Inspection Expired at</label>
-                                            </div>
-                                            <div class="col-lg-3">
+                                            <div class="col-lg-4">
+                                                <label class="font-weight-bold" >Inspection Expired at</label>                
                                                 <input type="text" class="form-control text-dark" name="expiryDate" id="$expiryDate" value="<?php echo $dt->addMonths(12);?>" disabled="true">                                          
                                             </div>
+                                            <!---------------------------------------------->
+                                            <div class="col-lg-4">
+                                                <label class="font-weight-bold" >Sticker No</label>                                       
+                                                <input type="text" class="form-control text-dark" name="stickerSerialNo" id="$stickerSerialNo" value="<?php echo $stationno[0]->stickerSerialNo;?>" disabled="true">                                          
+                                            </div>
+                                            <!---------------------------------------------->
+
                                         </div>
                                       </div>      
                                     </div>
+                                  </div>
 <!---------------------------------------------------------------------------------------------->
 
                         <div class="col-lg-12"  >
@@ -143,7 +146,7 @@ $dt=Carbon::today();
 
                                     <div class="form-group row" >
                                       <div class="col-lg-3">
-                                              <label for="maketype">No of cylinders:</label>
+                                              <label for="cylindernos">No of cylinders:</label>
                                               <select class="form-control" id="cylindernos" name="cylindernos">
                                                 <option value="1" <?php if (old('cylindernos')=="1") { echo "selected";} ?> >1</option>
                                                 <option value="2" <?php if (old('cylindernos')=="2") { echo "selected";} ?>>2</option>
@@ -166,27 +169,26 @@ $dt=Carbon::today();
                                               <label for="chasisno">Vehicle Registration No</label>
                                               <input type="text" class="form-control text-dark" name="vregno" id="vregno" placeholder="Enter Registration No" 
                                               value="{{$newvehicle}}" readonly>
-                                              <input type="hidden" name="record_id" id="record_id" 
-                                              value =<?php echo Request("recordid")?>
-                                              >
+                                              <input type="hidden" name="record_id" 
+                                              id="record_id" value =<?php echo Request("recordid")?> >
+                                              <input type="hidden" name="hidden_vregno" 
+                                              id="hidden_vregno" value ="{{$newvehicle}}" >                                              
                                       </div>
 
 
                                       <div class="col-lg-3">
                                               <label for="chasisno">Work Station Id</label>
                                               <input type="text" class="form-control{{ $errors->has('workstationid') ? ' is-invalid' : '' }}" name="workstationid" id="workstationid" placeholder="Work Station Id" value="{{$stationno[0]->stationno}}" autocomplete="off" readonly>
-
+                                              
                                               @if ($errors->has('workstationid'))
                                                 <span class="invalid-feedback" role="alert">
                                                   <strong>{{ $errors->first('workstationid') }}</strong>
                                                 </span>
-                                              @endif                                
+                                              @endif    
+                                              <input type  ="hidden" name ="hidden_workstationid" value="{{$stationno[0]->stationno}}">                            
 
                                       </div>
-                                      <!--<div class="col-lg-4">
-                                              <label for="chasisno">Inspection Status</label>
-                                              <input type="text" class="form-control" name="inspectionStatus" id="inspectionStatus" placeholder="Pending" disabled="true">
-                                      </div>-->
+                               
 
                                     </div>
 <!--------------------------------row 3-------------------------------------------------->
@@ -215,7 +217,7 @@ $dt=Carbon::today();
                                             <div class="col-lg-4" >Standard</div>
                                             <div class="col-lg-8" >
                                                 <select class="form-control" id="scancode_C1" name="scancode_C1">
-                                                  <option value="NZ5454" <?php if (old('scancode_C1')=="NZ5454") { echo "selected";} ?>>NZ5454</option>
+                                                  <option value="NZS 5454-1989" <?php if (old('scancode_C1')=="NZS 5454-1989") { echo "selected";} ?>>NZS 5454-1989</option>
                                                   <option value="ISO 11439" <?php if (old('scancode_C1')=="ISO 11439") { echo "selected";} ?>>ISO 11439</option>
                                                 </select>
                                                     @if ($errors->has('scancode_C1'))
@@ -227,7 +229,6 @@ $dt=Carbon::today();
                                             </div>
                                           </div>   
 
-                                            <!--<input type="text" class="form-control{{ $errors->has('scancode_C1') ? ' is-invalid' : '' }}" name="scancode_C1" id="scancode_C1" placeholder="Standard" value="{{ old('scancode_C1') }}" autocomplete="off">-->
 
                                         </div>
 <!--------------cylinder location----------->
@@ -262,11 +263,6 @@ $dt=Carbon::today();
                                         </div>
 
 
-
-                                        <!--<div class="col-lg-4">
-                                             <input type="text" class="form-control datepicker" data-format="mm/dd/yyyy" value="" name="inspectiondate_C1" id="inspectiondate_C1" placeholder="Inspection Date">
-                                        </div>-->
-                                            
 
                                         <div class="col-lg-4">
                                              <input type="text" class="form-control{{ $errors->has('importdate_C1') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy" value="{{ old('importdate_C1') }}" name="importdate_C1" id="importdate_C1" placeholder="Import Date" autocomplete="off">
@@ -305,13 +301,12 @@ $dt=Carbon::today();
                                         </div>
 
                                         <div class="col-lg-4">
-                                            <!--<input type="text" class="form-control{{ $errors->has('scancode_C2') ? ' is-invalid' : '' }}"  name="scancode_C2" id="scancode_C2" placeholder="Standard"
-                                            value="{{ old('scancode_C2') }}" autocomplete="off">-->
+                   
                                             <div class="form-group row" >
                                               <div class="col-lg-4">Standard</div>
                                               <div class="col-lg-8">
                                                     <select class="form-control" id="scancode_C2" name="scancode_C2">
-                                                          <option value="NZ5454" <?php if (old('scancode_C2')=="NZ5454") { echo "selected";} ?>>NZ5454</option>
+                                                          <option value="NZS 5454-1989" <?php if (old('scancode_C2')=="NZS 5454-1989") { echo "selected";} ?>>NZS 5454-1989</option>
                                                           <option value="ISO 11439" <?php if (old('scancode_C2')=="ISO 11439") { echo "selected";} ?>>ISO 11439</option>
                                                     </select>
 
@@ -354,9 +349,7 @@ $dt=Carbon::today();
                                               @endif                                                 
                                         </div>
 
-                                        <!--<div class="col-lg-4">
-                                            <input type="text" class="form-control datepicker" data-format="mm/dd/yyyy" value="" name="inspectiondate_C2" id="inspectiondate_C2" placeholder="Inspection Date">
-                                        </div>-->
+              
                                         <div class="col-lg-4">
                                             <input type="text" class="form-control{{ $errors->has('importdate_C2') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy" value="" name="importdate_C2" id="importdate_C2" placeholder="Import Date"
                                             value="{{ old('importdate_C2') }}" autocomplete="off">           
@@ -396,13 +389,12 @@ $dt=Carbon::today();
                       
 
                                         <div class="col-lg-4">
-                                            <!--<input type="text" class="form-control{{ $errors->has('scancode_C3') ? ' is-invalid' : '' }}" name="scancode_C3" id="scancode_C3" placeholder="Standard" value="{{ old('scancode_C3') }}" autocomplete="off">-->
-
+                           
                                             <div class="form-group row" >
                                               <div class="col-lg-4">Standard</div>
                                               <div class="col-lg-8">
                                                   <select class="form-control" id="scancode_C3" name="scancode_C3">
-                                                        <option value="NZ5454" <?php if (old('scancode_C3')=="NZ5454") { echo "selected";} ?>>NZ5454</option>
+                                                        <option value="NZS 5454-1989" <?php if (old('scancode_C3')=="NZS 5454-1989") { echo "selected";} ?>>NZS 5454-1989</option>
                                                         <option value="ISO 11439" <?php if (old('scancode_C3')=="ISO 11439") { echo "selected";} ?>>ISO 11439</option>
                                                   </select>
 
@@ -445,10 +437,7 @@ $dt=Carbon::today();
                                               @endif                                                                                                    
                                         </div>
 
-                                        <!--<div class="col-lg-4">
-                                            <input type="text" class="form-control datepicker" data-format="mm/dd/yyyy" value="" name="inspectiondate_C3" id="inspectiondate_C3" placeholder="Inspection Date">   
-
-                                        </div>-->
+                         
                                         <div class="col-lg-4">
                                             <input type="text" class="form-control{{ $errors->has('importdate_C3') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy" value="{{ old('importdate_C3') }}" name="importdate_C3" id="importdate_C3" placeholder="Import Date" autocomplete="off">   
                                               @if ($errors->has('importdate_C3'))
@@ -485,13 +474,12 @@ $dt=Carbon::today();
                                         </div>                                      
 
                                         <div class="col-lg-4">
-                                            <!--<input type="text" class="form-control{{ $errors->has('scancode_C4') ? ' is-invalid' : '' }} " name="scancode_C4" id="scancode_C4" placeholder="Standard" value="{{ old('scancode_C4') }}" autocomplete="off">-->
-
+                                 
                                             <div class="form-group row" >
                                               <div class="col-lg-4">Standard</div>
                                               <div class="col-lg-8">
                                           <select class="form-control" id="scancode_C4" name="scancode_C4">
-                                                <option value="NZ5454" <?php if (old('scancode_C4')=="NZ5454") { echo "selected";} ?>>NZ5454</option>
+                                                <option value="NZS 5454-1989" <?php if (old('scancode_C4')=="NZS 5454-1989") { echo "selected";} ?>>NZS 5454-1989</option>
                                                 <option value="ISO 11439" <?php if (old('scancode_C4')=="ISO 11439") { echo "selected";} ?>>ISO 11439</option>
                                           </select>
 
@@ -533,10 +521,7 @@ $dt=Carbon::today();
                                               @endif                                                                                                   
                                         </div>
 
-                                        <!--<div class="col-lg-4">
-                                            <input type="text" class="form-control datepicker" data-format="mm/dd/yyyy" value="" name="inspectiondate_C4" id="inspectiondate_C4" placeholder="Inspection Date">   
-
-                                        </div>-->
+                                
                                         <div class="col-lg-4">
                                             <input type="text" class="form-control{{ $errors->has('importdate_C4') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy" value="{{ old('importdate_C4') }}" name="importdate_C4" id="importdate_C4" placeholder="Import Date" autocomplete="off">   
                                               @if ($errors->has('importdate_C4'))
@@ -574,12 +559,12 @@ $dt=Carbon::today();
                                         </div>
                       
                                         <div class="col-lg-4">
-                                            <!--<input type="text" class="form-control{{ $errors->has('scancode_C5') ? ' is-invalid' : '' }}" name="scancode_C5" id="scancode_C5" placeholder="Standard" value="{{ old('scancode_C5') }}" autocomplete="off">-->
+                                       
                                             <div class="form-group row" >
                                               <div class="col-lg-4">Standard</div>
                                               <div class="col-lg-8">
                                           <select class="form-control" id="scancode_C5" name="scancode_C5">
-                                                <option value="NZ5454" <?php if (old('scancode_C5')=="NZ5454") { echo "selected";} ?>>NZ5454</option>
+                                                <option value="NZS 5454-1989" <?php if (old('scancode_C5')=="NZS 5454-1989") { echo "selected";} ?>>NZS 5454-1989</option>
                                                 <option value="ISO 11439" <?php if (old('scancode_C5')=="ISO 11439") { echo "selected";} ?>>ISO 11439</option>
                                           </select>
 
@@ -625,9 +610,7 @@ $dt=Carbon::today();
                                               @endif                                                                                                   
                                         </div>
 
-                                        <!--<div class="col-lg-4">
-                                            <input type="text" class="form-control datepicker" data-format="mm/dd/yyyy" value="" name="inspectiondate_C5" id="inspectiondate_C5" placeholder="Inspection Date">              
-                                        </div>-->
+                                    
                                         <div class="col-lg-4">
                                             <input type="text" class="form-control{{ $errors->has('importdate_C5') ? ' is-invalid' : '' }} datepicker"
                                             name="importdate_C5" data-format="mm/dd/yyyy" id="importdate_C5" placeholder="Import Date" value="{{ old('importdate_C5') }}" autocomplete="off">
@@ -661,12 +644,12 @@ $dt=Carbon::today();
                                         </div>
 
                                         <div class="col-lg-4">
-                                            <!--<input type="text" class="form-control{{ $errors->has('scancode_C6') ? ' is-invalid' : '' }} " name="scancode_C6" id="scancode_C6" placeholder="Standard" value="{{ old('scancode_C6') }}" autocomplete="off">-->
+                                    
                                             <div class="form-group row" >
                                               <div class="col-lg-4">Standard</div>
                                               <div class="col-lg-8">
                                           <select class="form-control" id="scancode_C6" name="scancode_C6">
-                                                <option value="NZ5454" <?php if (old('scancode_C6')=="NZ5454") { echo "selected";} ?>>NZ5454</option>
+                                                <option value="NZS 5454-1989" <?php if (old('scancode_C6')=="NZS 5454-1989") { echo "selected";} ?>>NZS 5454-1989</option>
                                                 <option value="ISO 11439" <?php if (old('scancode_C6')=="ISO 11439") { echo "selected";} ?>>ISO 11439</option>
                                           </select>
 
@@ -708,10 +691,7 @@ $dt=Carbon::today();
                                               @endif                                                                                                   
                                         </div>
 
-                                        <!--<div class="col-lg-4">
-                                            <input type="text" class="form-control datepicker" 
-                                            name="inspectiondate_C6" id="inspectiondate_C6" placeholder="Inspection Date" data-format="mm/dd/yyyy">
-                                        </div>-->
+                        
                                         <div class="col-lg-4">
                                             <input type="text" class="form-control{{ $errors->has('importdate_C6') ? ' is-invalid' : '' }}  datepicker" name="importdate_C6" id="importdate_C6" placeholder="Import Date" data-format="mm/dd/yyyy" value="{{ old('importdate_C6') }}" autocomplete="off">
                                               @if ($errors->has('serialno_C6'))

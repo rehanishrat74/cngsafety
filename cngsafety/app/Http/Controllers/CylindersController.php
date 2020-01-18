@@ -48,7 +48,7 @@ class CylindersController extends Controller
         $results = DB::SELECT('select Location_id,Location_name FROM cylinder_locations order by Location_id;');        
         //$newvehicle=array([$id]);
         $recordid=Request("recordid");
-        $stationno=DB::SELECT('select stationno FROM vehicle_particulars where Record_no=?',[$recordid]);
+        $stationno=DB::SELECT('select stationno,stickerSerialNo FROM vehicle_particulars where Record_no=?',[$recordid]);
         
         return view('vehicle.cylinders',['cylinder_locations'=>$results,'newvehicle'=>$id,'treeitems'=>$treeitems,'stationno'=>$stationno ]);        
 
@@ -72,35 +72,28 @@ class CylindersController extends Controller
     public function store(Request $request)
     {
 
+//echo 'here';
 
-
-        $kitfields =array('vregno' => 'required','kitmnm' => 'required','kitseriano' => 'required','workstationid' => 'required');
+        
+        $kitfields =array('kitmnm' => 'required','kitseriano' => 'required');
+        
         $cylinderfields=array();
         $cylinderfield=array();
         $cylindernos= $request->input('cylindernos');
-
-        for ($count=1 ;$count<= $cylindernos;++$count){
+//echo 'cylinder nos ='.$cylindernos;
+//return;
+       for ($count=1 ;$count<= $cylindernos;++$count){
+       
             $cylinderfield = array('makenmodel_C'.$count =>'required',
-                                    'serialno_C'.$count=>'required',
+                                    'serialno_C'.$count => 'required',
                                     'importdate_C'.$count=>'required',
                                     'scancode_C'.$count=>'required'
                                     );
             $cylinderfields=array_merge($cylinderfields,$cylinderfield);
         }
-        $kitfields=array_merge($kitfields,$cylinderfields);
-        $this->validate($request,$kitfields);
         
-
-
-
-
-
-        //$this->validate($request,$kitfields);
-        
-                //$imageName = time().'.'.request()->imgRegPlate->getClientOriginalExtension();
-
-
-        //$request->input('imgRegPlate')->image
+ $kitfields=array_merge($kitfields,$cylinderfields);
+$this->validate($request,$kitfields);
 
             $recordid= $request->record_id;
             $location = 1; //$request->input('location');
@@ -391,14 +384,19 @@ class CylindersController extends Controller
                     {   
                         if ($cylindervalve=="on" && $fillingvalve=="on" && $Reducer =="on" && $hpp=="on" && $exhaustpipe=="on")
                         {
-                            if ($registeredserialno==1)
+                            /*if ($registeredserialno==1)
+                            {
+                                $inspectionStatus='completed';
+
+                            }*/
+                            //kit status not matter with completed inspection
+                            
+                        }
+                        if ($registeredserialno==1)
                             {
                                 $inspectionStatus='completed';
 
                             }
-                            
-                        }
-                        
                         
                     }
 

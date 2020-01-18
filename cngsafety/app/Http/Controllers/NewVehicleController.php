@@ -318,6 +318,7 @@ $sortby="Record_no"; // to make compatible with vehiclelogiccontroller at the en
 $request->validate([
 
 //'scancode' => 'required',
+    //station code, cnic and reg no are commented because in edit mode the fields are disabled
 'maketype' => 'required',
 //'Stickerno'=> ['required',new ValidStickerForWorkstation($workstationParams)],
 //'registrationNo' => 'required', 

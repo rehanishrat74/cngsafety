@@ -76,3 +76,16 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+php artisan cache:clear
+php artisan route:clear
+php artisan config:clear 
+php artisan view:clear
+1
+2
+3
+4
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
+});

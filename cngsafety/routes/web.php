@@ -90,6 +90,7 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/editvehicle/{id}','NewVehicleController@edit')->name('edit-vehicle');
     Route::post('/editvehicle/{id}','NewVehicleController@update')->name('update-vehicle');      
 
+    //Route::get('/newcylinderreg/{id}','CylindersController@createcylinder')->name('newcylinderreg');  
     Route::get('/newcylinderreg/{id}','CylindersController@createcylinder')->name('newcylinderreg');  
     Route::post('/cylinders','CylindersController@store')->name('cylinders');    
     
