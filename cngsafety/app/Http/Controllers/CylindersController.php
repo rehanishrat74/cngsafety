@@ -872,7 +872,7 @@ public function showUploadFile(Request $request) {
 
 
         $vehicles= DB::table('vehicle_particulars')
-                ->select('Inspection_Status')
+                ->select('Inspection_Status','vehicle_particulars.StickerSerialNo')
                 ->where('lastinspectionid','=',$id)
                 ->get();
 

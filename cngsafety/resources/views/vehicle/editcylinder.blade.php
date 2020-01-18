@@ -73,7 +73,8 @@
     <div class="col-xl-12">
       <section class="box ">
         <header class="panel_header">
-          <h2 class="title float-left">Edit Inspection Form {{ $InspectionForm[0]->formid}}</h2>
+          <h2 class="title float-left">Edit Inspection Form {{ $InspectionForm[0]->formid}}
+          </h2>
           <div class="actions panel_actions float-right">
             <a class="box_toggle fa fa-chevron-down"></a>
             <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
@@ -97,36 +98,36 @@ $dt=Carbon::today();
   {{ csrf_field() }}
                              <div class="col-lg-12" >   
                                     <div class="form-group row" >
-                                      <div class="col-lg-12" >
-                                        <div class="form-group row"  >
-                                            <div class="col-lg-3">
-                                                <label class="font-weight-bold" >Inspection Date</label>
-                                            </div>                                      
-                                            <div class="col-lg-3">
-                                                 
-
-                                        <?php 
-                                            $mmddyy = date('m/d/Y', strtotime($InspectionForm[0]->InspectionDate));
-                                        ?>
-
-                                                <!--<label class="form-control" >{{ $mmddyy}}</label> -->
+                                      <div class="col-lg-4" >
+                                          
+                                          <div  class="form-group row">
+                                              <label class="font-weight-bold" >Inspection Date</label>
+                                              <?php $mmddyy = date('m/d/Y', strtotime($InspectionForm[0]->InspectionDate));?>
                                                 <input type="text" class="form-control"  
-                                                value="<?php echo  $mmddyy;?>" name="inspectiondate" id="inspectiondate" placeholder="Inspection Date" data-format="mm/dd/yyyy" readonly>
+                                                value="<?php echo  $mmddyy;?>" name="inspectiondate" id="inspectiondate" placeholder="Inspection Date" data-format="mm/dd/yyyy" readonly>                                              
+                                          </div>
 
-
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <label class="font-weight-bold" >Inspection Expired at</label>
-                                            </div>
-                                            <div class="col-lg-3">
+                                      </div>    
+                                      <div class="col-lg-4">
                                         
-                                        <?php 
-                                            $mmddyy = date('m/d/Y', strtotime($InspectionForm[0]->InspectionExpiry));
-                                        ?>                                              
-                                                
-                                                <label class="form-control" >{{$mmddyy }}</label>                                                                                         
-                                            </div>
-                                        </div>
+                                          <div  class="form-group row">
+                                              <label class="font-weight-bold" >Inspection Expired at</label>
+                                              <?php $mmddyy = date('m/d/Y', strtotime($InspectionForm[0]->InspectionExpiry));?>
+                                             
+                                              <input type="text" class="form-control"  
+                                                value="<?php echo  $mmddyy;?>" name="inspectionexpiresat" id="inspectionexpiresat" placeholder="Inspection Expires at" data-format="mm/dd/yyyy" readonly>  
+                                               
+                                          </div>
+
+                                      </div>
+                                      <div class="col-lg-4">
+                                        
+                                         <div  class="form-group row">
+                                            <label class="font-weight-bold" >Sticker</label>
+                                            <input type="text" class="form-control"  
+                                                value="<?php echo $vehicles[0]->StickerSerialNo;?>" name="sticker" id="sticker" placeholder="Sticker"  readonly> 
+
+                                         </div>
                                       </div>      
                                     </div>
                               </div>
@@ -276,15 +277,9 @@ $dt=Carbon::today();
                                           <div class="form-group row" >
                                             <div class="col-lg-4" >Standard</div>
                                               <div class="col-lg-8" >
-                                                  <!--<input type="text" class="form-control{{ $errors->has($scancode) ? ' is-invalid' : '' }}" 
-                                                  name="<?php //echo $scancode;?>" id="<?php //echo $scancode;?>" placeholder="Standard" value="{{$Cylinder->Standard}}" autocomplete="off">
-                                                    @if ($errors->has($scancode))
-                                                      <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $errors->first($scancode) }}</strong>
-                                                      </span>
-                                                    @endif   --> 
+                         
                                                     <select class="form-control" id="<?php echo $scancode;?>"  name="<?php echo $scancode;?>" >
-                                                          <option value="NZ5454" <?php if ($Cylinder->Standard=="NZ5454") { echo "selected";} ?>>NZ5454</option>
+                                                          <option value="NZS 5454-1989" <?php if ($Cylinder->Standard=="NZS 5454-1989") { echo "selected";} ?>>NZS 5454-1989</option>
                                                           <option value="ISO 11439" <?php if ($Cylinder->Standard=="ISO 11439") { echo "selected";} ?>>ISO 11439</option>
                                                     </select>
 
