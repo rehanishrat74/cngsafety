@@ -89,23 +89,19 @@
 
 <!------------------------Inspection / expiry date ----------------------------------------------->
                               <div class="col-12">
-                                    <div class="form-group row" >
-                                      <div class="col-lg-12" >
-                                        <div class="form-group row">
-                                            <div class="col-lg-3">
-                                                <label  >Inspection Date</label>
-                                            </div>                                      
-                                            <div class="col-lg-3">
-                                                 <label class="form-control" >{{ $InspectionForm[0]->InspectionDate}}</label>
-                                                                                                                                                 
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <label  >Inspection Expired at</label>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <label class="form-control" >{{ $InspectionForm[0]->InspectionExpiry}}</label>                                          
-                                            </div>
+                                    <div class="form-group row" >               
+                                        <div class="col-lg-4" >
+                                            <label  >Inspection Date</label>
+                                            <label class="form-control" >{{ $InspectionForm[0]->InspectionDate}}</label>
                                         </div>
+
+                                        <div class="col-lg-4" >
+                                            <label  >Inspection Expired at</label>
+                                            <label class="form-control" >{{ $InspectionForm[0]->InspectionExpiry}}</label>                                              
+                                        </div>
+                                        <div class="col-lg-4" >
+                                            <label  >Sticker</label>
+                                            <label class="form-control" >{{ $Cylinders[0]->StickerSerialNo}}</label>                                        
                                       </div>      
                                     </div>
                               </div>      

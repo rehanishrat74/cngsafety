@@ -506,9 +506,14 @@ $sortby="Record_no";
         //echo 'show editable form='.$id;
 
 
-          $cylinders=DB::SELECT('select formid,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,Cylinder_no,ImportDate,Standard,Make_Model
-                from kit_cylinders where formid =?',[$id]);
-
+  
+          $cylinders=DB::Table('kit_cylinders')
+                    ->leftjoin('vehicle_particulars',function($join){
+                        $join->on('vehicle_particulars.lastinspectionid','=','kit_cylinders.formid');
+                    })
+                    ->select('formid','Cylinder_SerialNo','CngKitSerialNo','InspectionDate','Cylinder_no','ImportDate','Standard','Make_Model','StickerSerialNo')
+                    ->where('formid','=',$id)
+                    ->get();
 
 
         $usertype =Auth::user()->regtype;
