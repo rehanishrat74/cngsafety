@@ -89,3 +89,18 @@ Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
+##-----------to update images-----------
+https://stackoverflow.com/questions/27374613/laravel-intervention-image-class-class-not-found
+Add "intervention/image": "dev-master" to the “require” section of your composer.json file.
+"require": {
+    "laravel/framework": "4.1.*",
+    "intervention/image": "dev-master"
+},
+Run CMD;
+$ composer install
+do $ composer update and then $ composer install
+open the config/app.php file. Add this to the $providers array.
+Intervention\Image\ImageServiceProvider::class
+Next add this to the $aliases array.
+'Image' => Intervention\Image\Facades\Image::class
+$ composer update
