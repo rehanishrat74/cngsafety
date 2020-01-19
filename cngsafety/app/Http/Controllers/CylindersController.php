@@ -549,7 +549,7 @@ $sortby="Record_no";
         $batches=DB::select(DB::raw('select batchid,user,filename from CodeRollsPrimary where batchid in (SELECT distinct batchid FROM CodeRollsSecondary where allotedto is null) order by filename asc'));
 
                         
-        $workshops = DB::select(DB::raw('select id,name,email,stationno,province,city,address,contactno from users where regtype ="workshop" order by name asc'));
+        $workshops = DB::select(DB::raw('select id,name,email,stationno,province,city,address,contactno from users where regtype ="workshop"  and deleted =0 and activated=1 and cellverified=1 order by name asc'));
 
 
         return view ('vehicle.allotedserials',['treeitems'=>$treeitems,'batches'=>$batches,'workshops'=>$workshops]);

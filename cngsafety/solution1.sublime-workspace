@@ -104,10 +104,12 @@
 		"/E/xampp/htdocs/laravel/cngsafety/resources",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user",
-		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle"
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle",
+		"/E/xampp/htdocs/laravel/cngsafety/routes"
 	],
 	"file_history":
 	[
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/CylindersController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/README.md",
 		"/E/xampp/htdocs/laravel/cngsafety/routes/web.php",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user/showuser.blade.php",
@@ -128,7 +130,6 @@
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/allotedserials.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/HomeController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/dashboardController.php",
-		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/CylindersController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/CylinderLocationsController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Controller.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Middleware/AdminMiddleware.php",
