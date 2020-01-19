@@ -86,6 +86,17 @@ if (Auth::user()->regtype =='admin')
 
       return view ('user.showuser',['treeitems'=>$treeitems,'userdetails'=>$userdetails]);
     }
+    public function dodisplaypswd($user)
+    {
+          $credentials=DB::table('users')
+          ->select(['email','encpwd','regtype','name','cellnoforinspection','mobileno'])
+          ->where(['id'=> $user])
+          ->get();                
+
+        $pwd= Crypt::decryptString($credentials[0]->encpwd);
+             //return response()->json("password is ", 200);
+        return response()->json($pwd, 200);
+    }
 
     public function edituser(Request $data)
     {

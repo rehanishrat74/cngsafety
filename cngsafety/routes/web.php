@@ -76,6 +76,7 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/showlabs','UserViewController@HDIPusers')->name('showlabs');
     Route::post('/deleteuser','UserViewController@delete')->name('deleteuser');
     Route::post('/dologinaccess','UserViewController@dologinaccess')->name('dologinaccess');
+    Route::get('/dodisplaypswd/{id}','UserViewController@dodisplaypswd')->name('dodisplaypswd');
   //Route::get('/ajax','UserViewController@AjaxSearch')->name('view-records');
 
 

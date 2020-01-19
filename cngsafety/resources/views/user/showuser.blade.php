@@ -11,7 +11,8 @@
                                 <span class="title">Dashboard</span>
                             </a>
                         </li>
-                    <?php }?>   -->                  
+                    <?php }?>   -->       
+                   
 
                         <li class='menusection'>Applications</li>
                         
@@ -114,7 +115,7 @@
                                                                 <input type="text" value="{{$userdetails[0]->id}}" class="form-control" 
                                                                 id="userid" name="userid"  disabled 
                                                                 >
-                                                                <input type="hidden" value="{{$userdetails[0]->id}}" id ="useridhidden" name="useridhidden" >
+                                                                <input type="hidden" value="{{$userdetails[0]->id}}" id ="useridhidden" name="useridhidden" class="pickuser" >
                                               <!--@if ($errors->has('userid'))
                                                 <span class="invalid-feedback" role="alert">
                                                   <strong>{{ $errors->first('userid') }}</strong>
@@ -145,9 +146,29 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
-
-<!-------------------------------------------------->
+<!----------------passwords---------------------------------->
+<div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >Password</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                                <input type="label"
+                                                                id="userpassword" name="userpassword" placeholder="xxxxxxxxx" autocomplete="off"  disabled 
+                                                                >   
+                                                               <br>
+                                                                  <!-- <input type="text" value="" class="form-control" 
+                                                                id="pswdkey" name="pswdkey" placeholder="Key" autocomplete="off"   
+                                                                > -->
+                                                             
+                                                                <button name="btnpass" type="button" onclick="searchpass() ;">Show Password </button>               
+                                   
+                                                            </div>
+                                                        </div>
+                                                    </div>
+<!------------------end passwords------------------------------->
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
@@ -252,9 +273,9 @@
                                                         <div class="col-6">
                                                             <div class="controls">
                                                                 <input type="label" value="<?php echo  $userdetails[0]->stationno.' '.$userdetails[0]->city.' '.$userdetails[0]->province ?>" class="form-control{{ $errors->has('regtype') ? ' is-invalid' : '' }}" 
-                                                                id="usertype" name="usertype" placeholder="UserType" autocomplete="off"  disabled 
+                                                                id="usertypelabel" name="usertypelabel" placeholder="UserType" autocomplete="off"  disabled 
                                                                 >
-                                                                <input type="hidden" value="{{$userdetails[0]->regtype}}" id ="userregtypehidden" name="userregtypehidden" >
+                                                               <!-- <input type="hidden" value="{{$userdetails[0]->regtype}}" id ="userregtypehidden" name="userregtypehidden" >-->
          
                                                             </div>
                                                         </div>
@@ -621,6 +642,7 @@
                     </div>  <!-- end of Main Content Area Col12-->
                 </section> <!-- end of main wrapper -->
 
+
 <script>
 function getcheckbox() {
   var checkBox = document.getElementById("isverified");
@@ -632,6 +654,38 @@ function getcheckbox() {
   }
   
 }
+     
+         function searchpass() {
+            //alert('infunction');pswdkey
+            //.concat(x.value)
+              //var x = document.getElementById("pswdkey");
+              //
+              var x = document.getElementById("useridhidden");
+              var y = document.getElementById("userpassword");
+              //alert(x.value);
+              //http://cngsafety.test/dodisplaypswd/
+            $.ajax({
+               type:'GET',
+               url:'http://cngsafety.test/dodisplaypswd/'.concat(x.value) ,
+               //data: x.value,
+              // data:'_token = <?php echo csrf_token() ?>',
+               //data:{stickerNo:x.value},
+               success:function(data) {
+                console.log(data);
+                y.value=data;
+                    /*$("#kizzlerDisplay").html(data);
+                        //$("#kizzlerDisplay").style.display="block";
+                    var x = document.getElementById("kizzlerDisplay");
+                    if (x.style.display === "none") {
+                        x.style.display = "block";
+                        }*/
+               }
+            });
+         }
+      
+
+
+
 </script>
 
 

@@ -116,3 +116,8 @@ laravel converstion
 example: 'regex:/(^([a-zA-Z]{3}-[\d]+)$)/'
 'regex:/(^$)/'
 'regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'
+##-------------------------
+jquery=editormtestedcylinders.blade.php
+views/jquerysample
+user/showuser.blade.php
+##=========================
