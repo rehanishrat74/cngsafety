@@ -707,7 +707,7 @@ public function showUploadFile(Request $request) {
 
     public function savetestcylinders(Request $request)
     {
-
+//https://regexr.com/
 
         $labUser =Auth::user()->email;
         $this->validate($request,array(
@@ -718,6 +718,7 @@ public function showUploadFile(Request $request) {
             'edate'=>'required',  //inspection date
             'expiry'=>'required',  //expiry date
             'method'=>'required',
+            'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
         ));
 
 
@@ -733,11 +734,13 @@ public function showUploadFile(Request $request) {
 
 
             $diameter=$request->input('diameter');
-            $length=$request->input('length');
+            //$length=$request->input('length');
+            $length=0;
             $capacity=$request->input('capacity');
             $notes=$request->input('notes');
-            $inspector=$request->input('inspector');
-
+            //$inspector=$request->input('inspector');
+            $inspector="not available"; 
+            $manufacturedate=$request->input('ddmanufacture');
 
             //---------setting inspection expiry date ---------------------
 
@@ -782,8 +785,8 @@ public function showUploadFile(Request $request) {
                     if ($duplicateSnos[0]->existssno<=0)
                     {
                         DB::insert('insert into RegisteredCylinders
-                        (LabCTS,CountryOfOrigin,BrandName,Standard,SerialNumber,LabUser,Date,InspectionExpiryDate,method,diameter,length,capacity,notes,inspector) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) ',[$LabCTS,$CountryOfOrigin,$BrandName,$Standard,$SerialNumber,
-                                        $LabUser,$Date,$InspectionExpiryDate,$method,$diameter,$length,$capacity,$notes,$inspector]);
+                        (LabCTS,CountryOfOrigin,BrandName,Standard,SerialNumber,LabUser,Date,InspectionExpiryDate,method,diameter,length,capacity,notes,inspector,DateOfManufacture) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ',[$LabCTS,$CountryOfOrigin,$BrandName,$Standard,$SerialNumber,
+                                        $LabUser,$Date,$InspectionExpiryDate,$method,$diameter,$length,$capacity,$notes,$inspector,$manufacturedate]);
                         $id = DB::getPdo()->lastInsertId();
 
                     }
@@ -1718,7 +1721,7 @@ session()->flashInput($request->input());
 
             
         $CylinderDetails=DB::table('RegisteredCylinders')
-                    ->select ('id','LabCTS','BrandName','Standard' ,'SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'stickerSerialNo','method','diameter','length','capacity','inspector','notes')
+                    ->select ('id','LabCTS','BrandName','Standard' ,'SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'stickerSerialNo','method','diameter','length','capacity','inspector','notes','DateOfManufacture')
                     ->where ('id','=',$cylinderid)
                     ->get();            
 
@@ -1740,6 +1743,8 @@ session()->flashInput($request->input());
             'edate'=>'required',  //inspection date
             'expiry'=>'required',         
             'method' =>'required',
+            'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
+
         ));
 
 
@@ -1753,6 +1758,7 @@ session()->flashInput($request->input());
             $capacity=$request->input('capacity');            
             $inspector=$request->input('inspector');            
             $notes =$request->input('notes');            
+            $DateOfManufacture =$request->input('ddmanufacture');
 
 
             $dt1=$request->input('edate');      
@@ -1818,7 +1824,8 @@ session()->flashInput($request->input());
                                     'length'=>$length,
                                     'capacity'=>$capacity,
                                     'inspector'=>$inspector,
-                                    'notes'=> $notes ,                         
+                                    'notes'=> $notes ,  
+                                    'DateOfManufacture'=>$DateOfManufacture,
                                 ]);                                            
 
                     }

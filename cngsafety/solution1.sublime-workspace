@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"form",
+				"formid"
+			],
+			[
+				"ve",
+				"vehicle_particulars"
+			],
+			[
+				"border-s",
+				"border-style\tproperty"
+			],
+			[
 				"PRINT",
 				"print_r"
 			],
@@ -47,32 +59,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "routes/web.php",
-			"settings":
-			{
-				"buffer_size": 6246,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/Http/Controllers/multiregistrationController.php",
-			"settings":
-			{
-				"buffer_size": 1978,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "resources/views/vehicle/cylinders.blade.php",
-			"settings":
-			{
-				"buffer_size": 63407,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -110,28 +96,40 @@
 		"/E/xampp/htdocs/laravel/cngsafety/app",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers",
-		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Auth",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Middleware",
 		"/E/xampp/htdocs/laravel/cngsafety/resources",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views",
-		"/E/xampp/htdocs/laravel/cngsafety/resources/views/user",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle",
 		"/E/xampp/htdocs/laravel/cngsafety/routes"
 	],
 	"file_history":
 	[
+		"/E/xampp/htdocs/laravel/cngsafety/routes/web.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Middleware/AdminMiddleware.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/InspectedCylinders.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/CylindersController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/editformfortestedcylinders.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/README.md",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/newVehicle.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/NewVehicleController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/VehicleLogicController.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/registrations.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/showcylinder.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/editcylinder.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/cylinders.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/testeditcylinder.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/config/app.php",
+		"/E/xampp/htdocs/laravel/cngsafety/composer.json",
+		"/E/xampp/htdocs/laravel/cngsafety/test_cylinders.blade.php",
+		"/E/xampp/htdocs/laravel/cngsafety/LiveEnv.md",
+		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/multiregistrationController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Auth/RegisterController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/UserViewController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Kernel.php",
-		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/NewVehicleController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/.env",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Rules/ValidStickerForWorkstation.php",
-		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/registrations.blade.php",
-		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/newVehicle.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Rules/Cnic.php",
-		"/E/xampp/htdocs/laravel/cngsafety/routes/web.php",
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/vehicle/editVehicle.blade.php",
-		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/VehicleLogicController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/ApiController.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Rules/workstationno.php",
 		"/C/Users/DELL/Desktop/UserViewController.php",
@@ -144,7 +142,6 @@
 		"/E/xampp/htdocs/laravel/cngsafety/resources/views/home.blade.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Middleware/VerifyCsrfToken.php",
 		"/E/xampp/htdocs/laravel/cngsafety/app/Http/Controllers/Auth/LoginController.php",
-		"/E/xampp/htdocs/laravel/cngsafety/composer.json",
 		"/E/xampp/htdocs/laravel/cngsafety/package.json"
 	],
 	"find":
@@ -163,6 +160,18 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"updateformfortestedcylinders",
+			"route",
+			"validate",
+			"savetestcylinders",
+			"route",
+			"leftjoin",
+			"show",
+			"cylinders",
+			"update",
+			"route",
+			"edit",
+			"route",
 			"makenmodel_M1",
 			"makenmodel_C1",
 			"makenmodelC3",
@@ -232,99 +241,8 @@
 	"groups":
 	[
 		{
-			"selected": 2,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "routes/web.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6246,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1692,
-								1692
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 740.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/Http/Controllers/multiregistrationController.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1978,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								303,
-								303
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "resources/views/vehicle/cylinders.blade.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 63407,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								18128,
-								18128
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 8256.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -334,7 +252,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 41.0
 	},
 	"layout":
 	{
@@ -405,7 +323,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 277.0,
+	"side_bar_width": 323.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

@@ -85,7 +85,7 @@ class AdminMiddleware
             if ( $route=='registrations' || $route=='registrations-search'  ||  $route=='new-vehicle' || $route== 'reg-vehicle' || $route== 'cylinders' || $route== 'showcylinder' || $route== 'editcylinder' || $route=='newcylinderreg'  || $route=='logout') {
                     $isauthorise=true;
             }
-            if ($route=='new-vehicle'){
+            if ($route=='new-vehicle' || $route=='edit-vehicle' || $route='update-vehicle'){
              $isauthorise=true;   
             }
 

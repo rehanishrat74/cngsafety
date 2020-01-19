@@ -175,32 +175,33 @@
                                                             </div>          
                                                         </div>
                                                     </div> <!-- end of diameter -->
-<!------------------------------->
-                                                    <div class="form-group row" >
-                                                        <div class="col-6">
-                                                            <div class="controls">
-                                                            <label class="form-label" >Length</label>
-                                                            </div>
-                                                        </div>
+<!--------------------------------------------------------------------------------->
+<!--
+<div class="form-group row" >
+<div class="col-6">
+<div class="controls">
+<label class="form-label" >Length</label>
+</div>
+</div>
+<div class="col-6">
+<div class="controls">
+<select class="form-control" id ="length" name="length">
 
-                                                        <div class="col-6">
-                                                            <div class="controls">
-                                                                <select class="form-control" id ="length" name="length">
-
-<?php 
- $lengths = array("730 mm","830 mm","900 mm","912 mm","1725 mm","other");
+<xx?phpx 
+ $lengths = array(730 mm,830 mm,900 mm,912 mm,1725 mm,other);
     $l=0;
-    for($l=0;$l <6;$l++){ ?>
-          <option value="<?php echo $lengths[$l];?>" <?php if ($lengths[$l] ==$cylinderdetails[0]->length ){echo 'selected';} ?> > 
-            <?php echo $lengths[$l];?>              
+    for($l=0;$l less6;$l++){ ?>
+          <option value="<d?phpc echo $lengths[$l];?>" lessx?phpx if ($lengths[$l] ==$cylinderdetails[0]->length ){echo 'selected';} ?> > 
+            <c?phpc cecho $lengths[$l];?>              
           </option>
-    <?php  }
-?>
-
-                                                                </select>                                 
-                                                            </div>          
-                                                        </div>
-                                                    </div> <!-- end of length -->
+    <x?phpxx  }
+-?x->
+</select>                                 
+</div>          
+</div>
+</div>
+-->
+ <!-- end of length -->
 <!------------------------------->
                                                     <div class="form-group row" >
                                                         <div class="col-6">
@@ -278,33 +279,52 @@
                                                         </div>
                                                     </div>
 <!----------------------------------------------->
-                                                    <div class="form-group row" >
+<!--<div class="form-group row" >
+<div class="col-6">
+<div class="controls">
+<label class="form-label" >3rd Party Inspector</label>
+</div>
+</div>
+<div class="col-6">
+<div class="controls">
+<select class="form-control" id ="inspector" name="inspector">
+
+<x?phpx
+ $inspectors = array(Lloyds, Bureau Vertas, ABS, SGS, -SGS-All Tests carried out by International Lab Powertech Inc, Canada, -Bureau Veritas,-SGS- );
+$i=0;
+for ($i=0;$iless4;$i++)
+{ -?->
+<option value ="<x-?phpx echo $inspectors[$i];?>"  -?php- if($inspectors[$i]==$cylinderdetails[0]->inspector){echo ' selected';} ?> >
+<-?-php echo $inspectors[$i]; ?></option>
+<--?php  echo $cylinderdetails[0]->inspector.'<br>'; }
+?>
+</select>                                 
+</div>          
+</div>
+</div> 
+-->
+<!-- end of inspector -->
+<!------------------------------------------------->               
+                                                 <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                            <label class="form-label" >3rd Party Inspector</label>
+                                                            <label class="form-label" >Date of Manufacturing</label>
                                                             </div>
                                                         </div>
-
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <select class="form-control" id ="inspector" name="inspector">
-
-<?php 
- $inspectors = array("Lloyd's, Bureau Vertas, ABS, SGS", "-SGS-All Tests carried out by International Lab Powertech Inc, Canada", "-Bureau Veritas","-SGS-" );
-
-    $i=0;
-    for ($i=0;$i<4;$i++)
-    { ?>
-    <option value ="<?php echo $inspectors[$i];?>"  <?php if($inspectors[$i]==$cylinderdetails[0]->inspector){echo ' selected';} ?> >
-    <?php echo $inspectors[$i]; ?></option>
-    <?php  echo $cylinderdetails[0]->inspector.'<br>'; }
-?>
-                                                                </select>                                 
-                                                            </div>          
+                                                                <input type="text" value="{{$cylinderdetails[0]->DateOfManufacture}}" class="form-control{{ $errors->has('SerialNo') ? ' is-invalid' : '' }}" 
+                                                                id="ddmanufacture" name="ddmanufacture" placeholder="YYYY-MM-DD" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('ddmanufacture'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('ddmanufacture') }}</strong>
+                                                </span>
+                                              @endif                                                                                                                      
+                                                            </div>
                                                         </div>
-                                                    </div> <!-- end of inspector -->
-<!------------------------------------------------->                                                    
-
+                                                    </div>                                                                                               
+<!------------------------------------------------->
                
 
                                                     <div class="form-group row" >
@@ -378,7 +398,7 @@
                                                         <div class="col-6">
                                                             <div class="controls">                                          
                                                                 <!--<input type="text" value="{{date('m/d/Y', strtotime($cylinderdetails[0]->InspectionExpiryDate))}}" class="form-control" data-format="mm/dd/yyyy" placeholder="Expiry Date" id="expiry" name="expiry" readonly>-->
-                                                                <input type="text" value="{{date('m/d/Y', strtotime($cylinderdetails[0]->Date))}}" class="form-control{{ $errors->has('edate') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy"  id="expiry" name="expiry" placeholder="date (e.g. 04/03/2015)" autocomplete="off">                                                                
+                                                                <input type="text" value="{{date('m/d/Y', strtotime($cylinderdetails[0]->InspectionExpiryDate))}}" class="form-control{{ $errors->has('expiry') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy"  id="expiry" name="expiry" placeholder="date (e.g. 04/03/2015)" autocomplete="off">                                                                
                                                             </div>
                                                 <input type="hidden" id ="year" name="year">
                                                 <input type="hidden" id ="month" name="month">

@@ -104,3 +104,15 @@ Intervention\Image\ImageServiceProvider::class
 Next add this to the $aliases array.
 'Image' => Intervention\Image\Facades\Image::class
 $ composer update
+
+##--------------regular expressions-------------------
+https://regexr.com/
+example: ^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$
+year = (19|20)\d\d-
+month = 0[1-9]|1[012]-
+date = (0[1-9]|[12][0-9]|3[01])
+
+laravel converstion
+example: 'regex:/(^([a-zA-Z]{3}-[\d]+)$)/'
+'regex:/(^$)/'
+'regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'

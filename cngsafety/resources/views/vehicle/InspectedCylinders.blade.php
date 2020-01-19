@@ -177,35 +177,28 @@
                                                         </div>
                                                     </div> <!-- end of diameter -->
 <!---------------------------------------------------------->
-                                                    <div class="form-group row" >
-                                                        <div class="col-6">
-                                                            <div class="controls">
-                                                            <label class="form-label" >Length</label>
-                                                            </div>
-                                                        </div>
-<?php 
-    $lengths = array("730 mm","830 mm","900 mm","912 mm","1725 mm","other");
-
-?>                                                        
-                                                        <div class="col-6">
-                                                            <div class="controls">
-
-                                                                <select class="form-control" id ="length" name="length"> 
-<?php 
-    $l=0;
-    for($l=0;$l <6;$l++){ ?>
-          <option value="<?php echo $lengths[$l];?>" <?php if (old("length")==$lengths[$l]){echo 'selected';} ?> > 
-            <?php echo $lengths[$l];?>              
-          </option>
-<?php 
-    }
-?>
-
-                      
-                                                                </select>                                                                
-                                                            </div>                                                
-                                                        </div>
-                                                    </div> <!-- end of diameter -->                                                    
+<!--<div class="form-group row" >
+<div class="col-6">
+<div class="controls">
+<label class="form-label" >Length</label>
+</div>
+</div>
+<-? $lengths = array("730 mm","830 mm","900 mm","912 mm","1725 mm","other");?>                                                        
+<div class="col-6">
+<div class="controls">
+<select class="form-control" id ="length" name="length"> 
+<-? 
+$l=0;
+for($l=0;$l <6;$l++){ ?>
+<option value="<-? echo $lengths[$l];?>" <-?phpx if (old("length")==$lengths[$l]){echo 'selected';} ?> > 
+<-?phpx echo $lengths[$l];?>              
+</option>
+<?phpx }?></select>                                                                
+</div>                                                
+</div>
+</div> -->
+<!-- end of length -->         
+<!------------------------------------------------------------------------------------->                                             
 
                                                     <div class="form-group row" >
                                                         <div class="col-6">
@@ -270,37 +263,52 @@ $capacities=array("30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC","58 WLC"
                                                     </div>
 
 <!------------------------------------------------------->
+<!--<div class="form-group row" >
+<div class="col-6">
+<div class="controls">
+<label class="form-label" >3rd Party Inspector</label>
+</div>
+</div>
+<-?
+$inspectors = array("Lloyd's, Bureau Vertas, ABS, SGS", "-SGS-All Tests carried out by International Lab Powertech Inc, Canada", "-Bureau Veritas","-SGS-" );
+?->
+<div class="col-6">
+<div class="controls">
+<select class="form-control" id="inspector"  name="inspector" >
+<-?php 
+$i=0;
+for ($i=0;$i<4;$i++)
+{ -?->
+<option value ="<--php echo $inspectors[$i];-?->"  -?- if(old(inspector) ==$inspectors[$i])
+{echo  selected;} -?-> >
+<-? echo $inspectors[$i];- ?-></option>
+<-?-  }
+-?->                                                                    
+</select>
+</div>
+</div>
+</div> -->
+<!------------------------------------------------------->
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                            <label class="form-label" >3rd Party Inspector</label>
+                                                            <label class="form-label" >Date of Manufacturing</label>
                                                             </div>
                                                         </div>
-<?php
-$inspectors = array("Lloyd's, Bureau Vertas, ABS, SGS", "-SGS-All Tests carried out by International Lab Powertech Inc, Canada", "-Bureau Veritas","-SGS-" );
-
-?>
-
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <select class="form-control" id="inspector"  name="inspector" >
-<?php 
-    $i=0;
-    for ($i=0;$i<4;$i++)
-    { ?>
-<option value ="<?php echo $inspectors[$i];?>"  <?php if(old('inspector') ==$inspectors[$i]){echo ' selected';} ?> >
-    <?php echo $inspectors[$i]; ?></option>
- <?php  }
-?>                                                                    
-
-
-                                                       
-                                                                 </select>
+                                                                <input type="text" value="" class="form-control{{ $errors->has('SerialNo') ? ' is-invalid' : '' }}" 
+                                                                id="ddmanufacture" name="ddmanufacture" placeholder="YYYY-MM-DD" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('ddmanufacture'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('ddmanufacture') }}</strong>
+                                                </span>
+                                              @endif                                                                                                                      
                                                             </div>
                                                         </div>
-                                                    </div>
-<!------------------------------------------------------->                                                    
-               
+                                                    </div>                                                    
+<!------------------------------------------------------->               
 
                                                     <div class="form-group row" >
                                                         <div class="col-6">

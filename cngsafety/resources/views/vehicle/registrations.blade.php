@@ -188,11 +188,12 @@
                                                      </td>
                                                     <?php } else
                                                     {?>
-                                                    <td>
+                                                     <td><a href="{{route('edit-vehicle',$vehicle->Record_no)}}">
                                                         Reg: {{$vehicle->Registration_no}}<br>
                                                         Chasis: {{$vehicle->Chasis_no}}<br>Engine: {{$vehicle->Engine_no}}<br>
-                                                        <?php if (isset($vehicle->StickerSerialNo)){echo "Sticker: ".$vehicle->StickerSerialNo;}?>    
-                                                    </td>
+                                                    <?php if (isset($vehicle->StickerSerialNo)){echo "Sticker: ".$vehicle->StickerSerialNo;}?>
+                                                        </a>
+                                                     </td>
                                                     <?php }
                                                     ?>
                                                     <!-- td ends  here -->
@@ -224,7 +225,7 @@ if($date > $inspectionDate)
                                                      </td>
                                                      
                                                      <td>
-                                                        <?php if (Auth::user()->regtype!="workshop") {?>
+                                                        <?php if (Auth::user()->regtype=="workshop" || Auth::user()->regtype!="admin") {?>
 
                                                         <a href="<?php if ($vehicle->formid==0){if ($inspectionExpired==0){echo route('newcylinderreg',$vehicle->Registration_no.'?recordid='.$vehicle->Record_no.'&stationno='.$vehicle->stationno);}}else{if ($vehicle->Inspection_Status=='completed'){if($inspectionExpired==1){echo route('newcylinderreg',$vehicle->Registration_no.'?recordid='.$vehicle->Record_no.'&stationno='.$vehicle->stationno);}else{echo route('showcylinder',$vehicle->formid);}}else{echo route('editcylinder',$vehicle->formid);}}?>">
                                                         <?php }?>
@@ -270,3 +271,8 @@ function setplaceholder() {
 </script>
 
 @endsection
+
+
+
+--------------------------------------
+

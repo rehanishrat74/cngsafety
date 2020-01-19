@@ -107,18 +107,32 @@
 
                                     <div class="form-group row" >
                                       <div class="col-lg-4">
+                                        
+                                        <?php if (Auth::user()->regtype=="workshop"){?>
                                               <label for="stationno">Work Station</label>
                                               <input type="text" class="form-control{{ $errors->has('stationno') ? ' is-invalid' : '' }}" 
-                                              name="stationno" id="stationno" placeholder="Station No" autocomplete="off" value="{{ old('stationno')}}" <?php if (Auth::user()->regtype=="workshop"){echo "readonly";}?>>
-
-
-
+                                              name="stationno" id="stationno" placeholder="Station No" autocomplete="off" value="{{ $stationno}}" <?php if (Auth::user()->regtype=="workshop"){echo "readonly";}?>>
 
                                               @if ($errors->has('stationno'))
                                                 <span class="invalid-feedback" role="alert">
                                                   <strong>{{ $errors->first('stationno') }}</strong>
                                                 </span>
-                                              @endif                                                                              
+                                              @endif   
+
+                                        <?php } else {?>
+                                              <label for="stationno">Work Station</label>
+                                              <input type="text" class="form-control{{ $errors->has('stationno') ? ' is-invalid' : '' }}" 
+                                              name="stationno" id="stationno" placeholder="Station No" autocomplete="off" value="{{ old('stationno')}}" <?php if (Auth::user()->regtype=="workshop"){echo "readonly";}?>>
+
+                                              @if ($errors->has('stationno'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('stationno') }}</strong>
+                                                </span>
+                                              @endif                                        
+                                        
+                                        <?php } ?>
+                                     
+                                      
                                       </div> 
                                       <div class="col-lg-4">
                                               <label for="maketype">Make & Type</label>
