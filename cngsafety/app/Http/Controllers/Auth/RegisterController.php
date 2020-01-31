@@ -166,14 +166,16 @@ class RegisterController extends Controller
                         
      
             $getwshopid = DB::TABLE('users')
-                        ->select(DB::raw('count(workshopstationid) as workshopid')) 
+                        ->select(DB::raw('max(workshopstationid) as workshopid')) 
                         ->where ('regtype','=','workshop')
                         ->where ('province','=',$data['province'])
                         ->where('city','=',$data['city'])
                         ->get();
-            $workshopstationid =$getwshopid[0]->workshopid +1 ;
-            
+            $workshopstationid =(int) $getwshopid[0]->workshopid +1 ;
 
+//echo print_r($data)."<br>";
+//echo print_r($getwshopid)."<br>";            
+//echo "stationid=".$workshopstationid."<br>";
 
 /*
 PLR   for punjab -> lahore.
@@ -200,8 +202,9 @@ B     for balochistan.
 
              $stationno=$stationcode.'-'.$workshopstationid;   //SKI-3
 
-
-
+//echo 'stationno='.$stationno;
+//dd($stationno);
+//return;
 
             $user= User::create([
                 'name' => $data['nickname'],
@@ -318,7 +321,7 @@ B     for balochistan.
                 curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-                $result = curl_exec($ch); 
+            //    $result = curl_exec($ch); 
                // $response['response'] = 'valid';        
 
         return $user;

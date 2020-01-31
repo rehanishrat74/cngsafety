@@ -54,6 +54,12 @@
     <!-- BEGIN BODY -->
     <body class=" login_page">
 
+<?php 
+ //Auth::logoutOtherDevices(Auth::user()->password);
+ Auth::logout();
+
+?>
+  
         <div class="container-fluid">
             <div class="login-wrapper row">
                 <div id="login" class="col-xl-12" style=" padding-top: 0; margin-top: 0;">
@@ -234,7 +240,7 @@
         <script src="../assets/plugins/pace/pace.min.js" type="text/javascript"></script>  
         <script src="../assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js" type="text/javascript"></script> 
         <script src="../assets/plugins/viewport/viewportchecker.js" type="text/javascript"></script>  
-        <script>window.jQuery || document.write('<script src="../assets/js/jquery-1.11.2.min.js"><\/script>');</script>
+        <script>window.jQuery || document.write('<script src="../assets/js/jquery-1.11.2.min.js"></script>');</script>
         <!-- CORE JS FRAMEWORK - END --> 
 
 

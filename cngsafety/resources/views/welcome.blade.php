@@ -100,7 +100,11 @@ div.sticky {
     <!--<body class=" login_page" >-->
     <body class=" login_page" >
 
+<?php 
+ //Auth::logoutOtherDevices(Auth::user()->password);
+ Auth::logout();
 
+?>
         <div class="container-fluid" >
 
             <div class="login-wrapper row" >

@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html class=" ">
     <head>
@@ -54,7 +53,11 @@
     <!-- BEGIN BODY -->
     <body class=" login_page">
 
+<?php 
+ //Auth::logoutOtherDevices(Auth::user()->password);
+ Auth::logout();
 
+?>
 
         <div class="container-fluid">
 
