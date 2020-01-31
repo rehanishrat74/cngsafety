@@ -177,27 +177,7 @@
                                                         </div>
                                                     </div> <!-- end of diameter -->
 <!---------------------------------------------------------->
-<!--<div class="form-group row" >
-<div class="col-6">
-<div class="controls">
-<label class="form-label" >Length</label>
-</div>
-</div>
-<-? $lengths = array("730 mm","830 mm","900 mm","912 mm","1725 mm","other");?>                                                        
-<div class="col-6">
-<div class="controls">
-<select class="form-control" id ="length" name="length"> 
-<-? 
-$l=0;
-for($l=0;$l <6;$l++){ ?>
-<option value="<-? echo $lengths[$l];?>" <-?phpx if (old("length")==$lengths[$l]){echo 'selected';} ?> > 
-<-?phpx echo $lengths[$l];?>              
-</option>
-<?phpx }?></select>                                                                
-</div>                                                
-</div>
-</div> -->
-<!-- end of length -->         
+ 
 <!------------------------------------------------------------------------------------->                                             
 
                                                     <div class="form-group row" >
@@ -263,31 +243,7 @@ $capacities=array("30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC","58 WLC"
                                                     </div>
 
 <!------------------------------------------------------->
-<!--<div class="form-group row" >
-<div class="col-6">
-<div class="controls">
-<label class="form-label" >3rd Party Inspector</label>
-</div>
-</div>
-<-?
-$inspectors = array("Lloyd's, Bureau Vertas, ABS, SGS", "-SGS-All Tests carried out by International Lab Powertech Inc, Canada", "-Bureau Veritas","-SGS-" );
-?->
-<div class="col-6">
-<div class="controls">
-<select class="form-control" id="inspector"  name="inspector" >
-<-?php 
-$i=0;
-for ($i=0;$i<4;$i++)
-{ -?->
-<option value ="<--php echo $inspectors[$i];-?->"  -?- if(old(inspector) ==$inspectors[$i])
-{echo  selected;} -?-> >
-<-? echo $inspectors[$i];- ?-></option>
-<-?-  }
--?->                                                                    
-</select>
-</div>
-</div>
-</div> -->
+
 <!------------------------------------------------------->
                                                     <div class="form-group row" >
                                                         <div class="col-6">
@@ -297,7 +253,7 @@ for ($i=0;$i<4;$i++)
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <input type="text" value="" class="form-control{{ $errors->has('SerialNo') ? ' is-invalid' : '' }}" 
+                                                                <input type="text" value="{{old('ddmanufacture')}}" class="form-control{{ $errors->has('ddmanufacture') ? ' is-invalid' : '' }}" 
                                                                 id="ddmanufacture" name="ddmanufacture" placeholder="YYYY-MM-DD" autocomplete="off" 
                                                                 >
                                               @if ($errors->has('ddmanufacture'))
@@ -373,7 +329,7 @@ for ($i=0;$i<4;$i++)
                                                         </div> 
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <!--<input type="text" value="" class="form-control" data-format="mm/dd/yyyy" placeholder="Expiry Date" id="expiry" name="expiry" readonly>-->
+                                                              
                                                                 <input type="text" value="" class="form-control{{ $errors->has('expiry') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy"  id="expiry" name="expiry" placeholder="date (e.g. 04/03/2015)" autocomplete="off">                              
                                               @if ($errors->has('expiry'))
                                                 <span class="invalid-feedback" role="alert">
@@ -460,31 +416,20 @@ var expiryday =document.getElementById("day");
     expirymonth.value =year5.getMonth()+1;
     expiryday.value =year5.getDate() ;    
     expiry.value=year5.toLocaleDateString();   
-    //$('#expiry').datepicker('setDate', expiry).trigger('change');
-    //$('#expiry').defaultValue=expiry.value;
-    //expiry.defaultValue=expiry.value;
+   
 
     //---------------------------------------
-/*
-//var date1 = new Date(); // now
-var input = document.createElement("input"); input.type = "date";
 
-input.valueAsDate = new Date(Date.UTC(year5.getFullYear(), year5.getMonth(), year5.getDate()));
-console.log(input.valueAsDate); 
 
-var midnightUtcDate = input.valueAsDate;
-var date2 = new Date(midnightUtcDate.getUTCFullYear(), midnightUtcDate.getUTCMonth(), midnightUtcDate.getUTCDate());
-console.log(date2);    */
-//expiry.defaultValue=date2;
     //----------------------------------------
 
-    //console.log($('#expiry'));    
+       
 
         }
 
-    //console.log(expiry.value);
+    
 
-    //console.log(year5);
+    
    });
 
    $(".datepicker").focusout(function() {
@@ -501,13 +446,10 @@ console.log(date2);    */
      expiryyear.value =year5.getFullYear();
      expirymonth.value =year5.getMonth()+1;
      expiryday.value =year5.getDate() ;
-     //expiry.defaultValue=expiry.value;
-     //$('#expiry').defaultValue=expiry.value;
-     //$('#expiry').datepicker('setDate', expiry).trigger('change');
+    
     }
 
-  //console.log(year5);
-    //console.log(addressinput);
+  
    });
 
 

@@ -15,12 +15,13 @@ class engravedCylinderno implements Rule
      *
      * @return void
      */
-    protected $serialno,$alloteduser,$msg,$validRule;
-    public function __construct($serialnotovalidate,$useremail)
+    protected $serialno,$alloteduser,$msg,$validRule,$brand;
+    public function __construct($serialnotovalidate,$useremail,$BrandName)
     {
         //
         $this->serialno = $serialnotovalidate;
         $this->alloteduser=$useremail;
+        $this->brand=$BrandName;
     }
 
     /**
@@ -44,7 +45,7 @@ class engravedCylinderno implements Rule
 
 
 
-        $registeredCylinders=Db::select('select count(SerialNumber) as serialregistered from RegisteredCylinders where SerialNumber=? ',[$this->serialno]);
+        $registeredCylinders=Db::select('select count(SerialNumber) as serialregistered from RegisteredCylinders where SerialNumber=? and BrandName=?',[$this->serialno,$this->brand]);
                         
 
         if ($registeredCylinders[0]->serialregistered > 0 ){

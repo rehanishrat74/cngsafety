@@ -710,11 +710,12 @@ public function showUploadFile(Request $request) {
 //https://regexr.com/
 
         $labUser =Auth::user()->email;
+        $BrandName=$request->input('brand');
         $this->validate($request,array(
             'CountryOfOrigin'=>'required',
             'brand'=>'required',
             'standard'=>'required',
-            'SerialNo'=>['required',new engravedCylinderno($request->input('SerialNo'),$labUser) ],
+            'SerialNo'=>['required',new engravedCylinderno($request->input('SerialNo'),$labUser,$BrandName) ],
             'edate'=>'required',  //inspection date
             'expiry'=>'required',  //expiry date
             'method'=>'required',
@@ -722,8 +723,7 @@ public function showUploadFile(Request $request) {
         ));
 
 
-            $CountryOfOrigin=$request->input('CountryOfOrigin');            
-            $BrandName=$request->input('brand');
+            $CountryOfOrigin=$request->input('CountryOfOrigin');
             $Standard=$request->input('standard');
             $SerialNumber=$request->input('SerialNo');            
             $dt1=$request->input('edate');   //inspection date
