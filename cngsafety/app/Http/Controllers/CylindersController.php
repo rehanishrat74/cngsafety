@@ -1735,11 +1735,12 @@ session()->flashInput($request->input());
     {
 
         $labUser =Auth::user()->email;
+        $BrandName=$request->input('brand');
         $this->validate($request,array(
             'CountryOfOrigin'=>'required',
             'brand'=>'required',
             'standard'=>'required',
-            'SerialNo'=>['required',new engravedCylindernoUpdate($request->input('SerialNo'),$labUser,$id) ],
+            'SerialNo'=>['required',new engravedCylindernoUpdate($request->input('SerialNo'),$labUser,$id,$BrandName) ],
             'edate'=>'required',  //inspection date
             'expiry'=>'required',         
             'method' =>'required',
@@ -1749,7 +1750,7 @@ session()->flashInput($request->input());
 
 
             $CountryOfOrigin=$request->input('CountryOfOrigin');            
-            $BrandName=$request->input('brand');
+            
             $Standard=$request->input('standard');
             $SerialNumber=$request->input('SerialNo');
 
