@@ -2,17 +2,6 @@
 @section('lefttree')
                     <ul class='wraplist'>   
 
-                    <!--    <li class='menusection'>Main</li>
-
-                    <?php if (Auth::user()->regtype!="hdip") {?>
-                        <li class=""> 
-                            <a href="{{ route('dashboard') }}">
-                                <i class="fa fa-dashboard"></i>
-                                <span class="title">Dashboard</span>
-                            </a>
-                        </li>
-                    <?php }?> Tested Cylinders -->                   
-
                         <li class='menusection'>Applications</li>
                         
                         @foreach ($treeitems as $node)
@@ -38,12 +27,12 @@
 
 
 
-<!-- left tree categories -------4-lefttreecategories.txt-------------------------------->          
+       
                     </ul>
 @endsection
 
 @section('content')
-
+<script src="../assets/js/jquery-3.2.1.min.js" type="text/javascript"></script>
 
                 <section class="wrapper main-wrapper row" style=''>
 
@@ -75,13 +64,13 @@
 
                     <div class="row margin-0">
                         <div class="col-lg-9 col-md-12 col-12" >
-                            <form id="searchvehicle" method="POST" action="{{route('testedcylinders-search')}}">
+                            <form attr.id="searchvehicle" method="POST" class="myform" action="{{route('testedcylinders-search')}}">
                                 {{ csrf_field() }}
 
 
                                
                             <div class="input-group primary">
-                                        <select class="form-control" id="pagesize" name="pagesize">
+                                        <select class="form-control" attr.id="pagesize" name="pagesize">
                                                 <option value="10" 
                                                   <?php if (old("pagesize")=="10") {echo "selected";}?>
                                                 >Page size 10</option>
@@ -99,12 +88,17 @@
                                                 >Page size 1000</option>
 
                                         </select>                                                                            
-                                        <select class="form-control" id="lab" name="lab">
-                                                 @foreach ($labs as $lab)       
+                                        <select class="form-control" attr.id="lab" name="lab">
+<?php if ((Auth::user()->regtype=="hdip" || Auth::user()->regtype=="admin") ) {?>
+ <option value="*">* (All Labs)</option>
+<?php }?>
+                                               
+                                                @foreach ($labs as $lab)       
                                                   <option value="{{$lab->Labname}}" 
                                                   <?php if (old("lab")=="$lab->Labname") {echo "selected";}?>
                                                     >{{$lab->Labname}}</option>
-                                                @endforeach
+                                                @endforeach 
+                                          
 
                                         </select>       
 
@@ -115,10 +109,10 @@
 
 
 
-                                      <select class="form-control" id="searchby" name="searchby" onclick="setplaceholder()"
+                                      <select class="form-control searchpicker" attr.id="searchby" name="searchby" 
                                         >
 
-                                                <option value="*" <?php if (old("searchby")=="*") {echo "selected";}?> >*</option>
+                                                <option value="*" <?php if (old("searchby")=="*") {echo "selected";}?> >* (All Cylinders)</option>
                                                 <option value="BrandName" <?php if (old("searchby")=="BrandName") {echo "selected";}?> >Brand Name</option>
                                                 <option value="Standard" <?php if (old("searchby")=="Standard") {echo "selected";}?> >Standard</option>
 
@@ -141,14 +135,17 @@
                     
 
 
-                                <input type="text" class="form-control search-page-input" placeholder="Search" value="" placeholder="Search" autocomplete="off" id="searchvalue" name="searchvalue">
-                                <span class="input-group-addon" 
+                                <input type="text" class="form-control search-page-input" placeholder="Search" value="" placeholder="Search" autocomplete="off" attr.id="searchvalue" name="searchvalue" disabled>
+                               <!-- <span class="input-group-addon" 
                                 onclick="event.preventDefault(); document.getElementById('searchvehicle').submit();">   
                                     <span class="arrow"></span>
                                     <i class="fa fa-search"></i>
-                                </span>                               
+                                </span>   -->                            
 
-
+                               <span class="input-group-addon submitbutton">   
+                                    <span class="arrow"></span>
+                                    <i class="fa fa-search"></i>
+                                </span>  
 
                             </div> <!--<br>-->
                         </form>
@@ -273,17 +270,52 @@ if (isset($cylinder->stickerSerialNo)){echo '<br>RegNo: '.$cylinder->Registratio
                     <!-- MAIN CONTENT AREA ENDS -->
                 </section>
 
+
+
+
 <script>
+$(document).ready(function(){
+
+  if($(".searchpicker").val()!="*"){$(".search-page-input").removeAttr("disabled"); }
+
+
+  
+  //xt$(".search-page-input").placeholder.value="sdfa";
+
+  $(".searchpicker").change(function(){
+    var searchValue = $(this).val();
+    if (searchValue=="*"){
+      //hide
+     //$(".search-page-input").hide();
     
-function setplaceholder() {
-  if (document.getElementById("searchby").value=="Date" || document.getElementById("searchby").value=="InspectionExpiryDate") {
-        document.getElementById("searchvalue").placeholder="mm/dd/yyyy";
-  }
-  else
-  {
-    document.getElementById("searchvalue").placeholder="Search";
-  }
-}
+         $(".search-page-input").attr("disabled", "disabled"); 
+
+     } else {
+      //display
+     
+         $(".search-page-input").removeAttr("disabled"); 
+     }
+     if (searchValue=="Date" || searchValue=="InspectionExpiryDate"){
+        $(".search-page-input").attr("placeholder", "mm/dd/yyyy");
+      } else {
+        $(".search-page-input").attr("placeholder", "Search");
+      }
+    
+  });
+
+  $(".submitbutton").click(function(){
+    //alert('hello');
+    $(".myform").submit(); 
+    
+  });
+
+
+   
+});
+
+
+
 </script>
+
 
 @endsection

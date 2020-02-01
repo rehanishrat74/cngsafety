@@ -1522,17 +1522,23 @@ $testedcylinders->appends($querystringArray);
 
 
     return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1);
+        /*$content = view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1);
 
+        return response($content)->withHeaders(['Set-Cookie'=> "Secure;SameSite=None"]);*/
     }
-
-
+/*return response($content)
+            ->withHeaders([
+                'Content-Type' => $type,
+                'X-Header-One' => 'Header Value',
+                'X-Header-Two' => 'Header Value',
+            ]);
+response.AddHeader("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");*/
     public function searchlabtestedcylinders(Request $request){
 
         $pagesize=$request->input('pagesize');
         $searchby=$request->input('searchby');
         $searchvalue=$request->input('searchvalue');
         $labName =$request->input('lab');
-
 
 
 
@@ -1565,28 +1571,6 @@ $testedcylinders->appends($querystringArray);
 
         $labUser =Auth::user()->email;
 
-/*
-
-                if (Auth::user()->regtype=='admin' || Auth::user()->regtype=='hdip')
-        {
-            
-        $testedcylinders=DB::table('RegisteredCylinders')
-                    ->select ('id','LabCTS','BrandName','Standard' ,'SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'stickerSerialNo','method')
-                    ->where ($searchby,'=',$searchvalue)
-                    ->paginate($pagesize);            
-        }
-        else
-        {
-            $testedcylinders=DB::table('RegisteredCylinders')
-                    ->select ('id','LabCTS','BrandName','Standard' ,'SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'stickerSerialNo','method')
-                    ->where ('LabUser','=',$labUser)
-                    ->where ($searchby,'=',$searchvalue)
-                    ->paginate($pagesize);            
-        }
-        
-        //return view ('vehicle.listestedcylinders',['testedcylinders'=>$testedcylinders]);            
-        return view ('vehicle.listtestedcylinders',compact('testedcylinders','treeitems'))->with('page',1);
-*/
 
 /*----------------------------------*/
 
@@ -1597,96 +1581,117 @@ $testedcylinders->appends($querystringArray);
 
 
         $usertype =Auth::user()->regtype;
-      $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);            
+        $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);            
 
 
         $labUser =Auth::user()->email;
-
-
-                if (Auth::user()->regtype=='admin' || Auth::user()->regtype=='hdip')
-        {
-                    if ($searchby=="*"){
-                        $testedcylinders=DB::table('RegisteredCylinders')
-                    ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
-                    ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
-                        'vehicle_particulars.Registration_no')                    
-                    ->where ('LabCTS','=',$labName)                    
-                    ->orderby($sort,'desc')
-                    ->paginate($pagesize);         
-
-                    } else {
-                        $testedcylinders=DB::table('RegisteredCylinders')
-                        ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
-                        ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
-                        'vehicle_particulars.Registration_no')
-                        ->where ($searchby,'=',$searchvalue)                    
-                        ->where ('LabCTS','=',$labName)                    
-                        ->orderby($sort,'desc')
-                        ->paginate($pagesize);                                 
-                    }
-
-
-
-                $labs=DB::table('users')                    
-                    ->select ('id','Labname')
-                    ->where ('regtype','=','laboratory')                    
-                    ->where ('deleted','=',0)
-                    ->orderby($sort,'desc')
-                    ->paginate($pagesize);                     //all labs                    
-        }
         
-        else{
-                if ($searchby=="*"){
-                    $testedcylinders=DB::table('RegisteredCylinders')
-                    ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
-                    ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
-                        'vehicle_particulars.Registration_no')
-                    //->where ($searchby,'=',$searchvalue)
-                    ->where ('LabUser','=',$labUser)                    
-                    ->where ('LabCTS','=',$labName)                    
-                    ->orderby($sort,'desc')
-                    ->paginate(10);                    
+            $labsWhereData = [           
+            ['regtype', '=', 'laboratory'],
+            ['deleted', '=', 0]
+            ];        
+/*$testedcylindersWhereData = [
+    ['name', 'test'],
+    ['id', '<>', '5']
+];*/
+        switch ($usertype) {
+        case ($usertype=="admin" || $usertype=="hdip") && ($labName=="*") && ($searchby=="*"):
+            # admin / all labs / all cylinder data
+            # code...
+            $testedcylindersWhereData = [           
+            ['id', '>', 0]
+            ];
+            
+           break;
 
-                } else 
-                {
-                    $testedcylinders=DB::table('RegisteredCylinders')
-                    ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
-                    ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
-                        'vehicle_particulars.Registration_no')
-                    ->where ($searchby,'=',$searchvalue)
-                    ->where ('LabUser','=',$labUser)                    
-                    ->where ('LabCTS','=',$labName)                    
-                    ->orderby($sort,'desc')
-                    ->paginate(10);
-                }
+        case ($usertype=="admin" || $usertype=="hdip") && ($labName=="*") && ($searchby!="*"):
+            # admin / all labs / cylinder searchby field
+            # code...
+            $testedcylindersWhereData = [            
+            [$searchby, '=', $searchvalue]
+                ];        
+           break;
+
+  //-----------------------------------------------------------------
+        case ($usertype=="admin" || $usertype=="hdip") && ($labName!="*") && ($searchby=="*"):
+            # admin / single lab / all cylinder data
+            # code...
+            $testedcylindersWhereData = [            
+            ['LabCTS', '=', $labName]
+                ];   
+           break;
+
+        case ($usertype=="admin" || $usertype=="hdip") && ($labName!="*") && ($searchby!="*"):
+            # admin / single lab / cylinder searchby field
+            # code...
+            $testedcylindersWhereData = [            
+            ['LabCTS', '=', $labName],
+            [$searchby, '=', $searchvalue]
+                ];          
+           break;
 
 
-                $labs=DB::table('users')                    
-                    ->select ('id','Labname')
-                    ->where ('regtype','=','laboratory')
-                    ->where('email','=',$labUser) //only reistered lab user
-                    ->where ('deleted','=',0)
-                    ->orderby($sort,'desc')
-                    ->paginate($pagesize);                                        
+
+        case ($usertype=="laboratory" && $labName!="*" && $searchby=="*"):
+            #non admin / single lab /  all cylinder data
+            $testedcylindersWhereData = [            
+            ['LabCTS', '=', $labName],
+            ['LabUser','=',$labUser]
+                ];   
+            $labsWhereData = [           
+            ['regtype', '=', 'laboratory'],
+            ['deleted', '=', 0],
+            ['email', '=', $labUser]
+            ];                                 
+            break;
+        case ($usertype=="laboratory" && $labName!="*"  && $searchby!="*"):
+            #non admin / single lab /  cylinder searchby field
+            $testedcylindersWhereData = [            
+            ['LabCTS', '=', $labName],
+            ['LabUser','=',$labUser],
+            [$searchby,'=',$searchvalue]
+                ]; 
+            $labsWhereData = [           
+            ['regtype', '=', 'laboratory'],
+            ['deleted', '=', 0],
+            ['email', '=', $labUser]
+            ];                                 
+
+            break;            
+        default:
+            # code...
+            #non admin / single lab /  all cylinder data
+            $testedcylindersWhereData = [            
+            ['LabCTS', '=', $labName],
+            ['LabUser','=',$labUser]
+                ];  
+
+            $labsWhereData = [           
+            ['regtype', '=', 'laboratory'],
+            ['deleted', '=', 0]
+            ];                         
+            break;
         }
+//print_r($testedcylindersWhereData);
+//return;
 
-        //return view ('vehicle.listestedcylinders',['testedcylinders'=>$testedcylinders]);            
-        
-        //return view ('vehicle.listtestedcylinders',compact('testedcylinders','treeitems'))->with('page',1);
-        //$sort=Request('sort');
+        $testedcylinders=DB::table('RegisteredCylinders')
+                    ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
+                    ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
+                        'vehicle_particulars.Registration_no') 
+                    ->where ($testedcylindersWhereData)
+                    ->orderby($sort,'desc')
+                    ->paginate($pagesize);
+
+        $labs=DB::table('users')                    
+                    ->select ('id','Labname')
+                    ->where ($labsWhereData)
+                    ->orderby($sort,'desc')
+                    ->paginate($pagesize); 
+
+
         $data =['page'=>'1','sort'=>$sort];
-        /*$testedcylinders->setCollection(
-    collect(
-        collect($testedcylinders->items())->sortBy($sort,true)
-    )->values());*/
-
-  //return view ('vehicle.listtestedcylinders',compact('testedcylinders','treeitems'))->with('page',1);
-  //return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders->appends('sort'=>$sort),'treeitems'=>$treeitems])->with('page',1);
-    //    return view ('vehicle.listtestedcylinders',compact('testedcylinders','treeitems'))->with($data);
-
-        //return view('vehicle.cylinders',['cylinder_locations'=>$results,'treeitems'=>$treeitems]);
-
-//$querystringArray = ['sort' => $sort, 'anotherVar' => 'something_else'];
+ 
     $querystringArray = ['sort' => $sort];
 
 $testedcylinders->appends($querystringArray);
@@ -1695,13 +1700,6 @@ session()->flashInput($request->input());
 
     return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1);
     
-
-
-
-
-
-
-
 
     }
     public function editformfortestedcylinders($cylinderid)

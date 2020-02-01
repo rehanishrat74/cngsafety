@@ -359,7 +359,7 @@
                     </div>
                     <div class="modal-body">
                                     
-                                        @yield('content')
+                                        @yield('content-temp')
                                     
 
                     </div>
