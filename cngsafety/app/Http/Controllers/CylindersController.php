@@ -871,6 +871,7 @@ public function showUploadFile(Request $request) {
             $cylinders = DB::table('kit_cylinders')
                     ->leftjoin('RegisteredCylinders', function($join){
                       $join->on('kit_cylinders.Cylinder_SerialNo','=','RegisteredCylinders.SerialNumber');
+                      $join->on('kit_cylinders.Make_Model','=','RegisteredCylinders.BrandName');
                     })
                     ->select('kit_cylinders.formid','kit_cylinders.Cylinder_SerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.InspectionDate','kit_cylinders.Cylinder_no','kit_cylinders.ImportDate','kit_cylinders.Standard','kit_cylinders.Make_Model','kit_cylinders.cylinderlocation',
                         DB::raw('IF(ISNULL(RegisteredCylinders.SerialNumber) OR ISNULL(Registeredcylinders.BrandName), "(Unregistered)", "") as cylinderStatus'))
