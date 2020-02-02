@@ -287,7 +287,7 @@ $this->validate($request,$kitfields);
 
                             
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_1,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_1,$inspectiondate,$makenmodel_1]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -305,7 +305,7 @@ $this->validate($request,$kitfields);
                         (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderlocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$formid, 2 ,$serialno_2,$kitseriano,$inspectiondate,$importdate_2,$scancode_2,$makenmodel_2,$location_2]);
                         $cylinderserialnocount=$cylinderserialnocount+1;
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_2,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_2,$inspectiondate,$makenmodel_2]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -322,7 +322,7 @@ $this->validate($request,$kitfields);
                         $cylinderserialnocount=$cylinderserialnocount+1;
 
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_3,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_3,$inspectiondate,$makenmodel_3]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -338,7 +338,7 @@ $this->validate($request,$kitfields);
                         $cylinderserialnocount=$cylinderserialnocount+1;
 
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_4,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_4,$inspectiondate,$makenmodel_4]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -353,7 +353,7 @@ $this->validate($request,$kitfields);
                         (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderlocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$formid, 5 ,$serialno_5,$kitseriano,$inspectiondate,$importdate_5,$scancode_5,$makenmodel_5,$location_5]);
                         $cylinderserialnocount=$cylinderserialnocount+1;
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_5,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_5,$inspectiondate,$makenmodel_5]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -368,7 +368,7 @@ $this->validate($request,$kitfields);
                         (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderlocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$formid, 6 ,$serialno_6,$kitseriano,$inspectiondate,$importdate_6,$scancode_6,$makenmodel_6,$location_6]);
                         $cylinderserialnocount=$cylinderserialnocount+1;
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_6,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_6,$inspectiondate,$makenmodel_6]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -858,17 +858,26 @@ public function showUploadFile(Request $request) {
         //echo 'show editable form='.$id;
 
 //---rehan here-----------------------------------------------
-          /*$cylinders=DB::SELECT('select formid,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,Cylinder_no,ImportDate,Standard,Make_Model,cylinderlocation
-                from kit_cylinders where formid =? order by Cylinder_no',[$id]);*/
-
-            $cylinders = DB::table('kit_cylinders')
+     
+           /*$cylinders = DB::table('kit_cylinders')
                     ->leftjoin('RegisteredCylinders', function($join){
                       $join->on('kit_cylinders.Cylinder_SerialNo','=','RegisteredCylinders.SerialNumber');
                     })
                     ->select('kit_cylinders.formid','kit_cylinders.Cylinder_SerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.InspectionDate','kit_cylinders.Cylinder_no','kit_cylinders.ImportDate','kit_cylinders.Standard','kit_cylinders.Make_Model','kit_cylinders.cylinderlocation',DB::raw('IF(ISNULL(RegisteredCylinders.SerialNumber), "(Unregistered)", "") as cylinderStatus'))
                     ->where('formid','=',$id)
                     ->orderby('Cylinder_no','asc')
-                    ->get();                        
+                    ->get();*/                        
+
+            $cylinders = DB::table('kit_cylinders')
+                    ->leftjoin('RegisteredCylinders', function($join){
+                      $join->on('kit_cylinders.Cylinder_SerialNo','=','RegisteredCylinders.SerialNumber');
+                    })
+                    ->select('kit_cylinders.formid','kit_cylinders.Cylinder_SerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.InspectionDate','kit_cylinders.Cylinder_no','kit_cylinders.ImportDate','kit_cylinders.Standard','kit_cylinders.Make_Model','kit_cylinders.cylinderlocation',
+                        DB::raw('IF(ISNULL(RegisteredCylinders.SerialNumber) OR ISNULL(Registeredcylinders.BrandName), "(Unregistered)", "") as cylinderStatus'))
+                    ->where('formid','=',$id)
+                    ->orderby('Cylinder_no','asc')
+                    ->get();                     
+
 
         $results = DB::SELECT('select Location_id,Location_name FROM cylinder_locations order by Location_id;');
                 
@@ -1207,7 +1216,7 @@ public function showUploadFile(Request $request) {
 
                             $cylinderserialnocount=$cylinderserialnocount+1;
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_1,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_1,$inspectiondate,$makenmodel_1]) ;
 
                         
                         
@@ -1240,7 +1249,7 @@ public function showUploadFile(Request $request) {
                         $cylinderserialnocount=$cylinderserialnocount+1;
 
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_2,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_2,$inspectiondate,$makenmodel_2]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -1269,7 +1278,7 @@ public function showUploadFile(Request $request) {
 
                         $cylinderserialnocount=$cylinderserialnocount+1;
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_3,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_3,$inspectiondate,$makenmodel_3]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -1295,7 +1304,7 @@ public function showUploadFile(Request $request) {
                             ]);
 
                         $cylinderserialnocount=$cylinderserialnocount+1;
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_4,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_4,$inspectiondate,$makenmodel_4]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -1323,7 +1332,7 @@ public function showUploadFile(Request $request) {
 
                         $cylinderserialnocount=$cylinderserialnocount+1;
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_5,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_5,$inspectiondate,$makenmodel_5]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
@@ -1350,7 +1359,7 @@ public function showUploadFile(Request $request) {
 
                         $cylinderserialnocount=$cylinderserialnocount+1;
 
-                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ?',[$serialno_6,$inspectiondate]) ;
+                        $validSerialNo=DB::select('select count(id) as totalcylinders from RegisteredCylinders where SerialNumber=? and InspectionExpiryDate > ? and BrandName=?',[$serialno_6,$inspectiondate,$makenmodel_6]) ;
                         
                         if ($validSerialNo[0]->totalcylinders<=0)
                         {
