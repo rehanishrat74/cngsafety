@@ -436,354 +436,580 @@ class Test extends Controller
 
     }
 
-
+// update cylinders
     public function doUpdateCylinders(Request $r) {
-        $response = array();
-        $userid =6; // $r['user_id'];
-        $code = $r['code'];
-	    $scan_code ="J5IQ0GAU6";// $r['scan_code']; //Additional fields
-	    $o_cnic ="cnic";// $r['o_cnic'];       // Additional fields
-	    $totalcylinders =2;// $r['totalcylinders'];  //Additional fields
-	    $lastinspectionid =0; // $r['inspectionid']; //Addtitional field. doUpdateCngKit returns this field.
-	    $workstationid="PFJ-1";// $r['stationno']; // Additional field.
-	    $registration_no ="PKR 233"; // $r['registration_no']; //Additional field
-        $inspectiondate ="2019-10-16"; //  $r['inspectiondate']; //Additional field
-        $kitserialno   ="kitserialno1"; //$r['cngkitserialno']; //Additional field
 
-        $location_1 ="1"; // !empty($r['c1_location']) ? $r['c1_location'] : ''; //Additional field
-        $standard_1 ="NZ5454"; // !empty($r['c1_iso_model']) ? $r['c1_iso_model'] : '';    //Additional field
-        $makenmodel_1 ="INFLEX"; // !empty($r['c1_make_model']) ? $r['c1_make_model'] : '';
-        $serialno_1 = "412412"; //!empty($r['c1_serial_no']) ? $r['c1_serial_no'] : '';
-        $importdate_1 ="2019-10-16";// $r['c1_import_date']; //Additional field
+        //if($r['API_Key'] != $this->API_KEY)
+        $i=1;
+        if($i== 2)
+         {
+            echo 'API Autorization Failed';
+        } else {
+                $response = array();
+                $userid =6;// $r['user_id'];
+                $code ="6XMWFH4G9";// $r['code'];6XMWFH4G9
+                $scan_code ="6XMWFH4G9";// $r['scan_code']; //Additional fields
+        $o_cnic ="3720114584115";// $r['o_cnic'];       // Additional fields
+        $totalcylinders =2;// $r['totalcylinders'];  //Additional fields
+        $lastinspectionid =0; // $r['inspectionid']; //Addtitional field. doUpdateCngKit returns this field.
+        $workstationid="PFJ-1";// $r['stationno']; // Additional field.
+        $registration_no ="KZ66 ZYT"; // $r['registration_no']; //Additional field
 
-        $location_2 ="2"; // !empty($r['c2_location']) ? $r['c2_location'] : ''; //Additional field
-        $standard_2 ="NZ5454"; // !empty($r['c2_iso_model']) ? $r['c2_iso_model'] : ''; //Additional field
-        $makenmodel_2 = "INFLEX"; //!empty($r['c2_make_model']) ? $r['c2_make_model'] : '';
-        $serialno_2 = "546235"; //!empty($r['c2_serial_no']) ? $r['c2_serial_no'] : '';
-        $importdate_2 ="2019-10-16"; $r['c2_import_date']; //Additional field
+                $oinspectiondate = "2019-10-16"; //  $r['inspectiondate']; //Additional field
+                if($oinspectiondate != '') {
+                    $date = strtotime($oinspectiondate);
+                    $inspectiondate = date('Y-n-j', $date);
+                } else {
+                    $inspectiondate = '';
+                }
 
-        $location_3 = null ;//!empty($r['c3_location']) ? $r['c3_location'] : ''; //Additional field
-        $standard_3 = null ;//!empty($r['c3_iso_model']) ? $r['c3_iso_model'] : '';   //Additional field      
-        $makenmodel_3 = null ;//!empty($r['c3_make_model']) ? $r['c3_make_model'] : '';
-        $serialno_3 =null ;// !empty($r['c3_serial_no']) ? $r['c3_serial_no'] : '';
-        $importdate_3 = null ;//$r['c3_import_date'];        //Additional field
+               $kitserialno   ="kitserialno1"; //$r['cngkitserialno']; //Additional field
+                $location_1 ="1"; // !empty($r['c1_location']) ? $r['c1_location'] : ''; //Additional field
+                $standard_1 ="NZ5454"; // !empty($r['c1_iso_model']) ? $r['c1_iso_model'] : '';    //Additional field
+                $makenmodel_1 ="INFLEX"; // !empty($r['c1_make_model']) ? $r['c1_make_model'] : '';
+                $serialno_1 ="412412b"; // !empty($r['c1_serial_no']) ? $r['c1_serial_no'] : '';
 
-        $location_4 = null ;//!empty($r['c4_location']) ? $r['c4_location'] : ''; //Additional field
-        $standard_4 = null ;//!empty($r['c4_iso_model']) ? $r['c4_iso_model'] : '';  //Additional field
-        $makenmodel_4 =null ;// !empty($r['c4_make_model']) ? $r['c4_make_model'] : '';
-        $serialno_4 = null ;//!empty($r['c4_serial_no']) ? $r['c4_serial_no'] : '';
-        $importdate_4 =null ;// $r['c4_import_date']; //Additional field
-
-        $location_5 = null ;//!empty($r['c5_location']) ? $r['c5_location'] : ''; //Additional field
-        $standard_5 =null ;// !empty($r['c5_iso_model']) ? $r['c5_iso_model'] : '';    //Additional field     
-        $makenmodel_5 = null ;//!empty($r['c5_make_model']) ? $r['c5_make_model'] : '';
-        $serialno_5 = null ;//!empty($r['c5_serial_no']) ? $r['c5_serial_no'] : '';
-        $importdate_5 =null ;// $r['c5_import_date'];        //Additional field
-        
-        $location_6 = null ;//!empty($r['c6_location']) ? $r['c6_location'] : ''; //Additional field
-        $standard_6 = null ;//!empty($r['c6_iso_model']) ? $r['c6_iso_model'] : '';        //Additional field
-        $makenmodel_6 =null ;// !empty($r['c6_make__model']) ? $r['c6_make__model'] : '';
-        $serialno_6 = null ;//!empty($r['c6_serial_no']) ? $r['c6_serial_no'] : '';
-        $importdate_6 = null ;//$r['c6_import_date']; //Additional field
-
-
-    	$vehicleParticularMsg="x";
-    	$ownermsg="x";
-    	$msgws="x";
-    	$vehicleRecordNo=0;
-
-	    $finalResponse ="InValid";
-	    $msg ="Error In doUpdateCylinders";	
-	    $record_no=0;
-        $cylinderserialnocount =0;
-        $inspectionStatus='pending';
-
-        $stickerCount=0;
-        $stickerCnic="0";
-        $stickervehicle="0";
-
-        $cylinderlist="";
-        $parameters=array();
-        $trace="x";
-
-
-       $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$workstationid]);
-
-        if (!empty($vechicle))
-        {
-
-            if ($vechicle[0]->recordfound==1)
-            {
-
-                $stickerStatus =DB::table('CodeRollsSecondary')             
-                                ->select( DB::Raw('ifnull(cnic,"0") as cnic'), DB::Raw('ifnull(vehicleRegNo,"0") as vehicleRegNo'),DB::Raw('count(batchid) as allocated'))
-                                ->groupby ('cnic','vehicleRegNo')
-                                ->where('serialno','=',$scan_code)
-                                ->get();
+                $oimportdate_1 ="2019-10-16";// $r['c1_import_date']; //Additional field
+                if($oimportdate_1 != '') {
+                    $date = strtotime($oimportdate_1);
+                    $importdate_1 = date('Y-n-j', $date);
+                } else {
+                    $importdate_1 = '';
+                }
                 
-                if (!empty($stickerStatus) && count($stickerStatus))
+                $location_2 = "2"; //!empty($r['c2_location']) ? $r['c2_location'] : ''; //Additional field
+                $standard_2 ="NZ5454"; // !empty($r['c2_iso_model']) ? $r['c2_iso_model'] : ''; //Additional field
+                $makenmodel_2 ="INFLEX"; // !empty($r['c2_make_model']) ? $r['c2_make_model'] : '';
+                $serialno_2 = "546235"; //!empty($r['c2_serial_no']) ? $r['c2_serial_no'] : '';
+                
+                $oimportdate_2 ="2019-10-16"; // $r['c2_import_date']; //Additional field
+                if($oimportdate_2 != '') {
+                    $date = strtotime($oimportdate_2);
+                    $importdate_2 = date('Y-n-j', $date);
+                } else {
+                    $importdate_2 = '';
+                }
+                
+                $location_3 =  null ;//!empty($r['c3_location']) ? $r['c3_location'] : ''; //Additional field
+                $standard_3 =null ;// !empty($r['c3_iso_model']) ? $r['c3_iso_model'] : '';   //Additional field      
+                $makenmodel_3 =null ;// !empty($r['c3_make_model']) ? $r['c3_make_model'] : '';
+                $serialno_3 =null ;//  !empty($r['c3_serial_no']) ? $r['c3_serial_no'] : '';
+                
+                $oimportdate_3 = null ;// $r['c3_import_date'];        //Additional field
+                if($oimportdate_3 != '') {
+                    $date = strtotime($oimportdate_3);
+                    $importdate_3 = date('Y-n-j', $date);
+                } else {
+                    $importdate_3 = '';
+                }
+                
+                $location_4 =null ;// !empty($r['c4_location']) ? $r['c4_location'] : ''; //Additional field
+                $standard_4 =null ;// !empty($r['c4_iso_model']) ? $r['c4_iso_model'] : '';  //Additional field
+                $makenmodel_4 =null ;// !empty($r['c4_make_model']) ? $r['c4_make_model'] : '';
+                $serialno_4 =null ;// !empty($r['c4_serial_no']) ? $r['c4_serial_no'] : '';
+
+                $oimportdate_4 = null ;//$r['c4_import_date']; //Additional field
+                if($oimportdate_4 != '') {
+                    $date = strtotime($oimportdate_4);
+                    $importdate_4 = date('Y-n-j', $date);
+                } else {
+                    $importdate_4 = '';
+                }
+
+                $location_5 = null ;// !empty($r['c5_location']) ? $r['c5_location'] : ''; //Additional field
+                $standard_5 =null ;// !empty($r['c5_iso_model']) ? $r['c5_iso_model'] : '';    //Additional field     
+                $makenmodel_5 =null ;// !empty($r['c5_make_model']) ? $r['c5_make_model'] : '';
+                $serialno_5 =null ;// !empty($r['c5_serial_no']) ? $r['c5_serial_no'] : '';
+                
+                $oimportdate_5 =null ;//  $r['c5_import_date'];        //Additional field
+                if($oimportdate_5 != '') {
+                    $date = strtotime($oimportdate_5);
+                    $importdate_5 = date('Y-n-j', $date);
+                } else {
+                    $importdate_5 = '';
+                }
+                
+                $location_6 =null ;// !empty($r['c6_location']) ? $r['c6_location'] : ''; //Additional field
+                $standard_6 =null ;// !empty($r['c6_iso_model']) ? $r['c6_iso_model'] : '';        //Additional field
+                $makenmodel_6 =null ;// !empty($r['c6_make_model']) ? $r['c6_make_model'] : '';
+                $serialno_6 = null ;//!empty($r['c6_serial_no']) ? $r['c6_serial_no'] : '';
+                
+                $oimportdate_6 = null ;// $r['c6_import_date']; //Additional field
+                if($oimportdate_6 != '') {
+                    $date = strtotime($oimportdate_6);
+                    $importdate_6 = date('Y-n-j', $date);
+                } else {
+                    $importdate_6 = '';
+                }
+                
+                $vehicleParticularMsg="null";
+        $ownermsg="null";
+        $msgws="null";
+                $vehicleRecordNo=0;
+                $finalResponse ="invalid";
+                $msg ="null";   
+                $record_no=0;
+                $cylinderserialnocount =0;
+                $inspectionStatus='pending';
+                $cylindersWhereData= array();
+                $cylindersWhereData1=array();
+                $cylindersWhereData2=array();
+                $cylindersWhereData3=array();
+                $cylindersWhereData4=array();
+                $cylindersWhereData5=array();
+                $cylindersWhereData6=array();
+
+                $stickerCount=0;
+                $stickerCnic="0";
+                $stickervehicle="0";
+
+                $cylinderlist="";
+                $parameters=array();
+                $trace="checking sticker status,";
+                $isproduction="0";
+                 if ($r['isproduction'] )
                 {
-                    if ($stickerStatus[0]->allocated==1)
+                    $isproduction =$r['isproduction'];
+                }
+                //dd ($totalcylinders);
+                if (!$totalcylinders>=1)
+                {
+                    $finalResponse ="invalid"; //invalid
+                    $inspectionStatus='invalid';
+                    $response['response'] = 'invalid'; //invalid
+                    $response['message'] = 'There must be at least one cylinder. Invalid total cylinders';
+                    echo json_encode($response);
+                    return;                                
+                }
+                $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$workstationid]);
+                if (!empty($vechicle))
+                {
+                    if ($vechicle[0]->recordfound==1)
                     {
-                        if($stickerStatus[0]->allocated==1)
+                        $stickerStatus =DB::table('CodeRollsSecondary')             
+                        ->select( DB::Raw('ifnull(cnic,"0") as cnic'), DB::Raw('ifnull(vehicleRegNo,"0") as vehicleRegNo'),DB::Raw('count(batchid) as allocated'))
+                        ->groupby ('cnic','vehicleRegNo')
+                        ->where('serialno','=',$scan_code)
+                        ->get();
+                        if (!empty($stickerStatus) && count($stickerStatus))
                         {
-                            if (!empty($stickerStatus) && count($stickerStatus) )    //count is safest to empty()
+                            if ($stickerStatus[0]->allocated==1)
                             {
-                                
-                                //retrieving sticker state
-                                $stickerCount=$stickerStatus[0]->allocated;
-                                $stickerCnic=$stickerStatus[0]->cnic;
-                                $stickervehicle=$stickerStatus[0]->vehicleRegNo;
-
-                                $trace=$trace."finding inspection";
-                
-                                $inspection = DB::SELECT('SELECT formid , vehicle_particulars.Inspection_Status,vehicle_particulars.Record_no FROM cng_kit LEFT JOIN vehicle_particulars on cng_kit.formid = vehicle_particulars.lastinspectionid and cng_kit.VehicleRecordNo = vehicle_particulars.Record_no where vehiclerRegistrationNo=? and vehicle_particulars.stationno=? and vehicle_particulars.stickerSerialNo=? and vehicle_particulars.OwnerCnic=? ',[$registration_no,$workstationid,$scan_code,$o_cnic]); 
-                    
-
-                                if (!empty($inspection) && count($inspection))
+                                if($stickerStatus[0]->allocated==1)
                                 {
-                                    $trace=$trace."<br> inside inspection";
-                                    $lastinspectionid=$inspection[0]->formid;
+                                    if (!empty($stickerStatus) && count($stickerStatus) )    //count is safest to empty()
+                                    {       
 
-                                    if ($inspection[0]->Inspection_Status=="completed")
-                                    {
-                                        $finalResponse ="Invalid";
-                                        $inspectionStatus='completed';
+                                        //retrieving sticker state
+                                        $stickerCount=$stickerStatus[0]->allocated;
+                                        $stickerCnic=$stickerStatus[0]->cnic;
+                                        $stickervehicle=$stickerStatus[0]->vehicleRegNo;
+                                        $trace=$trace."finding inspection";
+                                        $inspection = DB::SELECT('SELECT formid , vehicle_particulars.Inspection_Status,vehicle_particulars.Record_no FROM cng_kit LEFT JOIN vehicle_particulars on cng_kit.formid = vehicle_particulars.lastinspectionid and cng_kit.VehicleRecordNo = vehicle_particulars.Record_no where vehiclerRegistrationNo=? and vehicle_particulars.stationno=? and vehicle_particulars.stickerSerialNo=? and vehicle_particulars.OwnerCnic=? ',[$registration_no,$workstationid,$scan_code,$o_cnic]); 
 
-                                    }
 
-                                    if ($inspection[0]->Inspection_Status=="pending" && $totalcylinders > 0 && $stickerCount > 0 && $stickerCnic == $o_cnic && $stickervehicle ==$registration_no) 
-                                    {
-                                        $trace=$trace."/ finding recordno";  
-                                        $record_no = $inspection[0]->Record_no;     
 
-                                        if (!is_null($lastinspectionid) && !empty($lastinspectionid) && null !==$lastinspectionid && 
-                                        !is_null($kitserialno) && !empty($kitserialno) && null !==$kitserialno &&
-                                        !is_null($inspectiondate) && !empty($inspectiondate) && null !==$inspectiondate && null !== $serialno_1 && $record_no >0)
-                            
-                                        {   $trace=$trace."<br> start cylinders checks";
-                
-                                            if (!is_null($serialno_1) && !empty($serialno_1) && null!==$serialno_1 )
-                                            {   //at least 1 serial no is reqd to delete old cylinder records
-                                                $trace=$trace."/ in cylinder1";
-                                                DB::delete('delete from kit_cylinders where formid = ?',[$lastinspectionid]);                      
-                                                DB::insert('insert into kit_cylinders
-                                                (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_1,$kitserialno,$inspectiondate,$importdate_1,$standard_1,$makenmodel_1,$location_1]);
+                                        if (!empty($inspection) && count($inspection))
+                                        {
 
-                                                $cylinderserialnocount=$cylinderserialnocount+1;
-                                                $cylinderlist=$serialno_1; // to be used in 'inclause'
+                                            $trace=$trace."<br> inside inspection";
+                                            $lastinspectionid=$inspection[0]->formid;
+                                            if ($inspection[0]->Inspection_Status=="completed")
+                                            {
+
+                                                $finalResponse ="invalid"; //invalid
+                                                $inspectionStatus='completed';
+                                                $response['response'] = 'invalid'; //invalid
+                                                $response['message'] = 'cannot modify completed inspection';
+                                                echo json_encode($response);
+                                                return;                                                 
                                             }
-                
-                                            if (!is_null($serialno_2) && !empty($serialno_2) && isset($serialno_2) )
-                                            {   
-                                                $trace=$trace."/ in cylinder2";
+                                            if ($inspection[0]->Inspection_Status=="pending" && $totalcylinders > 0 && $stickerCount > 0 && $stickerCnic == $o_cnic && $stickervehicle ==$registration_no) 
+                                            {
 
-                                                DB::insert('insert into kit_cylinders
-                                                (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_2,$kitserialno,$inspectiondate,$importdate_2,$standard_2,$makenmodel_2,$location_2]);
+                                                $trace=$trace."/ finding recordno";  
+                                                $record_no = $inspection[0]->Record_no;     
+                                                if (!is_null($lastinspectionid) && !empty($lastinspectionid) && null !==$lastinspectionid && 
+                                                !is_null($kitserialno) && !empty($kitserialno) && null !==$kitserialno &&
+                                                !is_null($inspectiondate) && !empty($inspectiondate) && null !==$inspectiondate && null !== $serialno_1 && $record_no >0)
+                                                {   
 
-                                                $cylinderserialnocount=$cylinderserialnocount+1;
-                                                $cylinderlist=$cylinderlist.",".$serialno_2;
-                                            }
-                                            if (!is_null($serialno_3) && !empty($serialno_3) && isset($serialno_3) )
-                                            {                       
-                                                $trace=$trace."/ in cylinder3";
-                                                DB::insert('insert into kit_cylinders
-                                                (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_3,$kitserialno,$inspectiondate,$importdate_3,$standard_3,$makenmodel_3,$location_3]);
-
-                                                $cylinderserialnocount=$cylinderserialnocount+1;
-                                                $cylinderlist=$cylinderlist.",".$serialno_3;
-                                            }
-
-                                            if (!is_null($serialno_4) && !empty($serialno_4) && isset($serialno_4) )
-                                            {                        
-                                                $trace=$trace."/ in cylinder4";
-                                                DB::insert('insert into kit_cylinders
-                                                (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_4,$kitserialno,$inspectiondate,$importdate_4,$standard_4,$makenmodel_4,$location_4]);
-
-                                                $cylinderserialnocount=$cylinderserialnocount+1;
-                                                $cylinderlist=$cylinderlist.",".$serialno_4;
-                                            }
-                                            if (!is_null($serialno_5) && !empty($serialno_5) && isset($serialno_5) )
-                                            {                       
-                                                $trace=$trace."/ in cylinder5";
-                                                DB::insert('insert into kit_cylinders
-                                                (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_5,$kitserialno,$inspectiondate,$importdate_5,$standard_5,$makenmodel_5,$location_5]);
-
-                                                $cylinderserialnocount=$cylinderserialnocount+1;
-                                                $cylinderlist=$cylinderlist.",".$serialno_5;
-                                            }
-
-                                            if (!is_null($serialno_6) && !empty($serialno_6) && isset($serialno_6) )
-                                            {                        
-                                                $trace=$trace."/ in cylinder6";
-                                                DB::insert('insert into kit_cylinders
-                                                (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_6,$kitserialno,$inspectiondate,$importdate_6,$standard_6,$makenmodel_6,$location_6]);
-
-                                                $cylinderserialnocount=$cylinderserialnocount+1;
-                                                $cylinderlist=$cylinderlist.",".$serialno_6;
-                                            }
+                                                    $trace=$trace."<br> start cylinders checks";
+                                                    if (!is_null($serialno_1) && !empty($serialno_1) && null!==$serialno_1 ) {   
+                                                        //at least 1 serial no is reqd to delete old cylinder records
+                                                        $trace=$trace."/ in cylinder1";
+                                                        DB::delete('delete from kit_cylinders where formid = ?',[$lastinspectionid]);                      
+                                                        DB::insert('insert into kit_cylinders
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_1,$kitserialno,$inspectiondate,$importdate_1,$standard_1,$makenmodel_1,$location_1]);
+                                                        $cylinderserialnocount=$cylinderserialnocount+1;
+                                                        $cylinderlist=$serialno_1; // to be used in 'inclause'
+//cylinder changings brand and serial is the pk.
+                                                        $cylindersWhereData1 = [
+                                                            ['SerialNumber','=', $serialno_1],
+                                                            ['Make_Model', '=', $makenmodel_1]
+                                                                            ];                                        
 
 
+                                                    }
+                                                    if (!is_null($serialno_2) && !empty($serialno_2) && isset($serialno_2) ) {   
+                                                        $trace=$trace."/ in cylinder2";
+                                                        DB::insert('insert into kit_cylinders
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 2 ,$serialno_2,$kitserialno,$inspectiondate,$importdate_2,$standard_2,$makenmodel_2,$location_2]);
+                                                        $cylinderserialnocount=$cylinderserialnocount+1;
+                                                        $cylinderlist=$cylinderlist.",".$serialno_2;
+//cylinder changings brand and serial is the pk.
+                                                        $cylindersWhereData2 = [
+                                                            ['SerialNumber','=', $serialno_2],
+                                                            ['Make_Model', '=', $makenmodel_2]
+                                                                            ];                                                          
+                                                    }
+                                                    if (!is_null($serialno_3) && !empty($serialno_3) && isset($serialno_3) )
+                                                    {                       
+                                                        $trace=$trace."/ in cylinder3";
+                                                        DB::insert('insert into kit_cylinders
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 3 ,$serialno_3,$kitserialno,$inspectiondate,$importdate_3,$standard_3,$makenmodel_3,$location_3]);
+                                                        $cylinderserialnocount=$cylinderserialnocount+1;
+                                                        $cylinderlist=$cylinderlist.",".$serialno_3;
+//cylinder changings brand and serial is the pk.
+                                                        $cylindersWhereData3 = [
+                                                            ['SerialNumber','=', $serialno_3],
+                                                            ['Make_Model', '=', $makenmodel_3]
+                                                                            ];                        
 
-                                            if ($cylinderserialnocount==$totalcylinders) 
-                                            {   
-                                                $trace=$trace."/ cylinder count check ok. checking kit inspection";
-                                                //total cylinders data matched.
-                                                $cngKitInspection = DB::SELECT('SELECT count(formid) as incompleteInspection FROM cng_kit WHERE formid =? and Cylinder_valve <> "on" or Filling_valve <> "on" or Reducer <> "on" or HighPressurePipe <> "on" or ExhaustPipe <> "on"',[$lastinspectionid]);
-                                        
-                                                $msg="cng kit inspection not completed";
-                                                $finalResponse ="Inalid";
-                                                if ($cngKitInspection[0]->incompleteInspection ==0)
-                                                {
-                                                    $trace=$trace."/ kit inspection completed. checking any unregistered cylinder";
-                                                    //kit inspection is completed.
-                                                    //Checking in registered cylinders, if import date is null then pending because testing record in the registered cylinder is missing. 
-                                                    $Cylinders = DB::SELECT('SELECT count(formid) as UnregisteredCylinders FROM kit_cylinders LEFT JOIN RegisteredCylinders on kit_cylinders.Cylinder_SerialNo = RegisteredCylinders.SerialNumber where formid =? and RegisteredCylinders.Date is null',[$lastinspectionid]); 
-                                            //RegisteredCylinders.Date = inspection date by labs
-                                                    if ($Cylinders[0]->UnregisteredCylinders ==0)
-                                                    {   //all cylinders have inspection dates
-                                                        //update stickerserialno in registered cylinders
-                                                        $trace=$trace."/ all cylinders are verified by labs";
-                                                        //all cylinders are tested by hdip labs
-                                                        $inspectionStatus='completed';
+                                                    }
+                                                    if (!is_null($serialno_4) && !empty($serialno_4) && isset($serialno_4) )
+                                                    {                        
+                                                        $trace=$trace."/ in cylinder4";
+                                                        DB::insert('insert into kit_cylinders
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 4 ,$serialno_4,$kitserialno,$inspectiondate,$importdate_4,$standard_4,$makenmodel_4,$location_4]);
+                                                        $cylinderserialnocount=$cylinderserialnocount+1;
+                                                        $cylinderlist=$cylinderlist.",".$serialno_4;
 
-                                                        $UnregisteredCylinders=DB::table('RegisteredCylinders')
-                                                        ->select(DB::Raw('count(id) as cylinderscount'))                
-                                                        ->where('InspectionExpiryDate', '<', $inspectiondate)
-                                                        ->where('SerialNumber', 'in', $cylinderlist)
-                                                        ->get();
+//cylinder changings brand and serial is the pk.
+                                                        $cylindersWhereData4 = [
+                                                            ['SerialNumber','=', $serialno_4],
+                                                            ['Make_Model', '=', $makenmodel_4]
+                                                                            ];                                                         
+                                                    }
+                                                    if (!is_null($serialno_5) && !empty($serialno_5) && isset($serialno_5) )
+                                                    {                       
+                                                        $trace=$trace."/ in cylinder5";
+                                                        DB::insert('insert into kit_cylinders
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 5 ,$serialno_5,$kitserialno,$inspectiondate,$importdate_5,$standard_5,$makenmodel_5,$location_5]);
+                                                        $cylinderserialnocount=$cylinderserialnocount+1;
+                                                        $cylinderlist=$cylinderlist.",".$serialno_5;
+//cylinder changings brand and serial is the pk.
+                                                        $cylindersWhereData5 = [
+                                                            ['SerialNumber','=', $serialno_5],
+                                                            ['Make_Model', '=', $makenmodel_5]
+                                                                            ];                                                         
+                                                    }
+                                                    if (!is_null($serialno_6) && !empty($serialno_6) && isset($serialno_6) )
+                                                    {                        
+                                                        $trace=$trace."/ in cylinder6";
+                                                        DB::insert('insert into kit_cylinders
+                                                        (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 6 ,$serialno_6,$kitserialno,$inspectiondate,$importdate_6,$standard_6,$makenmodel_6,$location_6]);
+                                                        $cylinderserialnocount=$cylinderserialnocount+1;
+                                                        $cylinderlist=$cylinderlist.",".$serialno_6;
 
-                                                        $UnregisteredCylindersCount=0;
-                                                        if (!empty($UnregisteredCylinders) && !$UnregisteredCylinders->isempty() )
+//cylinder changings brand and serial is the pk.
+                                                        $cylindersWhereData6 = [
+                                                            ['SerialNumber','=', $serialno_6],
+                                                            ['Make_Model', '=', $makenmodel_6]
+                                                                            ];                  
+
+                                                                                                             
+                                                    }
+                                                    if ($cylinderserialnocount==$totalcylinders) 
+                                                    {   
+                                                        $trace=$trace."/ cylinder count check ok. checking kit inspection";
+                                                        //stopping valves test upon request
+                                                        //total cylinders data matched.
+                                                        //$cngKitInspection = DB::SELECT('SELECT count(formid) as incompleteInspection FROM cng_kit WHERE formid =? and Cylinder_valve <> "on" or Filling_valve <> "on" or Reducer <> "on" or HighPressurePipe <> "on" or ExhaustPipe <> "on"',[$lastinspectionid]);
+                                                        $cngKitInspection = DB::SELECT('SELECT count(formid) as incompleteInspection FROM cng_kit WHERE formid =? ',[$lastinspectionid]);                                                
+                                                        //$msg="All cngkit valves are not tested.";
+                                                        $msg="cngkit passed.";
+                                                        $finalResponse ="valid";  //incomplete
+                                                        $response['response']="valid"; //incomplete
+                                                        $response['message']=$msg;
+                                                        if ($cngKitInspection[0]->incompleteInspection ==1) //last value was 0. chanaged upon request
                                                         {
-                                                            if ($UnregisteredCylinders[0]->cylinderscount>0) 
-                                                            {
-                                                                $inspectionStatus='pending';
-                                                                $finalResponse ="Inalid";
-                                                                $msg="Cylinder Inspection id required by the approved labs";
-                                                            }
+                                                            $trace=$trace."/ kit inspection completed. checking any unregistered cylinder";
+                                                            //kit inspection is completed.
+                                                            //Checking in registered cylinders, if import date is null then pending because testing record in the registered cylinder is missing. 
+
+                                                            //commenting for model and serial no is unique.
+          
+switch ($totalcylinders ) {
+    case '1':
+        # code...
+            $cylindersWhereData= $cylindersWhereData1;     
+        break;
+    case '2':
+        # code...
+        $cylindersWhereData=array_merge( $cylindersWhereData1,$cylindersWhereData2);     
+        break;
+    case '3':
+        # code...
+        $cylindersWhereData=array_merge( $cylindersWhereData1,$cylindersWhereData2,$cylindersWhereData3);     
+        break;        
+    case '4':
+        # code...
+        $cylindersWhereData=array_merge( $cylindersWhereData1,$cylindersWhereData2,$cylindersWhereData3,$cylindersWhereData4);     
+        break; 
+    case '5':
+        # code...
+        $cylindersWhereData=array_merge( $cylindersWhereData1,$cylindersWhereData2,$cylindersWhereData3,$cylindersWhereData4,$cylindersWhereData5);    
+        break;  
+    case '6':
+        # code...
+        $cylindersWhereData=array_merge( $cylindersWhereData1,$cylindersWhereData2,$cylindersWhereData3,$cylindersWhereData4,$cylindersWhereData5,$cylindersWhereData6);    
+        break;             
+    default:
+        # code...
+        $cylindersWhereData= $cylindersWhereData1;     
+        break;
+}
+//dd($cylindersWhereData);
+
+ $Cylinders=DB::Table('kit_cylinders')
+                    ->leftjoin('RegisteredCylinders',function($join){
+                        $join->on('kit_cylinders.Cylinder_SerialNo','=','RegisteredCylinders.SerialNumber');
+                        $join->on('kit_cylinders.Make_Model','=','RegisteredCylinders.BrandName');
+                    })
+                    ->select(DB::Raw('count(formid) as UnregisteredCylinders'))
+                    ->where('formid','=',$lastinspectionid)
+                    ->where('RegisteredCylinders.Date','=',null)
+                    ->where($cylindersWhereData)                    
+                    ->get();
+                    
+//rehan is here.
+
+                                                            //RegisteredCylinders.Date = inspection date by labs
+                                                            if ($Cylinders[0]->UnregisteredCylinders ==0)
+                                                            {   
+                                                                //all cylinders have inspection dates
+                                                                //update stickerserialno in registered cylinders
+                                                                $trace=$trace."/ all cylinders are verified by labs";
+                                                                //all cylinders are tested by hdip labs
+                                                                $inspectionStatus='completed';
+                                                                $UnregisteredCylinders=DB::table('RegisteredCylinders')
+                                                                ->select(DB::Raw('count(id) as cylinderscount'))                
+                                                                ->where('InspectionExpiryDate', '<', $inspectiondate)
+                                                                ->where('SerialNumber', 'in', $cylinderlist)
+                                                                ->get();
+                                                                $UnregisteredCylindersCount=0;
+                                                                if (!empty($UnregisteredCylinders) && !$UnregisteredCylinders->isempty() )
+                                                                {
+                                                                    if ($UnregisteredCylinders[0]->cylinderscount>0) 
+                                                                    {
+                                                                        $inspectionStatus='pending';
+                                                                        $finalResponse ="valid"; //incomplete
+                                                                        $msg="Cylinder Inspection id required by the approved labs";
+                                                                        $finalResponse ="invalid";  //incomplete
+                                                                        $response['response']="invalid"; //incomplete
+                                                                        $response['message']=$msg;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        $trace=$trace."/ updating cylinders";                                                      
+                                                                        DB::table('vehicle_particulars')
+                                                                        ->where(['Registration_no' => $registration_no])
+                                                                        ->where(['OwnerCnic' => $o_cnic])
+                                                                        ->where(['stickerserialno' => $scan_code])
+                                                                        ->where(['stationno'=> $workstationid])
+                                                                        ->update(['Inspection_Status' => $inspectionStatus]); 
+                                                                        DB::table('cng_kit')
+                                                                        ->where(['VehiclerRegistrationNo'=> $registration_no])
+                                                                        ->where(['formid'=> $lastinspectionid])
+                                                                        ->where(['VehicleRecordNo'=> $record_no])
+                                                                        ->update(['Inspection_Status' => $inspectionStatus]);      
+                                                                        DB::table('RegisteredCylinders')
+                                                                        ->where('SerialNumber', 'in', $cylinderlist)
+                                                                        ->update(['stickerserialno' => $scan_code]); 
+                                                                        $finalResponse ="valid";
+                                                                        //  $msg ="valid inspection id ".$lastinspectionid." to process ".$totalcylinders." cylinders against vehicle ".$registration_no." with scancode ".$scan_code." with inspection status as ".$inspectionStatus;
+                                                                        $msg="Inspection status is completed against vehicle ".$registration_no."  and inspectionid ".$lastinspectionid;
+                                                                        $finalResponse ="valid";  //incomplete
+                                                                        $response['response']="valid"; //incomplete
+                                                                        $response['message']=$msg;
+                                                                    }
+                                                                } // end of unregistered cylinders empty check
+                                                            }  // end of unregistered cylinders
                                                             else
                                                             {
-                                                                $trace=$trace."/ updateing cylinders";                                                      
-                                                                DB::table('vehicle_particulars')
-                                                                ->where(['Registration_no' => $registration_no])
-                                                                ->where(['OwnerCnic' => $o_cnic])
-                                                                ->where(['stickerserialno' => $scan_code])
-                                                                ->where(['stationno'=> $workstationid])
-                                                                ->update(['Inspection_Status' => $inspectionStatus
-                                                                ]); 
-
-                                                                DB::table('cng_kit')
-                                                                ->where(['VehiclerRegistrationNo'=> $registration_no])
-                                                                ->where(['formid'=> $lastinspectionid])
-                                                                ->where(['VehicleRecordNo'=> $record_no])
-                                                                ->update(['Inspection_Status' => $inspectionStatus
-                                                                    ]);      
-                            
-                                                                DB::table('RegisteredCylinders')
-                                                                ->where('SerialNumber', 'in', $cylinderlist)
-                                                                ->update(['stickerserialno' => $scan_code
-                                                                    ]); 
-
-                                                                $finalResponse ="Valid";
-                                                                $msg ="valid inspection id ".$lastinspectionid." to process ".$totalcylinders." cylinders against vehicle ".$registration_no." with scancode ".$scan_code." with inspection status as ".$inspectionStatus;    
-                                                        
-                                                        
+                                                                $finalResponse ="invalid"; //incomplete
+                                                                $msg ="Inspection cannot complete because cylinders are not approved by labs";
+                                                                $response['message']="Not all cylinders are tested by labs";
                                                             }
-
-                                                        } // end of unregistered cylinders empty check
-                            
-                                                    }  // end of unregistered cylinders
-                                                    else
-                                                    {
-                                                        $finalResponse ="InValid";
-                                                        $msg ="Inspection cannot complete because cylinders are not approved by labs";                          
-                                
+                                                        } //end of incomplete inspections         
+                                                    }//cylinder count check
+                                                    else {
+                                                        $msg="Cylinders cound does not match";
+                                                        $finalResponse ="invalid";  //incomplete
+                                                        $response['response']="invalid"; //incomplete
+                                                        $response['message']=$msg;
+                                                        echo json_encode($response);
+                                                        return;                                                        
                                                     }
-                                                } //end of incomplete inspections         
-                                            }//cylinder count check
-                                        } // end of inserting in kit_cylinders      
-                                    } //valid inspection id found to process the inspection
+                                                } // end of inserting in kit_cylinders      
+                                            } //valid inspection id found to process the inspection
+                                            else {
+                                                if ($inspectionStatus=="completed") {
+                                                   $msg="vechicle inspection completed. cannot continue";
+                                                    $response['response']="invalid"; //completed
+                                                    $response['message']="Cannot modify completed inspection";
+                                                   echo json_encode($response);
+                                                   return;
+                                                } else {
+                                                   if ($totalcylinders < 0 ) { 
+                                                    $response['response']="invalid";
+                                                    $response['message'] ="Total cylinders must be >=1 ";     
+                                                    echo json_encode($response);           
+                                                   return;
+                                                    }
+                                                    if ($stickerCount  <= 0 ) { 
+                                                        $response['response']="invalid";
+                                                        $response['message'] ="Invalid sticker against this vehicle"; 
+                                                        echo json_encode($response);
+                                                        return;
+                                                    }
+                                                    if ($stickerCnic != $o_cnic ) { 
+                                                        $response['response']="invalid";
+                                                        $response['message'] ="Vehicle not registered for this NIC ";            
+                                                        echo json_encode($response);
+                                                        return;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else {
+                                            if ($isproduction==0) {
+                                                    $response =array('FinalResponse' => "invalid Sticker",
+                                                        'VehicleResponse'=>$vehicleParticularMsg,
+                                                        'OwnerResponse'=> $ownermsg,'WorkstationResponse' => $msgws,'VehicleRecordNo' => $vehicleRecordNo);
+                                                    $msgResponse="invalid";
+                                                    $response = array();
+                                                    $response['response'] = $finalResponse;
+                                                     $response['message'] = $msg;
+                                            } else {
+                                                        $response['response']="invalid";
+                                                        $response['message'] ="No inspection exists against this Sticker,nic and vehicle";
+                                                        echo json_encode($response);
+                                                        return;
+                                            }
+                                            //echo json_encode($response);
+                                            //return;                                     
+                                        }
+                                    }
                                     else
                                     {
-
-                                        if ($inspectionStatus=="completed")
-                                        {
-                                        $msg="vechicle inspection completed. cannot continue";
-                                        }
-                                        else 
-                                        {
-                                            $msg="Not enough parameters to continue continue cylinder inspection";
-                                        }
-                                
-
-                                    }                   
-
-                                }
-                                else
-                                {
-                                    $response =array('FinalResponse' => "Invalid Sticker",'VehicleResponse'=>$vehicleParticularMsg,'OwnerResponse'=> $ownermsg,'WorkstationResponse' => $msgws,'VehicleRecordNo' => $vehicleRecordNo);
-                                    $msgResponse="InValid";
+                                        //$trace=$trace."/ last inspection not found";    
+                                        //$msg="inspection not found";
+                                        $finalResponse="invalid";
+                                        $response['response']="invalid";
+                                        $response['message'] ="Invalid Sticker against this vehicle";
+                                        echo json_encode($response);
+                                        return;                                        
+                                    }
+                                } 
+                            } else {
+                                //echo 'sticker count is 0';
+                                //$msg="Sticker count is 0. not found";
+                                    $response['response']="invalid";
+                                    $response['message'] ="Invalid Sticker against this vehicle.";
                                     echo json_encode($response);
-                                    return;                                     
-                                }
-
-
+                                    return;                                
                             }
-                            else
-                            {
-                                $trace=$trace."/ last inspection not found";    
-                                $msg="inspection not found";
-                                $finalResponse="Invalid";
-                            }
-                    
-
-                        } 
-
-                    } else {echo 'sticker count is 0';$msg="Sticker count is 0. not found";}
-
-                }else {echo 'sticker not found';$msg="Sticker not found";}
-
-
-            }
-            else
-            {       
-                $trace=$trace."/ Invalid workstation";  
-                $msg="workstation not found";
-                $finalResponse="Invalid";
-            }
-
-        }
-
-
-        $parameters=array(
-                        'inspectionid'=>$lastinspectionid,
-                        'totalcylinders'=>$totalcylinders,
-                        'llotedstickerCount'=>$stickerCount,
-                        'allotedstickerCnic'=>$stickerCnic,
-                        'o_cnic'=>$o_cnic,
-                        'allotedvehicletosticker'=>$stickervehicle,
-                        'registration_no'=>$registration_no,
-                        'kitsercialno' =>$kitserialno,
-                        'inspectiondate'=>$inspectiondate,
-                        'cylinders'=>$cylinderlist,
-                        'recordno'=>$record_no,
-                        'inspectionstatus'=>$inspectionStatus,
-                        'stickercount'=>$stickerCount,
-                        'stickercnic'=>$stickerCnic,
-                        'passedcnic'=>$o_cnic,
-                        'RegisteredStickerVehicle'=>$stickervehicle
-                            );
-    
-        $response =array('response'=>$finalResponse,
-                         'msg'=>$msg,
-                         'inputparams'=>$parameters,
-                         'trace' => $trace
+                        } else {
+                            //echo 'sticker not found';
+                            //$msg="Sticker not found";
+                                $response['response']="invalid";
+                                $response['message'] ="Invalid Sticker against this NIC..";
+                                echo json_encode($response);
+                                return;                            
+                        }
+                    }
+                    else {       
+                        //$trace=$trace."/ Invalid workstation";  
+                        //$msg="workstation not found";
+                        //$finalResponse="invalid";                        
+                        $response['response']="invalid";
+                        $response['message'] ="Invalid userid or workstation";
+                        echo json_encode($response);
+                        return;                        
+                    }
+                }
+                $parameters=array(
+                    'inspectionid'=>$lastinspectionid,
+                    'totalcylinders'=>$totalcylinders,
+                    'llotedstickerCount'=>$stickerCount,
+                    'allotedstickerCnic'=>$stickerCnic,
+                    'o_cnic'=>$o_cnic,
+                    'allotedvehicletosticker'=>$stickervehicle,
+                    'registration_no'=>$registration_no,
+                    'kitsercialno' =>$kitserialno,
+                    'inspectiondate'=>$inspectiondate,
+                    'cylinders'=>$cylinderlist,
+                    'recordno'=>$record_no,
+                    'inspectionstatus'=>$inspectionStatus,
+                    'stickercount'=>$stickerCount,
+                    'stickercnic'=>$stickerCnic,
+                    'passedcnic'=>$o_cnic,
+                    'RegisteredStickerVehicle'=>$stickervehicle
+                );
+                if ($isproduction==0) {
+                     $response =array(
+                    'response'=>$finalResponse,
+                    'msg'=>$msg,
+                    'inputparams'=>$parameters,
+                    'trace' => $trace
                     );
-            
-
-        echo json_encode($response);        
-	
+                } else {
+                     $response['response'] =$finalResponse;
+                }
+                echo json_encode($response);
+            //} else {
+            //    echo 'Inspection API is available for only Mobile Apps';
+            //}
+        }
     }
 
+    public function testWhere()
+    {
+        $cylindersWhereData1 = [
+                    ['serialno','=', '1234'],
+                     ['Make_Model', '=', 'Inflex']
+            ];
+        $cylindersWhereData2 = [
+                    ['serialno','=', '5678'],
+                     ['Make_Model', '=', 'EKC']
+            ];  
+
+        $cylindersWhereData3=[
+                    ['serialno','=', '1234'],
+                     ['Make_Model', '=', 'Inflex'],
+                    ['serialno','=', '5678'],
+                     ['Make_Model', '=', 'EKC']                     
+        ];     
+
+        print_r($cylindersWhereData1);
+        echo '<p><br></p>';
+        print_r($cylindersWhereData2);
+        echo '<p><br></p>';
+
+        echo 'manual cat'.'<br>';
+        print_r($cylindersWhereData3);
+        echo '<p><br></p>';
+
+
+        echo 'arraymerge<br>'; // this seems ok.
+        print_r(array_merge( $cylindersWhereData1,$cylindersWhereData2));
+        echo '<p><br></p>';
+
+        echo 'arraypush<br>';
+        array_push($cylindersWhereData1,$cylindersWhereData2);
+        print_r($cylindersWhereData1);
+
+    }
 }

@@ -121,3 +121,25 @@ jquery=editormtestedcylinders.blade.php
 views/jquerysample
 user/showuser.blade.php
 ##=========================
+header("Set-Cookie: key=value; path=/; domain=www.tutorialshore.com; HttpOnly; Secure; SameSite=Strict");
+##==========================
+/*$testedcylindersWhereData = [
+    ['name', 'test'],
+    ['id', '<>', '5']
+];*/
+
+->where ($testedcylindersWhereData)
+##==========================
+to debug sql in laravel
+ $cylinders=DB::Table('kit_cylinders')
+                    ->leftjoin('RegisteredCylinders',function($join){
+                        $join->on('kit_cylinders.Cylinder_SerialNo','=','RegisteredCylinders.SerialNumber');
+                        $join->on('kit_cylinders.Make_Model','=','RegisteredCylinders.BrandName');
+                    })
+                    ->select(DB::Raw('count(formid) as UnregisteredCylinders'))
+                    ->where('formid','=',$lastinspectionid)
+                    ->where('RegisteredCylinders.Date','=',null)
+                    ->where($cylindersWhereData)
+                    ->toSql();
+
+                    dd($cylinders);
