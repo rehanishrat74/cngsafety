@@ -781,7 +781,9 @@ public function showUploadFile(Request $request) {
                     $duplicateSnos=DB::table('RegisteredCylinders')
                         ->select(DB::Raw('count(SerialNumber) as existssno'))
                         ->where('SerialNumber','=',$SerialNumber)
+                        ->where('BrandName','=',$BrandName)
                         ->get();
+                    //dd($duplicateSnos);
                     if ($duplicateSnos[0]->existssno<=0)
                     {
                         DB::insert('insert into RegisteredCylinders
@@ -1815,6 +1817,7 @@ session()->flashInput($request->input());
                     $duplicateSnos=DB::table('RegisteredCylinders')
                         ->select(DB::Raw('count(SerialNumber) as existssno'))
                         ->where('SerialNumber','=',$SerialNumber)
+                        ->where('BrandName','=',$BrandName)
                         ->get();
                     if ($duplicateSnos[0]->existssno<=1)
                     {
