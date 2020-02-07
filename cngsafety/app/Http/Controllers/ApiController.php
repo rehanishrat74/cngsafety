@@ -1345,18 +1345,20 @@ switch ($totalcylinders ) {
                                                                 //update stickerserialno in registered cylinders
                                                                 $trace=$trace."/ all cylinders are verified by labs";
                                                                 //all cylinders are tested by hdip labs
-                                                                $inspectionStatus='completed';
-                        /*$UnregisteredCylinders=DB::table('RegisteredCylinders')
-                                                ->select(DB::Raw('count(id) as cylinderscount'))
-                                        ->where('InspectionExpiryDate', '<', $inspectiondate)
-                                        ->where($brandsWhereData1)
-                                        ->orWhere($brandsWhereData2)
-                                        ->orWhere($brandsWhereData3)
-                                        ->orWhere($brandsWhereData4)
-                                        ->orWhere($brandsWhereData5)
-                                        ->orWhere($brandsWhereData6)          
-                                        //->toSql();
-                                        ->get();*/
+
+                                                                $inspectionStatus='pending';
+                        $images=DB::table('cng_kit')    
+                        ->select('WindScreen_Pic','RegistrationPlate_Pic')                    
+                        ->where(['formid'=> $formid])
+                        ->get();
+       
+                        if ($images[0]->WindScreen_Pic && $images[0]->RegistrationPlate_Pic)
+                            {
+                                $inspectionStatus='completed';
+
+                            }
+                            else{ $trace=$trace."/ all cylinders are verified by labs but images not uploaded";}                                                                  
+ 
                         $UnregisteredCylinders=DB::table('RegisteredCylinders')
                                                 ->select(DB::Raw('count(id) as cylinderscount'),'InspectionExpiryDate','SerialNumber','BrandName')
                                         ->where('InspectionExpiryDate', '<', $inspectiondate)

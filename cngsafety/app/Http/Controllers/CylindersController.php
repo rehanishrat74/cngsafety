@@ -382,17 +382,14 @@ $this->validate($request,$kitfields);
 
                     if ($cylinderserialnocount == $cylindernos)
                     {   
-                        if ($cylindervalve=="on" && $fillingvalve=="on" && $Reducer =="on" && $hpp=="on" && $exhaustpipe=="on")
-                        {
-                            /*if ($registeredserialno==1)
-                            {
-                                $inspectionStatus='completed';
 
-                            }*/
-                            //kit status not matter with completed inspection
-                            
-                        }
-                        if ($registeredserialno==1)
+
+                        $images=DB::table('cng_kit')    
+                        ->select('WindScreen_Pic','RegistrationPlate_Pic')                    
+                        ->where(['formid'=> $formid])
+                        ->get();
+       
+                        if ($registeredserialno==1 && $images[0]->WindScreen_Pic && $images[0]->RegistrationPlate_Pic)
                             {
                                 $inspectionStatus='completed';
 
@@ -402,12 +399,6 @@ $this->validate($request,$kitfields);
 
 
 
-                    DB::table('cng_kit')
-                        ->where(['VehiclerRegistrationNo'=> $vregno])
-                        ->where(['formid'=> $formid])
-                        //->where(['CngKitSerialNo'=> $kitseriano])
-                        //->where(['InspectionDate'=>$inspectiondate])
-                        ->update(['Inspection_Status' => $inspectionStatus]);
 
 
                     DB::table('vehicle_particulars')
@@ -1374,19 +1365,16 @@ public function showUploadFile(Request $request) {
                     $inspectionStatus='pending';
                     if ($cylinderserialnocount == $cylindernos)
                     {   
-                        /*if ($cylindervalve=="on" && $fillingvalve=="on" && $Reducer =="on" && $hpp=="on" && $exhaustpipe=="on")
-                        {
-                            if ($registeredserialno==1)
+                        $images=DB::table('cng_kit')    
+                        ->select('WindScreen_Pic','RegistrationPlate_Pic')                    
+                        ->where(['formid'=> $formid])
+                        ->get();
+       
+                        if ($registeredserialno==1 && $images[0]->WindScreen_Pic && $images[0]->RegistrationPlate_Pic)
                             {
-                                $inspectionStatus='completed';    
-                            }
-                            
-                        }*/
+                                $inspectionStatus='completed';
 
-                        if ($registeredserialno==1)
-                            {
-                                $inspectionStatus='completed';    
-                            }                        
+                            }                      
                     }
      
 
