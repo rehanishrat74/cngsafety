@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,14 +10,12 @@ use Jenssegers\Agent\Facades\Agent;
 use App\User as User;
 use Carbon\Carbon;
 use DB;
-
 class apiController extends Controller
 {
     private $API_KEY = '';
     public function __construct() {
         $this->API_KEY = '0J1wuM7aCPjdYhraeZR6abnVlvRHKfdT';
     }
-
     // upload files
     public function uploadFiles(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -76,7 +73,6 @@ class apiController extends Controller
             //}
         }
     }
-
     // login user
     public function doLogin(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -87,7 +83,6 @@ class apiController extends Controller
                 $email = $r['email'];      
                 $user_code = $r['email'];
                 $password = $r['pass'];
-                
                 $cred = array(
                     'email' => $user_code, //email
                     'password' => $password,
@@ -98,19 +93,15 @@ class apiController extends Controller
                 if(Auth::attempt($cred)) {
                     // update user details
                     $uid = Auth::user()->id;
-
                     $lat = $r['lat'];
                     $lng = $r['lng'];
                     $device_id = $r['device'] . '-' . $uid;
-
                     // update location coordinates
                     $coordinates = array(
                         'latitude' => $lat,
                         'longitude' => $lng
                     );
-
                     DB::table('users')->where('id', $uid)->update($coordinates);
-
                     // check if current device id is matching
                     $udwhere = array(
                         ['id', '=', $uid],
@@ -155,7 +146,6 @@ class apiController extends Controller
             // }
         }
     }
-
     // verify mobile and generate pin
     public function doGeneratePin(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -201,7 +191,6 @@ class apiController extends Controller
             echo json_encode($response);
         }
     }
-
     // verify pin
     public function doVerifyPin(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -216,27 +205,13 @@ class apiController extends Controller
             );
             $c = DB::table('users')->where($where)->count();
             if($c > 0) {
+                $device_id = $r['device'] . '-' . $userid;
                 $mStatus = array(
-                    'is_mobile_verified' => 1
+                    'is_mobile_verified' => 1,
+                    'device_id' => $device_id
                 );
                 DB::table('users')->where('id', $userid)->update($mStatus);
-                $device_id = $r['device'] . '-' . $userid;
-                // make sure device id is empty
-                $udwhere = array(
-                    'id' => $userid,
-                    'device_id' => ''
-                );
-                $c = DB::table('users')->where($udwhere)->count();
-                if($c == 1) {
-                    $user = array(
-                        'device_id' => $device_id
-                    );
-                    DB::table('users')->where('id', $userid)->update($user);
-                    $response['response'] = 'valid';
-                }  else {
-                    $response['response'] = 'invalid';
-                    $response['message'] ="Invalid Device ID, Your last device was different. Please contact Support for New Device Registration"; // Auth::user()->device_id;
-                }
+                $response['response'] = 'valid';
             } else {
                 $response['response'] = 'invalid';
                 $response['message'] = 'Invalid Pin Code, Try Different Pin';
@@ -244,7 +219,6 @@ class apiController extends Controller
             echo json_encode($response);
         }
     }
-
     // verify scanned code
     public function doVerifyCode(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -316,7 +290,6 @@ class apiController extends Controller
             // }
         }
     }
-
     // get codes
     public function doGetCodes(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -343,7 +316,6 @@ class apiController extends Controller
             // }
         }
     }
-
     // get inspection details
     public function doGetInspectionDetails(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -439,7 +411,6 @@ class apiController extends Controller
                 $stickerfound="true";
             }
         }
-        
         $vehicleStatus2 =DB::table('vehicle_particulars')         
                         ->select(DB::Raw('count(Registration_no) as registeredvehicles'))
                         ->where('Registration_no','=',$vehicleRegNo)
@@ -449,7 +420,6 @@ class apiController extends Controller
                 $regfound="true";
             }
         }
-        
         if ($regfound=="true" || $stickerfound=="true") {$duplicatefound="true";}
         return $duplicatefound;
     }
@@ -496,25 +466,22 @@ class apiController extends Controller
                 {
                     $isproduction =$r['isproduction'];
                 }
+if (env('LOG_API')==1) {
+                DB::insert('insert into logparticulars (code,vehicleCategory,businesstype,stationno ,user_id ,make_n_type,chasis_no ,engine_no ,vehicle_name,o_name ,o_cnic ,registration_no ,o_cell_no,o_address ,isproduction ,rectime ) values (?,?,?,?,?,?,? ,? ,?,? ,?,?,?,?,? ,?)',[$scan_code,$vcat,$businesstype,$stationno,$userid,$make_n_type,$chasis_no,$engine_no,$vehicle_name,$o_name,$o_cnic,$registration_no,$o_cell_no,$o_address,$isproduction,$created_at]);
+}                
                 //-------------------code below---------------------------------------
                 $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$stationno]);
                 $duplicate=$this->duplicateRegistration($registration_no);
                 if (!empty($vechicle))
                 {
-         
                     if ($vechicle[0]->recordfound ==1 and $vcat > 0) //valid work station
                     {
                         $msgws="Valid Workstation ". $stationno;
-                   
-
-
-                     
                         $stickerStatus =DB::table('CodeRollsSecondary')         
                         ->select( DB::Raw('ifnull(cnic,"0") as cnic'), DB::Raw('ifnull(vehicleRegNo,"0") as vehicleRegNo'),DB::Raw('count(batchid) as allocated'))
                         ->groupby ('cnic','vehicleRegNo')
                         ->where('serialno','=',$scan_code)
                         ->get();     
-         
                         if (!empty($stickerStatus) && !$stickerStatus->isempty() )
                         {
                             //storing sticker state
@@ -532,12 +499,11 @@ class apiController extends Controller
                                     if ($duplicate=="true"){
                                     $response = array();
                                     $response['response'] = 'invalid';
-                                    $response['message'] = 'Sticker already assaigned to the vechicle';
-
+                                    $response['message'] = 'Sticker already assaigned to the vehicle';
                                      return  json_encode($response);
                                     }
                                     else {
-                                        echo 'duplicaat is='.$duplicate;
+                                       // echo 'duplicaat is='.$duplicate;
                                         //sticker is free to allocate to any vechicle.
                                         $freesticker=$scan_code;
                                         DB::insert('insert into owner__particulars (Owner_name,CNIC,Cell_No,Address,VehicleReg_No,StickerSerialNo) values (?,?,?,?,?,?)', [$o_name, $o_cnic,$o_cell_no,$o_address,$registration_no,$scan_code]);
@@ -557,17 +523,15 @@ class apiController extends Controller
                                     $isvalid="Invalid";
                                     $response = array();
                                     $response['response'] = 'invalid';
-                                    $response['message'] = 'Sticker allocated to some other owner or vechicle.';
+                                    $response['message'] = 'Sticker allocated to some other owner or vehicle.';
                                     echo json_encode($response);
                                     return;                                     
-         
                                 }
                             }  //end of insert owner
                             else //update owner details
                             {
                                 if ($stickerCount ==1 && $stickerCnic ==$o_cnic && $stickervehicle==$registration_no) 
                                 {
-                                    
                                     DB::table('owner__particulars')
                                     ->where(['VehicleReg_No'=> $registration_no])
                                     ->where(['CNIC'=> $o_cnic])
@@ -592,12 +556,11 @@ class apiController extends Controller
                                     if ($duplicate=="true"){
                                     $response = array();
                                     $response['response'] = 'invalid';
-                                    $response['message'] = 'Sticker already assaigned to the vechicle';
+                                    $response['message'] = 'Sticker already assaigned to the vehicle';
                                      return  json_encode($response);
                                     }
                                     else {
                                     //sticker not allocated to vehicle. we can allocate it.
-
                                     DB::insert('insert into vehicle_particulars (Registration_no ,Chasis_no,Engine_no,Vehicle_catid,Make_type ,OwnerCnic,created_at,businesstype,stationno,stickerSerialNo,Inspection_Status ) values (?, ?, ?,?,?,?,?,?,?,?,?)',[$registration_no,$chasis_no,$engine_no,$vcat,$maketype,$o_cnic,$created_at,$businesstype,$stationno,$scan_code,"pending"]);
                                     //updating sticker status in CodeRollsSecondary to avoid reuse of sticker
                                     DB::table('CodeRollsSecondary')
@@ -609,12 +572,10 @@ class apiController extends Controller
                                     $isvalid="valid";                                                                
                                     }
                                 //------------end of insert
-
                                 }
                             } // end of insert vechicle
                             else  // update vehicle.
                             {
-                               
                                 DB::table('vehicle_particulars')
                                 ->where(['Registration_no' => $registration_no])
                                 ->where(['OwnerCnic' => $o_cnic])
@@ -645,7 +606,6 @@ class apiController extends Controller
                         } // end of $stickerStatus
                         else
                         {
-         
                             $isvalid="invalid"; 
                             $msgResponse="Sticker not updated in CodeRollsSecondary";
                             $response = array();
@@ -678,7 +638,6 @@ class apiController extends Controller
                         echo json_encode($response);
                         return; 
                     }
-         
                 }        
                 else {
                     $ownermsg="record not found in users table. userid=".$userid." stationno=".$stationno;
@@ -701,10 +660,8 @@ class apiController extends Controller
                 }
                if ($isvalid="valid"){$response['message'] = "Your inspection particulars updated successfully";}
                 echo json_encode($response);
-
         }
     }
-
      // update cng kit
      public function doUpdateCngKit(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -736,12 +693,16 @@ class apiController extends Controller
                 $update_at = time();
                 $finalResponse ="InValid";
                 $msg ="Error In CngKit Process";
-                $trace ="getting vechicle record no.";
+                $trace ="getting vehicle record no.";
                $isproduction="0";
                  if ($r['isproduction'] )
                 {
                     $isproduction =$r['isproduction'];
                 }
+   if (env('LOG_API')==1) {
+                DB::insert('insert into logcngkit(userid,code,workstationid,cylinderno,expiryDate,registration_no,vehicleRecordNo,scan_code,o_cnic,ck_make_n_model,ck_serial_no,ck_is_cylinder_valve,ck_is_filling_valve,ck_is_reducer,ck_is_high_pressure_pipe,ck_is_exhaust_pipe,isproduction,created_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[$userid,$code,$workstationid,$cylindernos,$expiryDate,$registration_no,$vehicleRecordNo,$scan_code,$o_cnic,$ck_make_n_model,$ck_serial_no,$ck_is_cylinder_valve,$ck_is_filling_valve,$ck_is_reducer,$ck_is_high_pressure_pipe,$ck_is_exhaust_pipe,$isproduction,$inspectiondate]);
+}             
+                
                 $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$workstationid]);
                 if (!empty($vechicle))
                 {                
@@ -757,7 +718,6 @@ class apiController extends Controller
                         //print_r($stickerStatus);
                         if (!empty($stickerStatus) && !$stickerStatus->isempty()) {
                             //storing sticker state
-                           
                             $stickerCount=$stickerStatus[0]->allocated;             
                             $stickerCnic=$stickerStatus[0]->cnic;
                             $stickervehicle=$stickerStatus[0]->vehicleRegNo;
@@ -765,7 +725,6 @@ class apiController extends Controller
                             $initinspection = DB::SELECT('SELECT vehicle_particulars.Inspection_Status,vehicle_particulars.Record_no FROM vehicle_particulars where Registration_No=? and vehicle_particulars.stationno=? and vehicle_particulars.stickerSerialNo=? and vehicle_particulars.OwnerCnic=?',[$registration_no,$workstationid,$scan_code,$o_cnic]); 
                         //print_r($initinspection);
                         if (!empty($initinspection) && $cylindernos >0 ) {
-                             
                             $vehicleRecordNo= $initinspection[0]->Record_no;
                             $trace =$trace."/ finding number of inspections done.";
                             $cngkit = DB::SELECT('select count(CngKitSerialNo) as kitcount from cng_kit where CngKitSerialNo=? and vehicleRecordNo=?',[$ck_serial_no,$vehicleRecordNo]);
@@ -801,7 +760,6 @@ class apiController extends Controller
                                 $trace =$trace."/ many inspections found. checking last completed inspection.";
                                 //echo 'getting lastinspection';
                                 //$lastinspection = DB::SELECT('SELECT lastinspectionid,cng_kit.Inspection_Status,cng_kit.formid FROM cng_kit LEFT JOIN vehicle_particulars on cng_kit.formid = vehicle_particulars.lastinspectionid and cng_kit.VehicleRecordNo = vehicle_particulars.Record_no where vehiclerRegistrationNo=? and vehicle_particulars.stationno=? and vehicle_particulars.stickerSerialNo=? and vehicle_particulars.OwnerCnic=?',[$registration_no,$workstationid,$scan_code,$o_cnic]);     //switching inspection status to particulars
-                                 
                                 $lastinspection = DB::SELECT('SELECT lastinspectionid,vehicle_particulars.Inspection_Status,cng_kit.formid FROM cng_kit LEFT JOIN vehicle_particulars on cng_kit.formid = vehicle_particulars.lastinspectionid and cng_kit.VehicleRecordNo = vehicle_particulars.Record_no where vehiclerRegistrationNo=? and vehicle_particulars.stationno=? and vehicle_particulars.stickerSerialNo=? and vehicle_particulars.OwnerCnic=?',[$registration_no,$workstationid,$scan_code,$o_cnic]);     
                                 if ($lastinspection[0]->Inspection_Status=="completed") {
                                     // we need to create new inspection
@@ -824,7 +782,6 @@ class apiController extends Controller
                                 } 
                                 else 
                                 {
-                                   
                                     // last inspection is the pending inspection.we need to update inspection
                                     $trace =$trace."/ updating last pending inspection";
                                     $inspectionId =$lastinspection[0]->lastinspectionid;
@@ -858,7 +815,7 @@ class apiController extends Controller
                         }
                         else  {
                             $finalResponse ="invalid";
-                            $msg ="Vechicle Record not found";                    
+                            $msg ="Vehicle Record not found";                    
                             $response['response']="invalid";
                             if ($cylindernos <=0 )
                             {
@@ -898,7 +855,6 @@ class apiController extends Controller
                     'inspectionid' => $inspectionId,
                     'trace' => $trace,'totalcylinders'=> $cylindernos
                     ); 
-
                     //$response = array();
                     //$response['response'] = strtolower($finalResponse);
                     $response['response'] = $response;
@@ -910,17 +866,14 @@ class apiController extends Controller
                     'response' => $finalResponse,
                     'msg' => $msg
                     ); 
-
                    // $response['response'] = $response;
                 }
-
                 echo json_encode($response);
             //} else {
             //    echo 'Inspection API is available for only Mobile Apps';
             //}
         }
     }
-
     // update cylinders
     public function doUpdateCylinders(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -936,7 +889,6 @@ class apiController extends Controller
                 $lastinspectionid = $r['inspectionid']; //Addtitional field. doUpdateCngKit returns this field.
                 $workstationid= $r['stationno']; // Additional field.
                 $registration_no = $r['registration_no']; //Additional field
-
                 $oinspectiondate =  $r['inspectiondate']; //Additional field
                 if($oinspectiondate != '') {
                     $date = strtotime($oinspectiondate);
@@ -944,13 +896,11 @@ class apiController extends Controller
                 } else {
                     $inspectiondate = '';
                 }
-
                 $kitserialno = $r['cngkitserialno']; //Additional field
                 $location_1 = !empty($r['c1_location']) ? $r['c1_location'] : ''; //Additional field
                 $standard_1 = !empty($r['c1_iso_model']) ? $r['c1_iso_model'] : '';    //Additional field
                 $makenmodel_1 = !empty($r['c1_make_model']) ? $r['c1_make_model'] : '';
                 $serialno_1 = !empty($r['c1_serial_no']) ? $r['c1_serial_no'] : '';
-
                 $oimportdate_1 = $r['c1_import_date']; //Additional field
                 if($oimportdate_1 != '') {
                     $date = strtotime($oimportdate_1);
@@ -958,13 +908,10 @@ class apiController extends Controller
                 } else {
                     $importdate_1 = '';
                 }
-                
                 $location_2 = !empty($r['c2_location']) ? $r['c2_location'] : ''; //Additional field
                 $standard_2 = !empty($r['c2_iso_model']) ? $r['c2_iso_model'] : ''; //Additional field
                 $makenmodel_2 = !empty($r['c2_make_model']) ? $r['c2_make_model'] : '';
                 $serialno_2 = !empty($r['c2_serial_no']) ? $r['c2_serial_no'] : '';
-              
-
                 $oimportdate_2 = $r['c2_import_date']; //Additional field
                 if($oimportdate_2 != '') {
                     $date = strtotime($oimportdate_2);
@@ -972,12 +919,10 @@ class apiController extends Controller
                 } else {
                     $importdate_2 = '';
                 }
-                
                 $location_3 = !empty($r['c3_location']) ? $r['c3_location'] : ''; //Additional field
                 $standard_3 = !empty($r['c3_iso_model']) ? $r['c3_iso_model'] : '';   //Additional field      
                 $makenmodel_3 = !empty($r['c3_make_model']) ? $r['c3_make_model'] : '';
                 $serialno_3 = !empty($r['c3_serial_no']) ? $r['c3_serial_no'] : '';
-                
                 $oimportdate_3 = $r['c3_import_date'];        //Additional field
                 if($oimportdate_3 != '') {
                     $date = strtotime($oimportdate_3);
@@ -985,12 +930,10 @@ class apiController extends Controller
                 } else {
                     $importdate_3 = '';
                 }
-                
                 $location_4 = !empty($r['c4_location']) ? $r['c4_location'] : ''; //Additional field
                 $standard_4 = !empty($r['c4_iso_model']) ? $r['c4_iso_model'] : '';  //Additional field
                 $makenmodel_4 = !empty($r['c4_make_model']) ? $r['c4_make_model'] : '';
                 $serialno_4 = !empty($r['c4_serial_no']) ? $r['c4_serial_no'] : '';
-
                 $oimportdate_4 = $r['c4_import_date']; //Additional field
                 if($oimportdate_4 != '') {
                     $date = strtotime($oimportdate_4);
@@ -998,12 +941,10 @@ class apiController extends Controller
                 } else {
                     $importdate_4 = '';
                 }
-
                 $location_5 = !empty($r['c5_location']) ? $r['c5_location'] : ''; //Additional field
                 $standard_5 = !empty($r['c5_iso_model']) ? $r['c5_iso_model'] : '';    //Additional field     
                 $makenmodel_5 = !empty($r['c5_make_model']) ? $r['c5_make_model'] : '';
                 $serialno_5 = !empty($r['c5_serial_no']) ? $r['c5_serial_no'] : '';
-                
                 $oimportdate_5 = $r['c5_import_date'];        //Additional field
                 if($oimportdate_5 != '') {
                     $date = strtotime($oimportdate_5);
@@ -1011,12 +952,10 @@ class apiController extends Controller
                 } else {
                     $importdate_5 = '';
                 }
-                
                 $location_6 = !empty($r['c6_location']) ? $r['c6_location'] : ''; //Additional field
                 $standard_6 = !empty($r['c6_iso_model']) ? $r['c6_iso_model'] : '';        //Additional field
                 $makenmodel_6 = !empty($r['c6_make_model']) ? $r['c6_make_model'] : '';
                 $serialno_6 = !empty($r['c6_serial_no']) ? $r['c6_serial_no'] : '';
-                
                 $oimportdate_6 = $r['c6_import_date']; //Additional field
                 if($oimportdate_6 != '') {
                     $date = strtotime($oimportdate_6);
@@ -1024,7 +963,6 @@ class apiController extends Controller
                 } else {
                     $importdate_6 = '';
                 }
-                
                 $vehicleParticularMsg="null";
                 $ownermsg="null";
                 $msgws="null";
@@ -1033,7 +971,6 @@ class apiController extends Controller
                 $msg ="null";   
                 $record_no=0;
                 $cylinderserialnocount =0;
-
                 $inspectionStatus='pending';
                 $cylindersWhereData= array();
                 $cylindersWhereData1=array();
@@ -1042,7 +979,6 @@ class apiController extends Controller
                 $cylindersWhereData4=array();
                 $cylindersWhereData5=array();
                 $cylindersWhereData6=array();
-
                 $brandsWhereData= array();
                 $brandsWhereData1=array();
                 $brandsWhereData2=array();
@@ -1050,20 +986,18 @@ class apiController extends Controller
                 $brandsWhereData4=array();
                 $brandsWhereData5=array();
                 $brandsWhereData6=array();
-
                 $stickerCount=0;
                 $stickerCnic="0";
                 $stickervehicle="0";
-
                 $cylinderlist="";
                 $parameters=array();
                 $trace="checking sticker status,";
                 $isproduction="0";
+                $imagesFound="False";
                  if ($r['isproduction'] )
                 {
                     $isproduction =$r['isproduction'];
                 }
-                
                 if (!$totalcylinders>=1)
                 {
                     $finalResponse ="invalid"; //invalid
@@ -1073,6 +1007,10 @@ class apiController extends Controller
                     echo json_encode($response);
                     return;                                
                 }
+                if (env('LOG_API')==1) {
+                DB::insert('insert into logcylinders (userid,code,scan_code,o_cnic,totalcylinders,lastinspectionid,workstationid,registration_no,oinspectiondate,kitserialno,location_1,standard_1,makenmodel_1,serialno_1,oimportdate_1,location_2,standard_2,makenmodel_2,serialno_2,oimportdate_2,location_3,standard_3 ,makenmodel_3,serialno_3,oimportdate_3,location_4,standard_4,makenmodel_4,serialno_4,oimportdate_4,location_5,standard_5,makenmodel_5,serialno_5,oimportdate_5,location_6,standard_6,makenmodel_6,serialno_6,oimportdate_6,isproduction,created_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[$userid,$code,$scan_code,$o_cnic,$totalcylinders,$lastinspectionid,$workstationid,$registration_no,$oinspectiondate,$kitserialno,$location_1,$standard_1,$makenmodel_1,$serialno_1,$oimportdate_1,$location_2,$standard_2,$makenmodel_2,$serialno_2,$oimportdate_2,$location_3,$standard_3 ,$makenmodel_3,$serialno_3,$oimportdate_3,$location_4,$standard_4,$makenmodel_4,$serialno_4,$oimportdate_4,$location_5,$standard_5,$makenmodel_5,$serialno_5,$oimportdate_5,$location_6,$standard_6,$makenmodel_6,$serialno_6,$oimportdate_6,$isproduction,Carbon::today()]);
+
+                }                
                 $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$workstationid]);
                 if (!empty($vechicle))
                 {
@@ -1128,7 +1066,6 @@ class apiController extends Controller
                                                         (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 1 ,$serialno_1,$kitserialno,$inspectiondate,$importdate_1,$standard_1,$makenmodel_1,$location_1]);
                                                         $cylinderserialnocount=$cylinderserialnocount+1;
                                                         $cylinderlist=$serialno_1; 
-                                                        
                                                         // to be used in 'inclause'
 //cylinder changings brand and serial is the pk.
                                                         $cylindersWhereData1 = [
@@ -1162,18 +1099,13 @@ class apiController extends Controller
                                                             ['BrandName', '=', $makenmodel_1]
                                                         ];                                                                                     
             //-----------------------------------------------------------
-
                                                     }
                                                     if (!is_null($serialno_2) && !empty($serialno_2) && isset($serialno_2) ) {   
                                                         $trace=$trace."/ in cylinder2";
                                                         DB::insert('insert into kit_cylinders
                                                         (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 2 ,$serialno_2,$kitserialno,$inspectiondate,$importdate_2,$standard_2,$makenmodel_2,$location_2]);
-                                             
                                                         $cylinderlist=$cylinderlist.",".$serialno_2;
-                                                        
- 
                                             $cylinderserialnocount = $cylinderserialnocount + 1;                                                        
-                                                    
 //cylinder changings brand and serial is the pk.
                                                         $cylindersWhereData2 = [
                                                             ['SerialNumber','=', $serialno_2],
@@ -1183,8 +1115,6 @@ class apiController extends Controller
                                                             ['SerialNumber','=', $serialno_2],
                                                             ['BrandName', '=', $makenmodel_2]
                                                         ];                                      
-
-
                                                     }
                                                     if (!is_null($serialno_3) && !empty($serialno_3) && isset($serialno_3) )
                                                     {                       
@@ -1202,8 +1132,6 @@ class apiController extends Controller
                                                             ['SerialNumber','=', $serialno_3],
                                                             ['BrandName', '=', $makenmodel_3]
                                                         ];                                      
-
-
                                                     }
                                                     if (!is_null($serialno_4) && !empty($serialno_4) && isset($serialno_4) )
                                                     {                        
@@ -1212,7 +1140,6 @@ class apiController extends Controller
                                                         (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 4 ,$serialno_4,$kitserialno,$inspectiondate,$importdate_4,$standard_4,$makenmodel_4,$location_4]);
                                                         $cylinderserialnocount=$cylinderserialnocount+1;
                                                         $cylinderlist=$cylinderlist.",".$serialno_4;
-
 //cylinder changings brand and serial is the pk.
                                                         $cylindersWhereData4 = [
                                                             ['SerialNumber','=', $serialno_4],
@@ -1222,7 +1149,6 @@ class apiController extends Controller
                                                             ['SerialNumber','=', $serialno_4],
                                                             ['BrandName', '=', $makenmodel_4]
                                                         ];                                      
-
                                                     }
                                                     if (!is_null($serialno_5) && !empty($serialno_5) && isset($serialno_5) )
                                                     {                       
@@ -1240,7 +1166,6 @@ class apiController extends Controller
                                                             ['SerialNumber','=', $serialno_5],
                                                             ['BrandName', '=', $makenmodel_5]
                                                         ];                                      
-
                                                     }
                                                     if (!is_null($serialno_6) && !empty($serialno_6) && isset($serialno_6) )
                                                     {                        
@@ -1249,7 +1174,6 @@ class apiController extends Controller
                                                         (formid, Cylinder_no ,Cylinder_SerialNo,CngKitSerialNo,InspectionDate,ImportDate,Standard,Make_Model,cylinderLocation) VALUES (?,?,?,?,?,?,?,?,?) ',[$lastinspectionid, 6 ,$serialno_6,$kitserialno,$inspectiondate,$importdate_6,$standard_6,$makenmodel_6,$location_6]);
                                                         $cylinderserialnocount=$cylinderserialnocount+1;
                                                         $cylinderlist=$cylinderlist.",".$serialno_6;
-
 //cylinder changings brand and serial is the pk.
                                                         $cylindersWhereData6 = [
                                                             ['SerialNumber','=', $serialno_6],
@@ -1259,10 +1183,7 @@ class apiController extends Controller
                                                             ['SerialNumber','=', $serialno_6],
                                                             ['BrandName', '=', $makenmodel_6]
                                                         ];                                      
-
-                                                                                                             
                                                     }
-                                                  
                                                     if ($cylinderserialnocount==$totalcylinders) 
                                                     {   
                                                         $trace=$trace."/ cylinder count check ok. checking kit inspection";
@@ -1277,16 +1198,11 @@ class apiController extends Controller
                                                         $response['message']=$msg;
                                                         if ($cngKitInspection[0]->incompleteInspection ==1) 
                                                         //last value was 0. chanaged upon request
-
                                                         {
-
                                                             $trace=$trace."/ kit inspection completed. checking any unregistered cylinder";
-
                                                             //kit inspection is completed.
                                                             //Checking in registered cylinders, if import date is null then pending because testing record in the registered cylinder is missing. 
-
                                                             //commenting for model and serial no is unique.
-          
 switch ($totalcylinders ) {
     case '1':
         # code...
@@ -1324,7 +1240,6 @@ switch ($totalcylinders ) {
         break;
 }
 //dd($cylindersWhereData);
-
  $Cylinders=DB::Table('kit_cylinders')
                     ->leftjoin('RegisteredCylinders',function($join){
                         $join->on('kit_cylinders.Cylinder_SerialNo','=','RegisteredCylinders.SerialNumber');
@@ -1336,8 +1251,6 @@ switch ($totalcylinders ) {
                     ->where($cylindersWhereData)                    
                     ->get();
                     //->toSql();
-
-
                                                             //RegisteredCylinders.Date = inspection date by labs
                                                             if ($Cylinders[0]->UnregisteredCylinders ==0)
                                                             {   
@@ -1345,20 +1258,24 @@ switch ($totalcylinders ) {
                                                                 //update stickerserialno in registered cylinders
                                                                 $trace=$trace."/ all cylinders are verified by labs";
                                                                 //all cylinders are tested by hdip labs
-
                                                                 $inspectionStatus='pending';
+                                                                $imagesFound="False";
                         $images=DB::table('cng_kit')    
                         ->select('WindScreen_Pic','RegistrationPlate_Pic')                    
-                        ->where(['formid'=> $formid])
+                        ->where(['formid'=> $lastinspectionid])
                         ->get();
-       
                         if ($images[0]->WindScreen_Pic && $images[0]->RegistrationPlate_Pic)
                             {
-                                $inspectionStatus='completed';
-
+                                    $inspectionStatus='completed';
+                                    $imagesFound="True";
                             }
-                            else{ $trace=$trace."/ all cylinders are verified by labs but images not uploaded";}                                                                  
- 
+                            else{ 
+                                $inspectionStatus='pending';
+                                $trace=$trace."/ all cylinders are verified by labs but images not uploaded";
+                                $finalResponse="pending";
+                                $msg="images not uploaded";
+                                $imagesFound="False";
+                                }                                                                  
                         $UnregisteredCylinders=DB::table('RegisteredCylinders')
                                                 ->select(DB::Raw('count(id) as cylinderscount'),'InspectionExpiryDate','SerialNumber','BrandName')
                                         ->where('InspectionExpiryDate', '<', $inspectiondate)
@@ -1384,8 +1301,6 @@ switch ($totalcylinders ) {
                         echo json_encode($response);
                         return;                                             
                 }
-
-
                         $Unregcyllist=DB::table('RegisteredCylinders')
                                          ->select('SerialNumber','BrandName','InspectionExpiryDate')
                                         //->where('InspectionExpiryDate', '<', $inspectiondate)
@@ -1395,27 +1310,22 @@ switch ($totalcylinders ) {
                                         ->orWhere($brandsWhereData4)
                                         ->orWhere($brandsWhereData5)
                                         ->orWhere($brandsWhereData6)
- 
                                         //->toSql();
                                         ->get();
-
                                /// print_r($brandsWhereData);
                         //echo $inspectiondate;
                         //echo 'getting result'.'<br>';
                         //print_r($Unregcyllist);
                         $pending="notpending";
-
                         foreach ( $Unregcyllist as $cyl) {
                             # code...
                             if ( $inspectiondate>$cyl->InspectionExpiryDate)
                             {
                                 $pending="pendingfound";
                             }
-                           
                         }
                         //echo  $pending;
                     //return;
-
 /*select count(id) as cylinderscount from `RegisteredCylinders` where ((`SerialNumber`='1548' and `BrandName`='NCL') or (`SerialNumber`='D2C49D-26236' and `BrandName`='EKC')) and `InspectionExpiryDate` < '2021-11-11' Unregcyllist*/
                                                                 $UnregisteredCylindersCount=0;
                                                                // if (!empty($UnregisteredCylinders) && !$UnregisteredCylinders->isempty() )
@@ -1442,24 +1352,28 @@ switch ($totalcylinders ) {
                                                 ->where(['stickerserialno' => $scan_code])
                                                 ->where(['stationno'=> $workstationid])
                                                 ->update(['Inspection_Status' => $inspectionStatus]); 
-                                                                        
-
                                                 DB::table('cng_kit')
                                                 ->where(['VehiclerRegistrationNo'=> $registration_no])
                                                 ->where(['formid'=> $lastinspectionid])
                                                 ->where(['VehicleRecordNo'=> $record_no])
                                                 ->update(['Inspection_Status' => $inspectionStatus]); 
-
                                                 DB::table('RegisteredCylinders')
                                                 //->where('SerialNumber', 'in', $cylinderlist)
                                                 ->where($brandsWhereData)
                                                 ->update(['stickerserialno' => $scan_code]); 
                                                 $finalResponse ="valid";
                                                                         //  $msg ="valid inspection id ".$lastinspectionid." to process ".$totalcylinders." cylinders against vehicle ".$registration_no." with scancode ".$scan_code." with inspection status as ".$inspectionStatus;
-                                                $msg="Inspection status is completed against vehicle ".$registration_no."  and inspectionid ".$lastinspectionid;
+                                                if ($imagesFound=="True"){
+$msg="Inspection status is completed against vehicle ".$registration_no."  and inspectionid ".$lastinspectionid;
                                                 $finalResponse ="valid";  //incomplete
                                                 $response['response']="valid"; //incomplete
-                                                $response['message']=$msg;
+                                                $response['message']=$msg;                                                  
+                                                }else {
+                                                $msg="Images not found";
+                                                $finalResponse ="pending";  //incomplete
+                                                $response['response']="pending"; //incomplete
+                                                $response['message']=$msg;  
+                                                }
                                                                     }
                                                                 } // end of unregistered cylinders empty check
                                                             }  // end of unregistered cylinders
@@ -1483,7 +1397,7 @@ switch ($totalcylinders ) {
                                             } //valid inspection id found to process the inspection
                                             else {
                                                 if ($inspectionStatus=="completed") {
-                                                   $msg="vechicle inspection completed. cannot continue";
+                                                   $msg="vehicle inspection completed. cannot continue";
                                                     $response['response']="invalid"; //completed
                                                     $response['message']="Cannot modify completed inspection";
                                                    echo json_encode($response);

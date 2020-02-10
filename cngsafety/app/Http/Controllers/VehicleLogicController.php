@@ -14,6 +14,7 @@ use App\user;
 use App\Owner_Particulars;
 use App\VehicleParticulars;
 use App\vehicleCategory;
+
 //use Illuminate\Support\Facades\Paginator;
 //use Illuminate\Pagination\Paginator;
 class VehicleLogicController extends Controller
@@ -102,6 +103,7 @@ else
 
         $querystringArray = ['sort' => $sort];
         $vehicles->appends($querystringArray);
+
         return view ('vehicle.registrations',['vehicles'=>$vehicles,'treeitems'=>$treeitems])->with('page',1);
       
     }

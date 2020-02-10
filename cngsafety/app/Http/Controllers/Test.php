@@ -1012,4 +1012,9 @@ switch ($totalcylinders ) {
         print_r($cylindersWhereData1);
 
     }
+    public function testImage()
+    {
+        echo 'hello';
+
+    }
 }
