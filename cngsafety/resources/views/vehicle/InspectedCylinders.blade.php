@@ -187,7 +187,7 @@
                                                             </div>
                                                         </div>
 <?php 
-$capacities=array("30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC","58 WLC","60 WLC","62 WLC","64 WLC","65 WLC","70 WLC","74 WLC","75 WLC","80 WLC","85 WLC","90 WLC","30-85 WLC","30-90 WLC","40-90 WLC","50-140 WLC","other");
+$capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC","58 WLC","60 WLC","62 WLC","64 WLC","65 WLC","70 WLC","74 WLC","75 WLC","80 WLC","85 WLC","90 WLC","30-85 WLC","30-90 WLC","40-90 WLC","50-140 WLC","other");
 
 ?>                                                        
                                                         <div class="col-6">
@@ -212,7 +212,7 @@ $capacities=array("30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC","58 WLC"
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                            <label class="form-label" >Stamdard</label>
+                                                            <label class="form-label" >Standard</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
@@ -301,8 +301,66 @@ $capacities=array("30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC","58 WLC"
                                                         </div>
                                                     </div> <!-- end of brand name -->                                              
 <!---------------------------------------------------------->
-
-
+                                                    <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >Owner Name</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                                <input type="text" value="" class="form-control{{ $errors->has('oname') ? ' is-invalid' : '' }}" 
+                                                                id="oname" name="oname" placeholder="Owner Name" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('oname'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('oname') }}</strong>
+                                                </span>
+                                              @endif                                                                                                                      
+                                                            </div>
+                                                        </div>
+                                                    </div>
+<!--------------------------vehicle-------------------------------->
+                                                    <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >Reg No</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                                <input type="text" value="" class="form-control{{ $errors->has('oreg') ? ' is-invalid' : '' }}" 
+                                                                id="oreg" name="oreg" placeholder="Vehicle Reg No" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('oreg'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('oreg') }}</strong>
+                                                </span>
+                                              @endif                                                                 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+<!-------------------------cnic--------------------------------->
+                                                    <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >CNIC</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                                <input type="text" value="" class="form-control{{ $errors->has('ocnic') ? ' is-invalid' : '' }}" 
+                                                                id="ocnic" name="ocnic" placeholder="12345-1234567-9" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('ocnic'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('ocnic') }}</strong>
+                                                </span>
+                                              @endif                                                                 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+<!---------------------------------------------------------->
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">

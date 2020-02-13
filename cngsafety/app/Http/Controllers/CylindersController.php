@@ -711,8 +711,12 @@ public function showUploadFile(Request $request) {
             'expiry'=>'required',  //expiry date
             'method'=>'required',
             'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
+            //'ocnic' =>['regex:/(^([\d]{5}-[\d]{7}-[\d])$)/'],
         ));
 
+$ownername=$request->input('oname');
+$vehicleRegNo=$request->input('oreg');
+$ocnic=$request->input('ocnic');
 
             $CountryOfOrigin=$request->input('CountryOfOrigin');
             $Standard=$request->input('standard');
@@ -778,8 +782,8 @@ public function showUploadFile(Request $request) {
                     if ($duplicateSnos[0]->existssno<=0)
                     {
                         DB::insert('insert into RegisteredCylinders
-                        (LabCTS,CountryOfOrigin,BrandName,Standard,SerialNumber,LabUser,Date,InspectionExpiryDate,method,diameter,length,capacity,notes,inspector,DateOfManufacture) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ',[$LabCTS,$CountryOfOrigin,$BrandName,$Standard,$SerialNumber,
-                                        $LabUser,$Date,$InspectionExpiryDate,$method,$diameter,$length,$capacity,$notes,$inspector,$manufacturedate]);
+                        (LabCTS,CountryOfOrigin,BrandName,Standard,SerialNumber,LabUser,Date,InspectionExpiryDate,method,diameter,length,capacity,notes,inspector,DateOfManufacture,ownername,vehicleRegNo,ocnic) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ',[$LabCTS,$CountryOfOrigin,$BrandName,$Standard,$SerialNumber,
+                                        $LabUser,$Date,$InspectionExpiryDate,$method,$diameter,$length,$capacity,$notes,$inspector,$manufacturedate,$ownername,$vehicleRegNo,$ocnic]);
                         $id = DB::getPdo()->lastInsertId();
 
                     }
@@ -1719,7 +1723,7 @@ session()->flashInput($request->input());
 
             
         $CylinderDetails=DB::table('RegisteredCylinders')
-                    ->select ('id','LabCTS','BrandName','Standard' ,'SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'stickerSerialNo','method','diameter','length','capacity','inspector','notes','DateOfManufacture')
+                    ->select ('id','LabCTS','BrandName','Standard' ,'SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'stickerSerialNo','method','diameter','length','capacity','inspector','notes','DateOfManufacture','ownername','vehicleRegNo','ocnic')
                     ->where ('id','=',$cylinderid)
                     ->get();            
 
@@ -1746,6 +1750,10 @@ session()->flashInput($request->input());
 
         ));
 
+
+$ownername=$request->input('oname');
+$vehicleRegNo=$request->input('oreg');
+$ocnic=$request->input('ocnic');
 
             $CountryOfOrigin=$request->input('CountryOfOrigin');            
             
@@ -1826,6 +1834,9 @@ session()->flashInput($request->input());
                                     'inspector'=>$inspector,
                                     'notes'=> $notes ,  
                                     'DateOfManufacture'=>$DateOfManufacture,
+                                    'ownername'=>$ownername,
+                                    'vehicleRegNo'=>$vehicleRegNo,
+                                    'ocnic'=>$ocnic
                                 ]);                                            
 
                     }

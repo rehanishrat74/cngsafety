@@ -363,7 +363,69 @@ for ($i=0;$iless4;$i++)
                                                         </div>
                                                     </div> <!-- end of notes -->
 
-<!------------------------------------------------->                                                    
+<!------------------------------------------------->
+<!---------------------------------------------------------->
+                                                    <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >Owner Name</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                                <input type="text" value="{{$cylinderdetails[0]->ownername}}" class="form-control{{ $errors->has('oname') ? ' is-invalid' : '' }}" 
+                                                                id="oname" name="oname" placeholder="Owner Name" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('oname'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('oname') }}</strong>
+                                                </span>
+                                              @endif                                                                                                                      
+                                                            </div>
+                                                        </div>
+                                                    </div>
+<!--------------------------vehicle-------------------------------->
+                                                    <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >Reg No</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                                <input type="text" value="{{$cylinderdetails[0]->vehicleRegNo}}" class="form-control{{ $errors->has('oreg') ? ' is-invalid' : '' }}" 
+                                                                id="oreg" name="oreg" placeholder="Vehicle Reg No" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('oreg'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('oreg') }}</strong>
+                                                </span>
+                                              @endif                                                                 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+<!-------------------------cnic--------------------------------->
+                                                    <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >CNIC</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                                <input type="text" value="{{$cylinderdetails[0]->ocnic}}" class="form-control{{ $errors->has('ocnic') ? ' is-invalid' : '' }}" 
+                                                                id="ocnic" name="ocnic" placeholder="12345-1234567-9" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('ocnic'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('ocnic') }}</strong>
+                                                </span>
+                                              @endif                                                                 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+<!---------------------------------------------------------->
+
 
 
                                                     <div class="form-group row" >
