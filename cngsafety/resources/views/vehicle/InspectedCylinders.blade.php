@@ -245,7 +245,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
 <!------------------------------------------------------->
 
 <!------------------------------------------------------->
-                                                    <div class="form-group row" >
+                                                <!--    <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
                                                             <label class="form-label" >Date of Manufacturing</label>
@@ -263,9 +263,30 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                               @endif                                                                                                                      
                                                             </div>
                                                         </div>
-                                                    </div>                                                    
-<!------------------------------------------------------->               
-
+                                                    </div> -->                                                   
+<!-------------------------Date of manufacturing.--------->               
+                                                    <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >Date of manufacturing</label>
+                                                            </div>
+                                                        </div> 
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                              
+                                                                <input type="text" value="" class="form-control{{ $errors->has('ddmanufacture') ? ' is-invalid' : '' }} datepicker datepickerddm" data-format="mm/dd/yyyy"  id="ddmanufacture" name="ddmanufacture" placeholder="date (e.g. 04/03/2015)" autocomplete="off">                              
+                                              @if ($errors->has('ddmanufacture'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('ddmanufacture') }}</strong>
+                                                </span>
+                                              @endif                                                                             
+                                                            </div>
+                                                        </div>
+                                                    </div>   
+                                                    <input type="hidden" id ="domyear" name="domyear">
+                                                    <input type="hidden" id ="dommonth" name="dommonth">
+                                                    <input type="hidden" id ="domday" name="domday">
+<!------------------------------------------------------->  
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
@@ -378,7 +399,8 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                               @endif                                                                                                                      
                                                             </div>
                                                         </div>
-                                                    </div>                        
+                                                    </div>       
+<!------------------------------------------------>                                                                     
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
@@ -400,6 +422,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                     <input type="hidden" id ="year" name="year">
                                                     <input type="hidden" id ="month" name="month">
                                                     <input type="hidden" id ="day" name="day">
+<!------------------------------------------------>                                                    
                                                 </div>  <!-- end of left column -->
                                                 <div class="col-5" > <!--  style="border-style: solid;"-->
                                                                                                     
@@ -476,21 +499,13 @@ var expiryday =document.getElementById("day");
     expiry.value=year5.toLocaleDateString();   
    
 
-    //---------------------------------------
-
-
-    //----------------------------------------
-
-       
-
         }
 
-    
 
-    
    });
 
    $(".datepicker").focusout(function() {
+
     var addressinput = $(this).val();
     var d = new Date(addressinput); //"03/25/2015"
 
@@ -505,11 +520,31 @@ var expiryday =document.getElementById("day");
      expirymonth.value =year5.getMonth()+1;
      expiryday.value =year5.getDate() ;
     
-    }
-
-  
+    }  
    });
+//===================================
+   $(".datepickerddm").change(function() {
 
+    var domyear =document.getElementById("domyear");
+     var dommonth =document.getElementById("dommonth");
+      var domday =document.getElementById("domday");
+
+
+    if ($(this)[0].id=="ddmanufacture"){
+
+   var ddm =$(this);
+   //console.log (ddm);
+   //alert(ddm[0].value);
+   var ddmdate = new Date(ddm[0].value); //"03/25/2015"
+   //console.log(ddmdate);
+   //console.log(ddmdate.getFullYear());
+     domyear.value =ddmdate.getFullYear();
+     dommonth.value =ddmdate.getMonth()+1;
+     domday.value =ddmdate.getDate() ;
+
+    }  
+   });
+//====================================
 
 });
 

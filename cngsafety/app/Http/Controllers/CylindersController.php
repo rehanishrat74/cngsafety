@@ -710,13 +710,17 @@ public function showUploadFile(Request $request) {
             'edate'=>'required',  //inspection date
             'expiry'=>'required',  //expiry date
             'method'=>'required',
-            'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
+             'ocnic'=>'nullable|regex:/(^([\d]{5}-[\d]{7}-[\d])$)/',
+            'ddmanufacture'=>['required'],
+            //'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
             //'ocnic' =>['regex:/(^([\d]{5}-[\d]{7}-[\d])$)/'],
         ));
 
 $ownername=$request->input('oname');
 $vehicleRegNo=$request->input('oreg');
 $ocnic=$request->input('ocnic');
+
+
 
             $CountryOfOrigin=$request->input('CountryOfOrigin');
             $Standard=$request->input('standard');
@@ -735,7 +739,7 @@ $ocnic=$request->input('ocnic');
             $notes=$request->input('notes');
             //$inspector=$request->input('inspector');
             $inspector="not available"; 
-            $manufacturedate=$request->input('ddmanufacture');
+            $manufacturedate=date('Y-m-d',strtotime($request->input('domyear').'/'.$request->input('dommonth').'/'.$request->input('domday')));
 
             //---------setting inspection expiry date ---------------------
 
@@ -1746,7 +1750,9 @@ session()->flashInput($request->input());
             'edate'=>'required',  //inspection date
             'expiry'=>'required',         
             'method' =>'required',
-            'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
+            'ocnic'=>'nullable|regex:/(^([\d]{5}-[\d]{7}-[\d])$)/',
+            'ddmanufacture'=>'required',
+            //'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
 
         ));
 
@@ -1765,7 +1771,9 @@ $ocnic=$request->input('ocnic');
             $capacity=$request->input('capacity');            
             $inspector=$request->input('inspector');            
             $notes =$request->input('notes');            
-            $DateOfManufacture =$request->input('ddmanufacture');
+            $DateOfManufacture =date('Y-m-d',strtotime($request->input('domyear').'/'.$request->input('dommonth').'/'.$request->input('domday')));
+
+            //$request->input('ddmanufacture');
 
 
             $dt1=$request->input('edate');      

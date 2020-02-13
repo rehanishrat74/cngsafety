@@ -215,7 +215,7 @@
                                                                 <select class="form-control" id ="capacity" name="capacity">
 
 <?php 
- $capacities=array("30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC","58 WLC","60 WLC","62 WLC","64 WLC","65 WLC","70 WLC","74 WLC","75 WLC","80 WLC","85 WLC","90 WLC","30-85 WLC","30-90 WLC","40-90 WLC","50-140 WLC","other");
+ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC","58 WLC","60 WLC","62 WLC","64 WLC","65 WLC","70 WLC","74 WLC","75 WLC","80 WLC","85 WLC","90 WLC","30-85 WLC","30-90 WLC","40-90 WLC","50-140 WLC","other");
 
      $c=0;
     for ($c=0;$c<22;$c++){ ?>
@@ -305,7 +305,7 @@ for ($i=0;$iless4;$i++)
 -->
 <!-- end of inspector -->
 <!------------------------------------------------->               
-                                                 <div class="form-group row" >
+                                             <!--    <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
                                                             <label class="form-label" >Date of Manufacturing</label>
@@ -313,7 +313,7 @@ for ($i=0;$iless4;$i++)
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <input type="text" value="{{$cylinderdetails[0]->DateOfManufacture}}" class="form-control{{ $errors->has('SerialNo') ? ' is-invalid' : '' }}" 
+                                                                <input type="text" value="{{$cylinderdetails[0]->DateOfManufacture}}" class="form-control{{ $errors->has('ddmanufacture') ? ' is-invalid' : '' }}" 
                                                                 id="ddmanufacture" name="ddmanufacture" placeholder="YYYY-MM-DD" autocomplete="off" 
                                                                 >
                                               @if ($errors->has('ddmanufacture'))
@@ -323,10 +323,31 @@ for ($i=0;$iless4;$i++)
                                               @endif                                                                                                                      
                                                             </div>
                                                         </div>
-                                                    </div>                                                                                               
+                                                    </div>   -->                                                                                            
 <!------------------------------------------------->
-               
-
+   <!-------------------------Date of manufacturing.--------->               
+                                                    <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >Date of manufacturing</label>
+                                                            </div>
+                                                        </div> 
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                              
+                                                                <input type="text" value="{{date('m/d/Y', strtotime($cylinderdetails[0]->DateOfManufacture))}}" class="form-control{{ $errors->has('ddmanufacture') ? ' is-invalid' : '' }} datepicker datepickerddm" data-format="mm/dd/yyyy"  id="ddmanufacture" name="ddmanufacture" placeholder="date (e.g. 04/03/2015)" autocomplete="off">                              
+                                              @if ($errors->has('ddmanufacture'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('ddmanufacture') }}</strong>
+                                                </span>
+                                              @endif                                                                             
+                                                            </div>
+                                                        </div>
+                                                    </div>   
+                                                    <input type="hidden" id ="domyear" name="domyear">
+                                                    <input type="hidden" id ="dommonth" name="dommonth">
+                                                    <input type="hidden" id ="domday" name="domday">            
+<!------------------------------------------------->
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
@@ -364,7 +385,8 @@ for ($i=0;$iless4;$i++)
                                                     </div> <!-- end of notes -->
 
 <!------------------------------------------------->
-<!---------------------------------------------------------->
+
+<
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
@@ -567,6 +589,29 @@ var expiryday =document.getElementById("day");
     //console.log(addressinput);
         }
    });
+
+   $(".datepickerddm").change(function() {
+
+    var domyear =document.getElementById("domyear");
+     var dommonth =document.getElementById("dommonth");
+      var domday =document.getElementById("domday");
+
+
+    if ($(this)[0].id=="ddmanufacture"){
+
+   var ddm =$(this);
+   //console.log (ddm);
+   //alert(ddm[0].value);
+   var ddmdate = new Date(ddm[0].value); //"03/25/2015"
+   //console.log(ddmdate);
+   //console.log(ddmdate.getFullYear());
+     domyear.value =ddmdate.getFullYear();
+     dommonth.value =ddmdate.getMonth()+1;
+     domday.value =ddmdate.getDate() ;
+
+    }  
+   });
+
 
 });
 </script>
