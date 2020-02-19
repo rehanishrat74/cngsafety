@@ -210,15 +210,20 @@ if (isset($vehicle->InspectionDate))
 {
 
 
-$inspectionDate = strtotime('+12 month',strtotime($vehicle->InspectionDate));
+//$inspectionDate = strtotime('+12 month',strtotime($vehicle->InspectionDate));
+$inspectionDate = strtotime($vehicle->InspectionDate);
 $inspectionDate=date('Y-m-j',$inspectionDate);
 
-$date = date('Y-m-d');
+$kitExpiryDate=strtotime($vehicle->InspectionExpiry);
+$kitExpiryDate =date('Y-m-j',$kitExpiryDate);
+
+$date = date('Y-m-d'); //today date
 
 //echo "Inspection date=".$inspectionDate;
 //echo " date=".$date;
-
-if($date > $inspectionDate)
+//echo 'today='.$date.'<br>';
+//echo 'expiry='.$kitExpiryDate.'<br>';
+if($date > $kitExpiryDate ) // old case was =if($date > $inspectionDate)
 {$inspectionExpired=1;?>
 <img id='redflag'  src="../assets/images/redflag.png" style="width:20px;height:20px;border:0;">
 <?php } }?>

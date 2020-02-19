@@ -78,7 +78,7 @@ $vehicles = DB::table('vehicle_particulars')
             })
             ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
             ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate')
+'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry')
             ->where('vehicle_particulars.stationno','=',Auth::user()->stationno)
             ->orderby($sortby,'desc')            
             ->paginate(10);                        
@@ -92,7 +92,7 @@ else
             })
             ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
             ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate')            
+'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry')
             ->orderby($sortby,'desc')            
             ->paginate(10);                        
 
