@@ -875,7 +875,7 @@ $ocnic=$request->input('ocnic');
                       $join->on('kit_cylinders.Make_Model','=','RegisteredCylinders.BrandName');
                     })
                     ->select('kit_cylinders.formid','kit_cylinders.Cylinder_SerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.InspectionDate','kit_cylinders.Cylinder_no','kit_cylinders.ImportDate','kit_cylinders.Standard','kit_cylinders.Make_Model','kit_cylinders.cylinderlocation',
-                        DB::raw('IF(ISNULL(RegisteredCylinders.SerialNumber) OR ISNULL(Registeredcylinders.BrandName), "(Unregistered)", "") as cylinderStatus'))
+                        DB::raw('IF(ISNULL(RegisteredCylinders.SerialNumber) OR ISNULL(RegisteredCylinders.BrandName), "(Unregistered)", "") as cylinderStatus'))
                     ->where('formid','=',$id)
                     ->orderby('Cylinder_no','asc')
                     ->get();                     
@@ -1480,7 +1480,8 @@ $sortby="Record_no";
                     ->where ('regtype','=','laboratory')
                     ->where ('deleted','=',0)
                     ->orderby($sort,'desc')
-                    ->paginate(10);                    //all labs
+                    ->get();
+                    //->paginate(10);                    //all labs
         }
         
         else{
@@ -1499,7 +1500,8 @@ $sortby="Record_no";
                     ->where('email','=',$labUser) //only reistered lab user
                     ->where ('deleted','=',0)
                     ->orderby($sort,'desc')
-                    ->paginate(10);                    
+                    ->get();
+                    //->paginate(10);                    
         }
 
         //return view ('vehicle.listestedcylinders',['testedcylinders'=>$testedcylinders]);            
@@ -1695,7 +1697,8 @@ response.AddHeader("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");*/
                     ->select ('id','Labname')
                     ->where ($labsWhereData)
                     ->orderby($sort,'desc')
-                    ->paginate($pagesize); 
+                    ->get();
+                    //->paginate($pagesize); 
 
 
         $data =['page'=>'1','sort'=>$sort];

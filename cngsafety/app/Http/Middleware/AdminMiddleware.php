@@ -63,6 +63,7 @@ class AdminMiddleware
             //$errmsg=$errmsg."<br>type=.".$regtype;
             //$errmsg=$errmsg."<br>routename=".$route;
            abort(403, $errmsg); 
+           //https://laravel.com/docs/5.6/authentication#logging-out
         }
 
 
@@ -78,14 +79,15 @@ class AdminMiddleware
             return true;
         }
 
+  
         $isauthorise=false;
 
         if ($regtype=='workshop')
         {
-            if ( $route=='registrations' || $route=='registrations-search'  ||  $route=='new-vehicle' || $route== 'reg-vehicle' || $route== 'cylinders' || $route== 'showcylinder' || $route== 'editcylinder' || $route=='newcylinderreg'  || $route=='logout') {
+            if ( $route=='registrations' || $route=='registrations-search'  ||  $route=='new-vehicle' || $route== 'reg-vehicle' || $route== 'cylinders' || $route== 'showcylinder' || $route== 'editcylinder' || $route=='newcylinderreg'  || $route=='logout' || $route=='displayProfile') {
                     $isauthorise=true;
             }
-            if ($route=='new-vehicle' || $route=='edit-vehicle' || $route='update-vehicle'){
+            if ($route=='new-vehicle' || $route=='edit-vehicle' || $route='update-vehicle'  || $route=='displayProfile'){
              $isauthorise=true;   
             }
 
@@ -93,7 +95,7 @@ class AdminMiddleware
         else if ($regtype=='laboratory')
         {
 
-            if ( $route=='testcylindersdataentryform' || $route=='savetestcylinders' || $route=='listlabtestedcylinders' || $route=='testedcylinders-search' || $route=='showlabs'  || $route=='logout'){
+            if ( $route=='testcylindersdataentryform' || $route=='savetestcylinders' || $route=='listlabtestedcylinders' || $route=='testedcylinders-search' || $route=='showlabs'  || $route=='logout'  || $route=='displayProfile'){
                 $isauthorise=true;
             }
 
@@ -103,7 +105,7 @@ class AdminMiddleware
         {
 
            if ($route=='showlabs' || $route=='listlabtestedcylinders' || $route=='testedcylinders-search' || $route=='editformfortestedcylinders' || $route =='updateformfortestedcylinders' || $route=='deleteuser' || $route=='view-records'  
-                || $route=='logout' ){
+                || $route=='logout'  || $route=='displayProfile'){
                 $isauthorise=true;
                 if (Auth::user()->readonly ==1 && ($route=='deleteuser' || $route=='editformfortestedcylinders' || $route =='updateformfortestedcylinders' ))
                 {
@@ -114,6 +116,10 @@ class AdminMiddleware
             }            
         }
         
+        if ($regtype=='hdip' &&($route=='registrations' || $route=='registrations-search'))
+         {  // giving access to hdip to vechilcles.
+
+            $isauthorise=true;} 
         if ($route=='getcities'){
             $isauthorise=true; //public
 
