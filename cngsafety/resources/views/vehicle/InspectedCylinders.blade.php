@@ -381,6 +381,26 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                             </div>
                                                         </div>
                                                     </div>
+<!------------------------certificate----------------------->
+                                                 <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >Issued Certificate</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                                <input type="text" value="{{old('certificate')}}" class="form-control{{ $errors->has('certificate') ? ' is-invalid' : '' }}" 
+                                                                id="certificate" name="certificate" placeholder="" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('certificate'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('certificate') }}</strong>
+                                                </span>
+                                              @endif                                                                 
+                                                            </div>
+                                                        </div>
+                                                    </div>
 <!---------------------------------------------------------->
                                                     <div class="form-group row" >
                                                         <div class="col-6">

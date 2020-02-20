@@ -711,6 +711,7 @@ public function showUploadFile(Request $request) {
             'expiry'=>'required',  //expiry date
             'method'=>'required',
              'ocnic'=>'nullable|regex:/(^([\d]{5}-[\d]{7}-[\d])$)/',
+             'certificate'=>'nullable',
             'ddmanufacture'=>['required'],
             //'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
             //'ocnic' =>['regex:/(^([\d]{5}-[\d]{7}-[\d])$)/'],
@@ -719,7 +720,7 @@ public function showUploadFile(Request $request) {
 $ownername=$request->input('oname');
 $vehicleRegNo=$request->input('oreg');
 $ocnic=$request->input('ocnic');
-
+$certificate=$request->input('certificate');
 
 
             $CountryOfOrigin=$request->input('CountryOfOrigin');
@@ -786,8 +787,8 @@ $ocnic=$request->input('ocnic');
                     if ($duplicateSnos[0]->existssno<=0)
                     {
                         DB::insert('insert into RegisteredCylinders
-                        (LabCTS,CountryOfOrigin,BrandName,Standard,SerialNumber,LabUser,Date,InspectionExpiryDate,method,diameter,length,capacity,notes,inspector,DateOfManufacture,ownername,vehicleRegNo,ocnic) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ',[$LabCTS,$CountryOfOrigin,$BrandName,$Standard,$SerialNumber,
-                                        $LabUser,$Date,$InspectionExpiryDate,$method,$diameter,$length,$capacity,$notes,$inspector,$manufacturedate,$ownername,$vehicleRegNo,$ocnic]);
+                        (LabCTS,CountryOfOrigin,BrandName,Standard,SerialNumber,LabUser,Date,InspectionExpiryDate,method,diameter,length,capacity,notes,inspector,DateOfManufacture,ownername,vehicleRegNo,ocnic,certificate) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ',[$LabCTS,$CountryOfOrigin,$BrandName,$Standard,$SerialNumber,
+                                        $LabUser,$Date,$InspectionExpiryDate,$method,$diameter,$length,$capacity,$notes,$inspector,$manufacturedate,$ownername,$vehicleRegNo,$ocnic,$certificate]);
                         $id = DB::getPdo()->lastInsertId();
 
                     }
@@ -1455,60 +1456,65 @@ $sortby="Record_no";
 
             $sort=Request('sort');
             if (!isset($sort)){
-                $sort='id';
+                //$sort='id';
+                $sort='row_number';
+
             }
 
 
         $usertype =Auth::user()->regtype;
-      $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);            
+        $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);            
 
 
         $labUser =Auth::user()->email;
 
                 if (Auth::user()->regtype=='admin' || Auth::user()->regtype=='hdip' || Auth::user()->regtype=='apcng')
         {
+                DB::statement(DB::raw('set @row:=0'));
                 $testedcylinders=DB::table('RegisteredCylinders')
                     ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
-                    ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
-                        'vehicle_particulars.Registration_no')
-
-                    ->orderby($sort,'desc')
+                    ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 
+                        'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
+                        'vehicle_particulars.Registration_no',DB::Raw('@row:=@row+1 as row_number'))
+                    ->orderby($sort,'desc')    
                     ->paginate(10);            
 
                 $labs=DB::table('users')                    
                     ->select ('id','Labname')
                     ->where ('regtype','=','laboratory')
                     ->where ('deleted','=',0)
-                    ->orderby($sort,'desc')
+                    ->orderby('Labname','desc')
                     ->get();
-                    //->paginate(10);                    //all labs
+                   //all labs
         }
         
         else{
+                DB::statement(DB::raw('set @row:=0'));
                 $testedcylinders=DB::table('RegisteredCylinders')
                     ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
-                    ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
-                        'vehicle_particulars.Registration_no')
+                    ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 
+                        'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
+                        'vehicle_particulars.Registration_no',DB::Raw('@row:=@row+1 as row_number'))
 
                     ->where ('LabUser','=',$labUser)
-                    ->orderby($sort,'desc')
-                    ->paginate(10);
+                    ->orderby($sort,'desc')                   
+                    ->paginate(10);  
 
                 $labs=DB::table('users')                    
                     ->select ('id','Labname')
                     ->where ('regtype','=','laboratory')
                     ->where('email','=',$labUser) //only reistered lab user
                     ->where ('deleted','=',0)
-                    ->orderby($sort,'desc')
+                    ->orderby('Labname','desc')
                     ->get();
-                    //->paginate(10);                    
+                                   
         }
 
         //return view ('vehicle.listestedcylinders',['testedcylinders'=>$testedcylinders]);            
         
         //return view ('vehicle.listtestedcylinders',compact('testedcylinders','treeitems'))->with('page',1);
         //$sort=Request('sort');
-        $data =['page'=>'1','sort'=>$sort];
+//        $data =['page'=>'1','sort'=>$sort];
         /*$testedcylinders->setCollection(
     collect(
         collect($testedcylinders->items())->sortBy($sort,true)
@@ -1524,11 +1530,13 @@ $sortby="Record_no";
     $querystringArray = ['sort' => $sort];
 
 $testedcylinders->appends($querystringArray);
-
-
-
-
-
+/*$productArray = (array)$testedcylinders->getIterator();
+usort($productArray, function($a, $b)
+             {
+                 if ($a["row_number"] == $b["row_number"])
+                     return (0);
+                 return (($a["row_number"] < $b["row_number"]) ? -1 : 1);
+             });*/
 
 
     return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1);
@@ -1536,6 +1544,14 @@ $testedcylinders->appends($querystringArray);
 
         return response($content)->withHeaders(['Set-Cookie'=> "Secure;SameSite=None"]);*/
     }
+ 
+/*private function sortProductsByRow(Product $a, Product $b)
+{
+   if ($a->getCreated() == $b->getCreated()) {
+      return 0;
+   }
+   return ($a->getCreated() < $b->getCreated()) ? -1 : 1;
+}*/
 /*return response($content)
             ->withHeaders([
                 'Content-Type' => $type,
@@ -1586,7 +1602,8 @@ response.AddHeader("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");*/
 
             $sort=Request('sort');
             if (!isset($sort)){
-                $sort='id';
+                //$sort='id';
+                $sort='row_number';
             }
 
 
@@ -1684,11 +1701,11 @@ response.AddHeader("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");*/
         }
 //print_r($testedcylindersWhereData);
 //return;
-
+        DB::statement(DB::raw('set @row:=0'));
         $testedcylinders=DB::table('RegisteredCylinders')
                     ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
                     ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
-                        'vehicle_particulars.Registration_no') 
+                        'vehicle_particulars.Registration_no',DB::Raw('@row:=@row+1 as row_number')) 
                     ->where ($testedcylindersWhereData)
                     ->orderby($sort,'desc')
                     ->paginate($pagesize);
@@ -1696,7 +1713,7 @@ response.AddHeader("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");*/
         $labs=DB::table('users')                    
                     ->select ('id','Labname')
                     ->where ($labsWhereData)
-                    ->orderby($sort,'desc')
+                    ->orderby('Labname','desc')
                     ->get();
                     //->paginate($pagesize); 
 
@@ -1730,7 +1747,7 @@ session()->flashInput($request->input());
 
             
         $CylinderDetails=DB::table('RegisteredCylinders')
-                    ->select ('id','LabCTS','BrandName','Standard' ,'SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'stickerSerialNo','method','diameter','length','capacity','inspector','notes','DateOfManufacture','ownername','vehicleRegNo','ocnic')
+                    ->select ('id','LabCTS','BrandName','Standard' ,'SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'stickerSerialNo','method','diameter','length','capacity','inspector','notes','DateOfManufacture','ownername','vehicleRegNo','ocnic','certificate')
                     ->where ('id','=',$cylinderid)
                     ->get();            
 
@@ -1754,6 +1771,7 @@ session()->flashInput($request->input());
             'expiry'=>'required',         
             'method' =>'required',
             'ocnic'=>'nullable|regex:/(^([\d]{5}-[\d]{7}-[\d])$)/',
+            'certificate'=>'nullable',
             'ddmanufacture'=>'required',
             //'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
 
@@ -1763,6 +1781,7 @@ session()->flashInput($request->input());
 $ownername=$request->input('oname');
 $vehicleRegNo=$request->input('oreg');
 $ocnic=$request->input('ocnic');
+$certificate=$request->input('certificate');
 
             $CountryOfOrigin=$request->input('CountryOfOrigin');            
             
@@ -1847,7 +1866,8 @@ $ocnic=$request->input('ocnic');
                                     'DateOfManufacture'=>$DateOfManufacture,
                                     'ownername'=>$ownername,
                                     'vehicleRegNo'=>$vehicleRegNo,
-                                    'ocnic'=>$ocnic
+                                    'ocnic'=>$ocnic,
+                                    'certificate'=>$certificate
                                 ]);                                            
 
                     }
@@ -1901,7 +1921,8 @@ $ocnic=$request->input('ocnic');
                     ->where ('regtype','=','laboratory')
                     ->where ('deleted','=',0)
                     ->orderby($sort,'desc')
-                    ->paginate(10);  //all labs                    
+                    ->get();
+                    //->paginate(10);  //all labs                    
         }
         
         else{
@@ -1920,7 +1941,8 @@ $ocnic=$request->input('ocnic');
                     ->where ('deleted','=',0)
                     ->where ('email','=',$labUser)
                     ->orderby($sort,'desc')
-                    ->paginate(10);                    
+                    ->get();
+                    //->paginate(10);                    
         }
 
         //return view ('vehicle.listestedcylinders',['testedcylinders'=>$testedcylinders]);            

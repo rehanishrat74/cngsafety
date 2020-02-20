@@ -447,7 +447,26 @@ for ($i=0;$iless4;$i++)
                                                         </div>
                                                     </div>
 <!---------------------------------------------------------->
-
+                                                    <div class="form-group row" >
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                            <label class="form-label" >Issued Certificate</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="controls">
+                                                                <input type="text" value="{{$cylinderdetails[0]->certificate}}" class="form-control{{ $errors->has('certificate') ? ' is-invalid' : '' }}" 
+                                                                id="certificate" name="certificate" placeholder="" autocomplete="off" 
+                                                                >
+                                              @if ($errors->has('certificate'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('certificate') }}</strong>
+                                                </span>
+                                              @endif                                                                 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+<!---------------------------------------------------------->
 
 
                                                     <div class="form-group row" >

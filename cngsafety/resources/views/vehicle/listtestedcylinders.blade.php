@@ -210,14 +210,14 @@
                                                    <tr>
 
 <?php if ((Auth::user()->regtype=="hdip" || Auth::user()->regtype=="admin") && Auth::user()->readonly!=1) {?>
-<td><a href="{{route('editformfortestedcylinders',$cylinder->id)}}">{{$cylinder->id}}</a></td>
+<td><a href="{{route('editformfortestedcylinders',$cylinder->id)}}">{{$cylinder->row_number}}</a></td>
 <td><a href="{{route('editformfortestedcylinders',$cylinder->id)}}">{{$cylinder->LabCTS}}</a></td>
 <?php 
 } 
 else
 {
 ?>
-                                               <td>{{$cylinder->id}}</td>
+                                               <td>{{$cylinder->row_number}}</td>
                                                <td>{{$cylinder->LabCTS}}</td>
 <?php }
 
