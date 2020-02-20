@@ -147,25 +147,13 @@ public function DisableLoginAccess ($userid){
 }
 
     public function searchSticker($stickerNo) {
- /*$msg = "This is a simple message.";
-    $msg = $data->user ;
-      return response()->json(array('msg'=> $msg), 200);*/
-      //$users=DB::table('users')->where('name', 'like', '%'.$data->name.'%')->get();      
-      //return response()->json(array('msg'=> $msg), 200);
 
 
-      /*use homestead;
-SELECT Record_no,Registration_no,Make_type,lastinspectionid,StickerSerialNo 
-FROM homestead.vehicle_particulars where StickerSerialNo ='6XMWFH4G9' and lastinspectionid is not null;
-select Cylinder_SerialNo,InspectionDate from kit_cylinders where formid =37;*/
-
-       //$stickerNo = $_GET['stickerNo'];
-
-        $stickerdetails="Code: ".$stickerNo." not found";
+        $stickerdetails="Code: ".$stickerNo." not found.";
 
         if (!isset($stickerNo))
         {
-            $stickerNo="NOtfound";
+            $stickerNo="Not Found";
 
         }
 
@@ -174,42 +162,37 @@ select Cylinder_SerialNo,InspectionDate from kit_cylinders where formid =37;*/
             $vehicle=DB::table('vehicle_particulars')      
             ->select('Record_no','Registration_no','Make_type','lastinspectionid','StickerSerialNo' )
             ->where('StickerSerialNo','=',$stickerNo)
-            ->where('lastinspectionid','!=',null)
             ->get();
 
-            //print_r($vehicle).'<br>';
-            //print_r($vehicle[0]->Record_no);
+            
+    $stickerdetails="Sticker:".$stickerNo.". This is <strong>".$vehicle[0]->Make_type."</strong> registration <strong>#".$vehicle[0]->Registration_no."</strong>. Inspection Pending."; 
 
 
             if (  isset($vehicle[0]->lastinspectionid)  ) 
-            {        
+            {  
+              
                 $cylinders=DB::table('kit_cylinders')      
                 ->select('Cylinder_SerialNo','InspectionDate','formid' )
                 ->where('formid','=',$vehicle[0]->lastinspectionid)                
-                ->get();                
-                
+                ->get();    
+   
+
                 $formid=$cylinders[0]->formid;
+
                 if (isset($formid)  )                 
                 {
 
-//                        $cylinderExpiry=$cylinders[0]->InspectionDate;
                     $date = strtotime(date("Y-m-d", strtotime($cylinders[0]->InspectionDate)) . " +60 month");
                     $cylinderExpiry = date("Y-m-d",$date);
-                    
 
-                        $stickerdetails="Code:".$stickerNo.". This is <strong>".$vehicle[0]->Make_type."</strong> registration <strong>#".$vehicle[0]->Registration_no."</strong>. carrying cylinders <strong>";
+                   // str_replace("carrying cylinders <strong>"," Inspection Pending.",$stickerdetails);
 
-//                        print_r($cylinders);
                         foreach ($cylinders as $cylinder){
                             $stickerdetails=$stickerdetails."#".$cylinder->Cylinder_SerialNo;
                         }
 
 
-
-
-                            //$stickerdetails=$stickerdetails."#232,#2342";
-
-                            $stickerdetails=$stickerdetails."</strong>, duly tested and passed for CNG Kit and cylinder in compliance with requirement of Standard Code of Practice Part III, CNG Safety Ruld: 1992. This inspection expires on <strong> ".$cylinderExpiry."</strong>. It is illegal to refuel untested CNG cylinder. HDIP considers public safety as top priority. For complains and guidelines please dial 051-4901444 or visit our weblink <a href='http://www.hdip.com.pk' target='_blank'>www.hdip.com.pk</a>".", sticker=".$stickerNo;
+                            $stickerdetails=$stickerdetails."</strong>, duly tested and passed for CNG Kit and cylinder in compliance with requirement of Standard Code of Practice Part III, CNG Safety Ruld: 1992. This inspection expires on <strong> ".$cylinderExpiry."</strong>. It is illegal to refuel untested CNG cylinder. HDIP considers public safety as top priority. For complains and guidelines please dial 051-4901444 or visit our weblink <a href='http://www.hdip.com.pk' target='_blank'>www.hdip.com.pk</a>";
 
                 }
 
@@ -218,10 +201,6 @@ select Cylinder_SerialNo,InspectionDate from kit_cylinders where formid =37;*/
         }
 
       
-
-
-
-
     return response()->json($stickerdetails, 200);
   }
 
