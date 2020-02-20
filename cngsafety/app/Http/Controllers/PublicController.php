@@ -28,6 +28,7 @@ class PublicController extends Controller
     }
     public function  searchKCcode() {
            // echo 'hello';
+        //usage: https://cngsafetypakistan.com/searchkccode?kezzler_code=KO6TIZKM9
              $kezzler_code = Input::get('kezzler_code');
             // echo $kezzler_code;
             if (!empty($kezzler_code)) 
@@ -61,28 +62,36 @@ class PublicController extends Controller
                         ->where ('VehicleReg_No','=', $record[0]->Registration_no)
                         ->get();                    
                     $data['name'] =$recordowner[0]->Owner_name;
-                    
-                    $inspection = DB::table('cng_kit')
+                         $data['inspection_date']='';  
+                         $data['token_expiry'] ='';    
+                        $cylindersarr = array();               
+                        $cylinderobj = array();
+                    if ($record[0]->Registration_no > 0)
+                    {
+                         $inspection = DB::table('cng_kit')
                         ->select ('*')
                         ->where('formid', '=',$record[0]->lastinspectionid)
                         ->get();   
 
-                    $data['inspection_date']=$inspection[0]->InspectionDate;  
-                    $data['token_expiry'] =$inspection[0]->InspectionExpiry;
+                         $data['inspection_date']=$inspection[0]->InspectionDate;  
+                         $data['token_expiry'] =$inspection[0]->InspectionExpiry;
    
-                     $cylinders  = DB::table('kit_cylinders')
-                        ->select ('*')
-                        ->where('formid', '=',$record[0]->lastinspectionid)
-                        ->get();   
-   
-                    $cylindersarr = array();
-                    foreach ($cylinders as $cylinder) {
-                        $cylinderobj = array();
-                        $cylinderobj['serial'] = $cylinder->Cylinder_SerialNo;
-                        $cylinderobj['inspection_expiry'] = $cylinder->ExpiryDate;
-                        array_push($cylindersarr, $cylinderobj);
+                         $cylinders  = DB::table('kit_cylinders')
+                         ->select ('*')
+                         ->where('formid', '=',$record[0]->lastinspectionid)
+                         ->get();  
+
+                        foreach ($cylinders as $cylinder) {
+                            $cylinderobj = array();
+                            $cylinderobj['serial'] = $cylinder->Cylinder_SerialNo;
+                            $cylinderobj['inspection_expiry'] = $cylinder->ExpiryDate;
+                           // array_push($cylindersarr, $cylinderobj);
+                            }
+                        //$data['cylinders'] = $cylindersarr;                         
                     }
-                    $data['cylinders'] = $cylindersarr;
+  array_push($cylindersarr, $cylinderobj);
+   $data['cylinders'] = $cylindersarr;   
+
                     
                     $response_array = array('success' => true, 'data' => $data);
                     $response_code = 200;
