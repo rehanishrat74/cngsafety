@@ -274,7 +274,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                         <div class="col-6">
                                                             <div class="controls">
                                                               
-                                                                <input type="text" value="" class="form-control{{ $errors->has('ddmanufacture') ? ' is-invalid' : '' }} datepicker datepickerddm" data-format="mm/dd/yyyy"  id="ddmanufacture" name="ddmanufacture" placeholder="date (e.g. 04/03/2015)" autocomplete="off">                              
+                                                                <input type="text" value="{{old('ddmanufacture')}}" class="form-control{{ $errors->has('ddmanufacture') ? ' is-invalid' : '' }} datepicker datepickerddm" data-format="mm/dd/yyyy"  id="ddmanufacture" name="ddmanufacture" placeholder="date (e.g. 04/03/2015)" autocomplete="off">                              
                                               @if ($errors->has('ddmanufacture'))
                                                 <span class="invalid-feedback" role="alert">
                                                   <strong>{{ $errors->first('ddmanufacture') }}</strong>
@@ -295,7 +295,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <input type="text" value="" class="form-control{{ $errors->has('SerialNo') ? ' is-invalid' : '' }}" 
+                                                                <input type="text" value="{{old('SerialNo')}}" class="form-control{{ $errors->has('SerialNo') ? ' is-invalid' : '' }}" 
                                                                 id="SerialNo" name="SerialNo" placeholder="Serial No" autocomplete="off" 
                                                                 >
                                               @if ($errors->has('SerialNo'))
@@ -316,7 +316,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="controls">
-                                              <textarea class="form-control"  name="notes" id="notes" placeholder="Notes" ></textarea>
+                                              <textarea class="form-control"  name="notes" id="notes" placeholder="Notes" >{{old('notes')}}</textarea>
            
                                                             </div>                                                
                                                         </div>
@@ -330,7 +330,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <input type="text" value="" class="form-control{{ $errors->has('oname') ? ' is-invalid' : '' }}" 
+                                                                <input type="text" value="{{old('oname')}}" class="form-control{{ $errors->has('oname') ? ' is-invalid' : '' }}" 
                                                                 id="oname" name="oname" placeholder="Owner Name" autocomplete="off" 
                                                                 >
                                               @if ($errors->has('oname'))
@@ -350,7 +350,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <input type="text" value="" class="form-control{{ $errors->has('oreg') ? ' is-invalid' : '' }}" 
+                                                                <input type="text" value="{{old('oreg')}}" class="form-control{{ $errors->has('oreg') ? ' is-invalid' : '' }}" 
                                                                 id="oreg" name="oreg" placeholder="Vehicle Reg No" autocomplete="off" 
                                                                 >
                                               @if ($errors->has('oreg'))
@@ -370,7 +370,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <input type="text" value="" class="form-control{{ $errors->has('ocnic') ? ' is-invalid' : '' }}" 
+                                                                <input type="text" value="{{old('ocnic')}}" class="form-control{{ $errors->has('ocnic') ? ' is-invalid' : '' }}" 
                                                                 id="ocnic" name="ocnic" placeholder="12345-1234567-9" autocomplete="off" 
                                                                 >
                                               @if ($errors->has('ocnic'))
@@ -410,7 +410,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                         </div> 
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <input type="text" value="" class="form-control{{ $errors->has('edate') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy"  id="edate" name="edate" placeholder="date (e.g. 04/03/2015)" autocomplete="off">
+                                                                <input type="text" value="{{old('edate')}}" class="form-control{{ $errors->has('edate') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy"  id="edate" name="edate" placeholder="date (e.g. 04/03/2015)" autocomplete="off">
 
                                               @if ($errors->has('edate'))
                                                 <span class="invalid-feedback" role="alert">
@@ -430,7 +430,7 @@ $capacities=array("20 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC"
                                                         <div class="col-6">
                                                             <div class="controls">
                                                               
-                                                                <input type="text" value="" class="form-control{{ $errors->has('expiry') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy"  id="expiry" name="expiry" placeholder="date (e.g. 04/03/2015)" autocomplete="off">                              
+                                                                <input type="text" value="{{old('expiry')}}" class="form-control{{ $errors->has('expiry') ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy"  id="expiry" name="expiry" placeholder="date (e.g. 04/03/2015)" autocomplete="off">                              
                                               @if ($errors->has('expiry'))
                                                 <span class="invalid-feedback" role="alert">
                                                   <strong>{{ $errors->first('expiry') }}</strong>

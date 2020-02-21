@@ -702,11 +702,12 @@ public function showUploadFile(Request $request) {
 
         $labUser =Auth::user()->email;
         $BrandName=$request->input('brand');
+        $CountryOfOrigin=$request->input('CountryOfOrigin');        
         $this->validate($request,array(
             'CountryOfOrigin'=>'required',
             'brand'=>'required',
             'standard'=>'required',
-            'SerialNo'=>['required',new engravedCylinderno($request->input('SerialNo'),$labUser,$BrandName) ],
+            'SerialNo'=>['required',new engravedCylinderno($request->input('SerialNo'),$labUser,$BrandName,$CountryOfOrigin) ],
             'edate'=>'required',  //inspection date
             'expiry'=>'required',  //expiry date
             'method'=>'required',
@@ -723,7 +724,7 @@ $ocnic=$request->input('ocnic');
 $certificate=$request->input('certificate');
 
 
-            $CountryOfOrigin=$request->input('CountryOfOrigin');
+
             $Standard=$request->input('standard');
             $SerialNumber=$request->input('SerialNo');            
             $dt1=$request->input('edate');   //inspection date
@@ -782,6 +783,7 @@ $certificate=$request->input('certificate');
                         ->select(DB::Raw('count(SerialNumber) as existssno'))
                         ->where('SerialNumber','=',$SerialNumber)
                         ->where('BrandName','=',$BrandName)
+                        ->where ('CountryOfOrigin','=',$CountryOfOrigin)
                         ->get();
                     //dd($duplicateSnos);
                     if ($duplicateSnos[0]->existssno<=0)
@@ -1762,11 +1764,13 @@ session()->flashInput($request->input());
 
         $labUser =Auth::user()->email;
         $BrandName=$request->input('brand');
+        $CountryOfOrigin=$request->input('CountryOfOrigin');            
+//dd($CountryOfOrigin);
         $this->validate($request,array(
             'CountryOfOrigin'=>'required',
             'brand'=>'required',
             'standard'=>'required',
-            'SerialNo'=>['required',new engravedCylindernoUpdate($request->input('SerialNo'),$labUser,$id,$BrandName) ],
+            'SerialNo'=>['required',new engravedCylindernoUpdate($request->input('SerialNo'),$labUser,$id,$BrandName,$CountryOfOrigin) ],
             'edate'=>'required',  //inspection date
             'expiry'=>'required',         
             'method' =>'required',
@@ -1783,7 +1787,6 @@ $vehicleRegNo=$request->input('oreg');
 $ocnic=$request->input('ocnic');
 $certificate=$request->input('certificate');
 
-            $CountryOfOrigin=$request->input('CountryOfOrigin');            
             
             $Standard=$request->input('standard');
             $SerialNumber=$request->input('SerialNo');
@@ -1844,6 +1847,7 @@ $certificate=$request->input('certificate');
                         ->select(DB::Raw('count(SerialNumber) as existssno'))
                         ->where('SerialNumber','=',$SerialNumber)
                         ->where('BrandName','=',$BrandName)
+                        ->where('CountryOfOrigin','=',$CountryOfOrigin)
                         ->get();
                     if ($duplicateSnos[0]->existssno<=1)
                     {
@@ -1894,9 +1898,10 @@ $certificate=$request->input('certificate');
         
         /*--------------------------------*/
         
-                    $sort=Request('sort');
+            $sort=Request('sort');
             if (!isset($sort)){
-                $sort='id';
+                //$sort='id';
+                $sort='row_number';                
             }
 
 
@@ -1908,10 +1913,11 @@ $certificate=$request->input('certificate');
 
                 if (Auth::user()->regtype=='admin' || Auth::user()->regtype=='hdip')
         {
+                DB::statement(DB::raw('set @row:=0'));
                 $testedcylinders=DB::table('RegisteredCylinders')
                     ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
                     ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
-                        'vehicle_particulars.Registration_no')
+                        'vehicle_particulars.Registration_no',DB::Raw('@row:=@row+1 as row_number'))
 
                     ->orderby($sort,'desc')
                     ->paginate(10);            
@@ -1920,17 +1926,17 @@ $certificate=$request->input('certificate');
                     ->select ('id','Labname')
                     ->where ('regtype','=','laboratory')
                     ->where ('deleted','=',0)
-                    ->orderby($sort,'desc')
+                    ->orderby('Labname','desc')
                     ->get();
                     //->paginate(10);  //all labs                    
         }
         
         else{
+                DB::statement(DB::raw('set @row:=0'));
                 $testedcylinders=DB::table('RegisteredCylinders')
                     ->leftjoin('vehicle_particulars','RegisteredCylinders.stickerSerialNo','=','vehicle_particulars.StickerSerialNo')                
                     ->select ('id','LabCTS','BrandName','Standard' ,'RegisteredCylinders.SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
-                        'vehicle_particulars.Registration_no')
-
+                        'vehicle_particulars.Registration_no',DB::Raw('@row:=@row+1 as row_number'))
                     ->where ('LabUser','=',$labUser)
                     ->orderby($sort,'desc')
                     ->paginate(10);
@@ -1940,7 +1946,7 @@ $certificate=$request->input('certificate');
                     ->where ('regtype','=','laboratory')
                     ->where ('deleted','=',0)
                     ->where ('email','=',$labUser)
-                    ->orderby($sort,'desc')
+                    ->orderby('Labname','desc')
                     ->get();
                     //->paginate(10);                    
         }
@@ -1949,7 +1955,7 @@ $certificate=$request->input('certificate');
         
         //return view ('vehicle.listtestedcylinders',compact('testedcylinders','treeitems'))->with('page',1);
         //$sort=Request('sort');
-        $data =['page'=>'1','sort'=>$sort];
+        //$data =['page'=>'1','sort'=>$sort];
         /*$testedcylinders->setCollection(
     collect(
         collect($testedcylinders->items())->sortBy($sort,true)

@@ -11,14 +11,15 @@ class engravedCylindernoUpdate implements Rule
      *
      * @return void
      */
-       protected $serialno,$alloteduser,$msg,$validRule,$id,$brand;
-    public function __construct($serialnotovalidate,$useremail,$serialid,$BrandName)
+       protected $serialno,$alloteduser,$msg,$validRule,$id,$brand,$CountryOfOrigin;
+    public function __construct($serialnotovalidate,$useremail,$serialid,$BrandName,$CountryOfOrigin)
     {
         //
         $this->serialno = $serialnotovalidate;
         $this->alloteduser=$useremail;
         $this->id=$serialid;
         $this->brand=$BrandName;
+        $this->CountryOfOrigin=$CountryOfOrigin;
     }
 
     /**
@@ -32,13 +33,15 @@ class engravedCylindernoUpdate implements Rule
     {
         //
         $this->validRule=true;
-                $registeredCylinders=Db::select('select count(SerialNumber) as serialregistered from RegisteredCylinders where SerialNumber=? and BrandName=? ',[$this->serialno,$this->brand]);
-                        
-
+                $registeredCylinders=Db::select('select count(SerialNumber) as serialregistered from RegisteredCylinders where SerialNumber=? and BrandName=? and CountryOfOrigin=?',[$this->serialno,$this->brand,
+                    $this->CountryOfOrigin]);
+//dd($this->serialno); 2345
+//dd($this->brand);        *Cidgas                
+//dd($this->CountryOfOrigin);
         if ($registeredCylinders[0]->serialregistered > 0 ){
 
-                    $registeredCylinderid=DB::Select('select id,serialnumber from RegisteredCylinders where SerialNumber=? and BrandName=?',[$this->serialno,$this->brand]);
-
+                    $registeredCylinderid=DB::Select('select id,serialnumber from RegisteredCylinders where SerialNumber=? and BrandName=? and CountryOfOrigin=?',[$this->serialno,$this->brand,$this->CountryOfOrigin]);
+//dd($registeredCylinderid);
                         if ($registeredCylinderid[0]->id != $this->id)
                         {
                         $this->msg="Serial Number [".$this->serialno."] already registered.";
