@@ -82,12 +82,14 @@
 
                                
                             <div class="input-group primary">
+
+                                
                                         <select class="form-control" id="pagesize" name="pagesize">
-                                                <option value="10">Page size 10</option>
-                                                <option value="50">Page size 50</option>
-                                                <option value="100">Page size 100</option>
-                                                <option value="500">Page size 500</option>
-                                                <option value="1000">Page size 1000</option>
+                                                <option value="10" <?php if (session()->get('pagesize')==10){echo 'selected';} ?> >Page size 10</option>
+                                                <option value="50" <?php if (session()->get('pagesize')==50){echo 'selected';} ?>>Page size 50</option>
+                                                <option value="100" <?php if (session()->get('pagesize')==100){echo 'selected';} ?> >Page size 100</option>
+                                                <option value="500" <?php if (session()->get('pagesize')==500){echo 'selected';} ?>>Page size 500</option>
+                                                <option value="1000" <?php if (session()->get('pagesize')==1000){echo 'selected';} ?>>Page size 1000</option>
 
                                         </select>                                                                            
                                         <select class="form-control" id="searchby" name="searchby" 

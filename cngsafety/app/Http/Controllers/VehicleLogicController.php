@@ -14,7 +14,7 @@ use App\user;
 use App\Owner_Particulars;
 use App\VehicleParticulars;
 use App\vehicleCategory;
-
+use Cookie;
 //use Illuminate\Support\Facades\Paginator;
 //use Illuminate\Pagination\Paginator;
 class VehicleLogicController extends Controller
@@ -66,7 +66,12 @@ class VehicleLogicController extends Controller
         $sortby="Inspection_Status";
       }
 
-
+    $recordperpage = 10;
+    $pagesize=10;
+   if(request()->cookie('pagesize'))
+      { $pagesize =request()->cookie('pagesize');
+        $recordperpage =$pagesize;
+      }
 
 //$stationno=Auth::user()->stationno;
 if ($usertype =='workshop')
@@ -81,7 +86,7 @@ $vehicles = DB::table('vehicle_particulars')
 'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry')
             ->where('vehicle_particulars.stationno','=',Auth::user()->stationno)
             ->orderby($sortby,'desc')            
-            ->paginate(10);                        
+            ->paginate($pagesize);                        
 }
 else
 {
@@ -94,7 +99,7 @@ else
             ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
 'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry')
             ->orderby($sortby,'desc')            
-            ->paginate(10);                        
+            ->paginate($pagesize);                        
 
 }
 
@@ -104,7 +109,10 @@ else
         $querystringArray = ['sort' => $sort];
         $vehicles->appends($querystringArray);
 
-        return view ('vehicle.registrations',['vehicles'=>$vehicles,'treeitems'=>$treeitems])->with('page',1);
+
+    
+        return view ('vehicle.registrations',['vehicles'=>$vehicles,'treeitems'=>$treeitems])->with('page',1)
+          ->with('pagesize',$recordperpage);
       
     }
 
@@ -147,6 +155,8 @@ else
         $searchby=$request->input('searchby');
         $searchvalue=$request->input('searchvalue');
         
+        Cookie::queue('pagesize', $pagesize, 120);
+        $request->session()->put('pagesize',$pagesize);
 
         if ($searchby=="created_at" ) {
             if (!isset($searchvalue)){
@@ -243,7 +253,8 @@ $vehicles = DB::table('vehicle_particulars')
 }
 
 
-        return view ('vehicle.registrations',compact('vehicles','treeitems'))->with('page',1);
+        return view ('vehicle.registrations',compact('vehicles','treeitems'))->with('page',1)
+                                                                              ->with('pagesize',$pagesize);
 
 
 
