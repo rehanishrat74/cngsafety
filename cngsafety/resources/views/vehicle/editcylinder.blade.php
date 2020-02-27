@@ -200,7 +200,16 @@ $dt=Carbon::today();
                                       </div>                                      
                                     </div>
 
+<?php 
+$readonly ='';
+$disabled='';
+if (Auth::User()->regtype=="hdip" || Auth::User()->regtype=="laboratory" || Auth::User()->regtype=="apcng")
+{
+$readonly="readonly";
+$disabled="disabled";
+}
 
+?>
 <!--------------------------------row 4------------------------------------------------->
                                 <?php $count=1; ?>
                                 @foreach ($Cylinders as $Cylinder)
@@ -217,7 +226,7 @@ $dt=Carbon::today();
                                             <div class="col-lg-4">Make/Model</div>
                                               <div class="col-lg-8">
                                                   <input type="text" class="form-control{{ $errors->has($makenmodel) ? ' is-invalid' : '' }}" 
-                                                  name="<?php echo $makenmodel;?>" id="<?php echo $makenmodel;?>" placeholder="Make & Model" value="{{ $Cylinder->Make_Model}}" autocomplete="off">
+                                                  name="<?php echo $makenmodel;?>" id="<?php echo $makenmodel;?>" placeholder="Make & Model" value="{{ $Cylinder->Make_Model}}" autocomplete="off" <?php echo $readonly;?>>
 
                                                     @if ($errors->has($makenmodel))
                                                       <span class="invalid-feedback" role="alert">
@@ -236,7 +245,7 @@ $dt=Carbon::today();
                                           <div class="form-group row" >
                                             <div class="col-lg-4">Serial No</div>
                                               <div class="col-lg-8">
-                                                  <input type="text" class="form-control{{ $errors->has($serialno) ? ' is-invalid' : '' }}" name="<?php echo $serialno;?>"  id="<?php echo $serialno;?>" placeholder=" Serial No" value="{{  $Cylinder->Cylinder_SerialNo }}" autocomplete="off">
+                                                  <input type="text" class="form-control{{ $errors->has($serialno) ? ' is-invalid' : '' }}" name="<?php echo $serialno;?>"  id="<?php echo $serialno;?>" placeholder=" Serial No" value="{{  $Cylinder->Cylinder_SerialNo }}" autocomplete="off" <?php echo $readonly;?> >
           
 
                                                     @if ($errors->has($serialno))
@@ -261,7 +270,7 @@ $dt=Carbon::today();
                                           <div class="form-group row" >
                                             <div class="col-lg-5">Import-date</div>
                                               <div class="col-lg-7">
-                                                   <input type="text" class="form-control{{ $errors->has($importdate) ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy" value="{{ $mmddyy}}" name="<?php echo $importdate;?>" id="<?php echo $importdate;?>" placeholder="Import Date" autocomplete="off">
+                                                   <input type="text" class="form-control{{ $errors->has($importdate) ? ' is-invalid' : '' }} datepicker" data-format="mm/dd/yyyy" value="{{ $mmddyy}}" name="<?php echo $importdate;?>" id="<?php echo $importdate;?>" placeholder="Import Date" autocomplete="off" <?php echo $readonly;?>>
                                                     @if ($errors->has($importdate))
                                                       <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $errors->first($importdate) }}</strong>
@@ -278,7 +287,7 @@ $dt=Carbon::today();
                                             <div class="col-lg-4" >Standard</div>
                                               <div class="col-lg-8" >
                          
-                                                    <select class="form-control" id="<?php echo $scancode;?>"  name="<?php echo $scancode;?>" >
+                                                    <select class="form-control" id="<?php echo $scancode;?>"  name="<?php echo $scancode; ?>" <?php echo $disabled; ?>  >
                                                           <option value="NZS 5454-1989" <?php if ($Cylinder->Standard=="NZS 5454-1989") { echo "selected";} ?>>NZS 5454-1989</option>
                                                           <option value="ISO 11439" <?php if ($Cylinder->Standard=="ISO 11439") { echo "selected";} ?>>ISO 11439</option>
                                                     </select>
@@ -299,7 +308,7 @@ $dt=Carbon::today();
                                       <div class="form-group row">
                                         <div class="col-lg-4">Location</div>
                                         <div class="col-lg-8">
-                                                <select class="form-control" id="<?php echo $locationcode ?>" name="<?php echo $locationcode ?>">
+                                                <select class="form-control" <?php echo $disabled; ?>  id="<?php echo $locationcode ?>"  name="<?php echo $locationcode;?>" >
 
                                                @foreach ($cylinder_locations as $location)
                                                     <option value="{{$location->Location_id}}"   <?php if ($Cylinder->cylinderlocation==$location->Location_id) { echo "selected";} ?>
@@ -350,7 +359,7 @@ $dt=Carbon::today();
                                             <!--left col row 1-->
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control{{ $errors->has('kitmnm') ? ' is-invalid' : '' }} " name="kitmnm" id="kitmnm" placeholder="Make & Model" 
-                                                value="{{ $InspectionForm[0]->Make_Model}}" autocomplete="off">
+                                                value="{{ $InspectionForm[0]->Make_Model}}" autocomplete="off" <?php echo $readonly;?>>
                                               @if ($errors->has('kitmnm'))
                                                 <span class="invalid-feedback" role="alert">
                                                   <strong>{{ $errors->first('kitmnm') }}</strong>
@@ -359,7 +368,7 @@ $dt=Carbon::today();
                                             </div>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control{{ $errors->has('kitseriano') ? ' is-invalid' : '' }} " name="kitseriano"  id="kitseriano" placeholder=" Serial No" 
-                                                value="{{ $InspectionForm[0]->CngKitSerialNo }}" autocomplete="off">
+                                                value="{{ $InspectionForm[0]->CngKitSerialNo }}" autocomplete="off" <?php echo $readonly;?>>
                                               @if ($errors->has('kitseriano'))
                                                 <span class="invalid-feedback" role="alert">
                                                   <strong>{{ $errors->first('kitseriano') }}</strong>
@@ -375,7 +384,7 @@ $dt=Carbon::today();
                                                       <div class="input-group">
                                                           <span class="input-group-btn">
                                                               <span class="btn btn-default btn-file">
-                                                                   <input type="file" id="imgRegPlate" name="imgRegPlate">
+                                                                   <input type="file" <?php echo $disabled; ?> id="imgRegPlate" name="imgRegPlate">
                                                               </span>
                                                           </span>        
                                                       </div>                                                
@@ -389,7 +398,7 @@ $dt=Carbon::today();
                                                             $regplate = $regplate.$InspectionForm[0]->RegistrationPlate_Pic;
                                                           ?>
 
-                                                          <img id='img-regplate' src="{{ $regplate}}">
+                                                          <img id='img-regplate'  src="{{ $regplate}}">
 
                                                       </div>
 
@@ -402,7 +411,7 @@ $dt=Carbon::today();
                                                       <div class="input-group">
                                                           <span class="input-group-btn">
                                                               <span class="btn btn-default btn-file">
-                                                                   <input type="file" id="imgWndScreen" 
+                                                                   <input type="file" <?php echo $disabled; ?> id="imgWndScreen" 
                                                                    name="imgWndScreen">
                                                               </span>
                                                           </span>        
@@ -434,7 +443,7 @@ $dt=Carbon::today();
                                                 <div class="col-lg-6">                                    
                                                   <div class="checkbox">
                                                     <input type="checkbox"  name ="cylindervalve" 
-                                                    id ="cylindervalve" <?php if ($InspectionForm[0]->Cylinder_valve =="on"){echo "checked";}?>>
+                                                    id ="cylindervalve" <?php if ($InspectionForm[0]->Cylinder_valve =="on"){echo "checked";} echo $disabled;?>>
                                                   </div>                                    
                                                 </div>                     
 
@@ -449,7 +458,7 @@ $dt=Carbon::today();
                                                 <div class="col-lg-6">                                    
                                                   <div class="checkbox">
                                                     <input type="checkbox" id ="fillingvalve" 
-                                                    name ="fillingvalve" <?php if ($InspectionForm[0]->Filling_valve =="on"){echo "checked";}?>>
+                                                    name ="fillingvalve" <?php if ($InspectionForm[0]->Filling_valve =="on"){echo "checked";} echo $disabled;?>>
                                                   </div>                                    
                                                 </div>                                
 
@@ -463,7 +472,7 @@ $dt=Carbon::today();
                                               <div class="col-lg-6">                                    
                                                 <div class="checkbox">
                                                   <input type="checkbox" id = "Reducer" name = "Reducer" 
-                                                  <?php if ($InspectionForm[0]->Reducer =="on"){echo "checked";}?>
+                                                  <?php if ($InspectionForm[0]->Reducer =="on"){echo "checked";} echo $disabled;?>
                                                   >
                                                 </div>                                    
                                               </div>                                
@@ -479,7 +488,7 @@ $dt=Carbon::today();
                                               <div class="col-lg-6">                                    
                                                 <div class="checkbox">
                                                   <input type="checkbox" id="hpp"  name="hpp"
-                                                      <?php if ($InspectionForm[0]->HighPressurePipe =="on"){echo "checked";}?>
+                                                      <?php if ($InspectionForm[0]->HighPressurePipe =="on"){echo "checked";} echo $disabled;?>
                                                   >
                                                 </div>                                    
                                               </div>                                
@@ -494,7 +503,7 @@ $dt=Carbon::today();
                                                 <div class="col-lg-6">                                    
                                                   <div class="checkbox">
                                                     <input type="checkbox"  id="exhaustpipe"  name="exhaustpipe" 
-                                                    <?php if ($InspectionForm[0]->ExhaustPipe =="on"){echo "checked";}?>
+                                                    <?php if ($InspectionForm[0]->ExhaustPipe =="on"){echo "checked";} echo $disabled;?>
                                                     >
                                                   </div>                                    
                                                 </div>                                
@@ -509,9 +518,12 @@ $dt=Carbon::today();
                                       <div class="col-lg-6 input-group">
                                       </div>                                
                                     </div>                                                                 
-
+                                <?php 
+                                  if (Auth::User()->regtype=="admin" || Auth::User()->regtype=="workshop"){
+                                ?>
 
                                  <button type="submit" value="submit" class="btn btn-primary">Submit</button>
+                               <?php } ?>
                                </fieldset>
                             </form>
                         </div>

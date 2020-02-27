@@ -84,7 +84,7 @@ class PublicController extends Controller
                         foreach ($cylinders as $cylinder) {
                             $cylinderobj = array();
                             $cylinderobj['serial'] = $cylinder->Cylinder_SerialNo;
-                            $cylinderobj['inspection_expiry'] = $cylinder->ExpiryDate;
+                            $cylinderobj['inspection_expiry'] =$inspection[0]->InspectionExpiry; // $cylinder->ExpiryDate;
                            // array_push($cylindersarr, $cylinderobj);
                             }
                         //$data['cylinders'] = $cylindersarr;                         

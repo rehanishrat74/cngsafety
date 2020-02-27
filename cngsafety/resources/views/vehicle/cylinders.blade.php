@@ -45,6 +45,7 @@
 
 <section class="wrapper main-wrapper row" style=''>
 
+
     <div class='col-12'>
         <div class="page-title">
 
@@ -93,8 +94,11 @@
                         <!--class="col-lg-8 col-md-9 col-10"-->
 <!------------------------Inspection / expiry date ----------------------------------------------->
 <?php
+
+
 use Carbon\Carbon;
 $dt=Carbon::today();
+
 
 ?>
 
@@ -104,6 +108,7 @@ $dt=Carbon::today();
                                       <div class="col-lg-12" style="text-align: left;">
                                         <div class="form-group row" >
                                             <div class="col-lg-4">
+
                                                 <label class="font-weight-bold" >Inspection Date</label>
 
                                                 <input type="text" class="form-control text-dark"  value="<?php echo $dt;?>" name="inspectiondate" id="inspectiondate" placeholder="Inspection Date" data-format="mm/dd/yyyy" disabled>
@@ -111,7 +116,11 @@ $dt=Carbon::today();
                                             </div>
                                             <div class="col-lg-4">
                                                 <label class="font-weight-bold" >Inspection Expired at</label>                
-                                                <input type="text" class="form-control text-dark" name="expiryDate" id="$expiryDate" value="<?php echo $dt->addMonths(12);?>" disabled="true">                                          
+                                                <input type="text" class="form-control text-dark" name="expiryDate" id="$expiryDate" value="<?php 
+                                                echo $dt->year.'-'.'12-31';
+                                                //echo $dt->addMonths(12);
+
+                                                ?>" disabled="true">                                          
                                             </div>
                                             <!---------------------------------------------->
                                             <div class="col-lg-4">
@@ -127,6 +136,14 @@ $dt=Carbon::today();
 <!---------------------------------------------------------------------------------------------->
 
                         <div class="col-lg-12"  >
+                                   <?php 
+
+if (Auth::User()->regtype=="workshop")        
+{
+
+
+
+          ?>
                             <form method="POST" action="{{ route('cylinders') }}" 
                             enctype="multipart/form-data" >
                                 {{ csrf_field() }}
@@ -870,6 +887,7 @@ $dt=Carbon::today();
                                  <button type="submit" value="submit" class="btn btn-primary">Submit</button>
                                </fieldset>
                             </form>
+                          <?php } else {echo '<p> <Strong>Inspection Awaiting</Strong></p>';}?>
                         </div>
                       </div>
 

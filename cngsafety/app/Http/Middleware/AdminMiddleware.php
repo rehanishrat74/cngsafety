@@ -73,7 +73,7 @@ class AdminMiddleware
     public function allowedOperation($regtype,$route)
     {
         
-        
+       
         if ($regtype=='admin')
         {
             return true;
@@ -116,7 +116,10 @@ class AdminMiddleware
             }            
         }
         
-        if ($regtype=='hdip' &&($route=='registrations' || $route=='registrations-search'))
+        if ($regtype=='hdip' &&($route=='registrations' || $route=='registrations-search'
+            || $route=='editcylinder' || $route=='cylinders' || $route=='newcylinderreg'
+            || $route=='showcylinder'
+        ))
          {  // giving access to hdip to vechilcles.
 
             $isauthorise=true;} 

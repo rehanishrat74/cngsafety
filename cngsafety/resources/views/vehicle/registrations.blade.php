@@ -164,7 +164,7 @@
                                                  <th><a href="/registrations/?sort=Owner">Owner</a></th>
                                                  <th><a href="/registrations/?sort=Station">Station</a></th>
 
-                                                 <?php if (Auth::user()->regtype!="hdip") {?>
+                                                 <?php if (Auth::user()->regtype!="hdipexclude") {?>
                                                  <th><a href="/registrations/?sort=Inspection">Inspection</a></th>
                                                  <?php }?>
                                                </tr>
@@ -178,7 +178,7 @@
                                                      <td>{{$vehicle->Record_no}}</td>
                                                      <!-- td starts here -->
                                                         <?php 
-                                                        if (Auth::user()->regtype=="hdip")
+                                                        if (Auth::user()->regtype=="hdipexcludee")
                                                         {?>
 
                                                      <td>
@@ -229,10 +229,10 @@ if($date > $kitExpiryDate ) // old case was =if($date > $inspectionDate)
 <?php } }?>
 
                                                      </td>
-                                                     <?php  if (Auth::user()->regtype!="hdip" ){ // restricting hdip access to inspecton
+                                                     <?php  if (Auth::user()->regtype!="hdipexclue" ){ // restricting hdip access to inspecton
                                                         ?>
                                                      <td>
-                                                        <?php if (Auth::user()->regtype=="workshop" || Auth::user()->regtype!="admin" ) {?>
+                                                        <?php if (Auth::user()->regtype=="workshop" || Auth::user()->regtype=="admin" || Auth::user()->regtype=="hdip") {?>
 
                                                         <a href="<?php if ($vehicle->formid==0){if ($inspectionExpired==0){echo route('newcylinderreg',$vehicle->Registration_no.'?recordid='.$vehicle->Record_no.'&stationno='.$vehicle->stationno);}}else{if ($vehicle->Inspection_Status=='completed'){if($inspectionExpired==1){echo route('newcylinderreg',$vehicle->Registration_no.'?recordid='.$vehicle->Record_no.'&stationno='.$vehicle->stationno);}else{echo route('showcylinder',$vehicle->formid);}}else{echo route('editcylinder',$vehicle->formid);}}?>">
                                                         <?php }?>
