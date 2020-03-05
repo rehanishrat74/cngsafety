@@ -414,26 +414,9 @@ $this->validate($request,$kitfields);
             } // end if ($countkits==0) 
 
 
-        
-/*
-            $vehicles = DB::select('select Owner_name,CNIC,Cell_No,Address,Record_no,Registration_no,Chasis_no,Engine_no,Vehicle_catid,Make_type,Scan_code,OwnerCnic,businesstype,stationno,IF(ISNULL(Inspection.Inspection_Status), "pending", Inspection.Inspection_Status) as Inspection_Status,IF(ISNULL(Inspection.formid), 0, Inspection.Inspection.formid) as formid
-            from owner__particulars owners 
-            left join vehicle_particulars vehicles on  owners.CNIC=vehicles.OwnerCnic
-            left join (select Inspection_Status,VehiclerRegistrationNo,formid from cng_kit  order by formid desc limit 1) Inspection
-            on Inspection.VehiclerRegistrationNo=Registration_no order by Record_no desc;');*/
-        
-
-/*$vehicles = DB::table('vehicle_particulars')
-            ->leftjoin('owner__particulars','owner__particulars.CNIC','=','vehicle_particulars.OwnerCnic')
-
-            ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.Scan_code','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at')            
-            ->orderby('Record_no','desc')  
-            ->paginate(10);*/            
-
 
         $usertype =Auth::user()->regtype;
-$sortby="Record_no";
+        $sortby="Record_no";
 
 
 
@@ -852,32 +835,6 @@ public function showUploadFile(Request $request) {
    }
 
 
-/*
-            if (!is_null($kitseriano) && !empty($kitseriano) && isset($kitseriano) &&
-                !is_null($inspectiondate) && !empty($inspectiondate) && isset($inspectiondate)
-            ) 
-            {
-                //DB::table('users')->delete($id);
-                //DB::table('users')->where('id', $id)->delete();
-                //DB::delete('delete from users');
-
-                    DB::table('cng_kit')
-                        ->where('VehiclerRegistrationNo', $vregno)
-                        ->where('formid', $formid)
-                        //->where(['CngKitSerialNo'=> $kitseriano])
-                        ->where('InspectionDate',$inspectiondate)
-                        ->update(['Make_Model'=>$kitmnm ,
-                                    'CngKitSerialNo'=>$kitseriano,
-                                    'Cylinder_valve'=>$cylindervalve,
-                                    'Filling_valve'=>$fillingvalve,
-                                    'Reducer'=>$Reducer,
-                                    'HighPressurePipe'=>$hpp,
-                                    'ExhaustPipe'=>$exhaustpipe,
-                                    'Workshop_identity'=>$workstationid,
-                                    //'Location_cylinder'=>$location                                 
-
-                    ]);
-*/
 
     public function savetestcylinders(Request $request)
     {
@@ -1006,19 +963,6 @@ $certificate=$request->input('certificate');
 
 /*------------------------------------------------------------*/
      
-        /*$usertype =Auth::user()->regtype;
-        $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
-
-        $countries=DB::select(DB::raw('select distinct countries from worldcountries order by countries asc'));
-                        
-        $brands=DB::select(DB::raw('select distinct brandname  from  cylinderbrand order by brandname asc;'));
-
-        $email=Auth::user()->email;
-        $serialnos=DB::select('select distinct serialno  from  CodeRollsSecondary  where RegisteredCylindersRefNo is null and allotedto=? limit 100',[$email])   ;         
-            
-        
-
-        return view ('vehicle.InspectedCylinders',['treeitems'=>$treeitems,'countries'=>$countries,'brands'=>$brands,'serialnos'=>$serialnos ]); */
 
 
     }
@@ -1047,14 +991,7 @@ $certificate=$request->input('certificate');
 
 //---rehan here-----------------------------------------------
      
-           /*$cylinders = DB::table('kit_cylinders')
-                    ->leftjoin('RegisteredCylinders', function($join){
-                      $join->on('kit_cylinders.Cylinder_SerialNo','=','RegisteredCylinders.SerialNumber');
-                    })
-                    ->select('kit_cylinders.formid','kit_cylinders.Cylinder_SerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.CngKitSerialNo','kit_cylinders.InspectionDate','kit_cylinders.Cylinder_no','kit_cylinders.ImportDate','kit_cylinders.Standard','kit_cylinders.Make_Model','kit_cylinders.cylinderlocation',DB::raw('IF(ISNULL(RegisteredCylinders.SerialNumber), "(Unregistered)", "") as cylinderStatus'))
-                    ->where('formid','=',$id)
-                    ->orderby('Cylinder_no','asc')
-                    ->get();*/                        
+           
 
             $cylinders = DB::table('kit_cylinders')
                     ->leftjoin('RegisteredCylinders', function($join){
@@ -1696,15 +1633,7 @@ $sortby="Record_no";
                                    
         }
 
-        //return view ('vehicle.listestedcylinders',['testedcylinders'=>$testedcylinders]);            
-        
-        //return view ('vehicle.listtestedcylinders',compact('testedcylinders','treeitems'))->with('page',1);
-        //$sort=Request('sort');
-//        $data =['page'=>'1','sort'=>$sort];
-        /*$testedcylinders->setCollection(
-    collect(
-        collect($testedcylinders->items())->sortBy($sort,true)
-    )->values());*/
+ 
 
   //return view ('vehicle.listtestedcylinders',compact('testedcylinders','treeitems'))->with('page',1);
   //return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders->appends('sort'=>$sort),'treeitems'=>$treeitems])->with('page',1);
@@ -1716,14 +1645,6 @@ $sortby="Record_no";
     $querystringArray = ['sort' => $sort];
 
 $testedcylinders->appends($querystringArray);
-/*$productArray = (array)$testedcylinders->getIterator();
-usort($productArray, function($a, $b)
-             {
-                 if ($a["row_number"] == $b["row_number"])
-                     return (0);
-                 return (($a["row_number"] < $b["row_number"]) ? -1 : 1);
-             });*/
-
 
     return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1);
         /*$content = view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1);
@@ -2070,15 +1991,7 @@ $certificate=$request->input('certificate');
 
             }
 
-/*                $testedcylinders=DB::table('RegisteredCylinders')
-                    ->select ('id','LabCTS','BrandName','Standard' ,'SerialNumber','CountryOfOrigin' , 'LabUser' , 'Date', 'InspectionExpiryDate' ,   'stickerSerialNo','method')
-                    ->orderby('id','desc')
-                    ->paginate(10);            
-  
-            $usertype =Auth::user()->regtype;
-            $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);            
-
-
+/*                
         return view ('vehicle.listtestedcylinders',compact('testedcylinders','treeitems'))->with('page',1); */
         
         
