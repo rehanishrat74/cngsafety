@@ -514,22 +514,204 @@ $sortby="Record_no";
         return view ('vehicle.showcylinder',['InspectionForm'=>$iform,'Cylinders'=>$cylinders,'treeitems'=>$treeitems ]);
     }
 
+    public function getAvailableBrands()
+    {
+        $brandsDB=array(
+            "brand1"=>array("brandName"=>"Associate High Pressure Technologies Pvt
+Ltd (India)",
+                  "dimensions"=>array(                        
+                        array("diameter"=>"267 mm","wlc"=>"20/30/40/41/50/55/60/75/80/90"),
+                        array("diameter"=>"280 mm","wlc"=>"20/30/40/41/50/55/60/75/80/90"),
+                        array("diameter"=>"317 mm","wlc"=>"20/30/40/41/50/55/60/75/80/90")
+                            )
+                ),
+             "brand2"=>array("brandName"=>"Beijing Tianhai Industrial Co (BTIC)",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"20/30 to 85/45 to 130/50 to 140"),
+                        array("diameter"=>"273 mm","wlc"=>"20/30 to 85/45 to 130/50 to 140"),
+                        array("diameter"=>"280 mm","wlc"=>"20/30 to 85/45 to 130/50 to 140"),
+                        array("diameter"=>"325 mm","wlc"=>"20/30 to 85/45 to 130/50 to 140")                      
+                            )
+                ),  
+             "brand3"=>array("brandName"=>"BKC",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"30 to 85/45 to 130/50 to 140")
+                            )
+                ),               
+             "brand4"=>array("brandName"=>"*Cidegas",
+                  "dimensions"=>array(
+                        array("diameter"=>"316 mm","wlc"=>"45 to 60"),
+                        array("diameter"=>"267 mm","wlc"=>"20/30/50/55/60/55/90")
+                            )
+                ),  
+             "brand5"=>array("brandName"=>"Cilbras",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"40/50/55/58/60"),
+                        array("diameter"=>"324 mm","wlc"=>"62")
+                            )
+                ),                 
+             "brand6"=>array("brandName"=>"Dalmine spa",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"30/40/50/55/58/60/62"),
+                        array("diameter"=>"324 mm","wlc"=>"62"),
+                        array("diameter"=>"340 mm","wlc"=>"50")
+                            )
+                ),
+             "brand7"=>array("brandName"=>"EICC",
+                  "dimensions"=>array(
+                        array("diameter"=>"324 mm","wlc"=>"62")
+                            )
+                ),                              
+             "brand8"=>array("brandName"=>"EKC",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"30/37/40/45/50/55/60/65/70/80/90/95/100"),
+                    array("diameter"=>"316 mm","wlc"=>"40/45/50/55/60/65/70/75/80/85/90/95/100/110/120/130/140"),
+                    array("diameter"=>"356 mm","wlc"=>"55/58/60/62/64/65/70/73/80/85/90/95/100/110/120/130/145/152")
+                            )
+                ),
+             "brand9"=>array("brandName"=>"EKC-India",
+                  "dimensions"=>array(
+                        array("diameter"=>"324 mm","wlc"=>"62")
+                            )
+                ),                          
+             "brand10"=>array("brandName"=>"EKC-UAE",
+                  "dimensions"=>array(
+                        array("diameter"=>"324 mm","wlc"=>"62")
+                            )
+                ),                                       
+              "brand11"=>array("brandName"=>"Euro, India cylinders ltd",
+                  "dimensions"=>array(
+                        array("diameter"=>"232 mm","wlc"=>"20/22"),
+                        array("diameter"=>"267 mm","wlc"=>"40/50/55/60/80"),
+                        array("diameter"=>"316 mm","wlc"=>"50/55/60")
+                            )
+                ),                
+            
+              "brand12"=>array("brandName"=>"Everest Kanto Cylinder Ltd",
+                  "dimensions"=>array(
+                        array("diameter"=>"232 mm","wlc"=>"21.5/22/24/25/28/30/35/40/45/50/55/60/65/70/75/80"),
+                        array("diameter"=>"267 mm","wlc"=>"30/34/40/48/49/50/55/60/65/70/75/80/85/90/95/100")
+                       )
+                ),  
+                
+                "brand13"=>array("brandName"=>"Faber Industries",
+                  "dimensions"=>array(
+                        array("diameter"=>"228 mm","wlc"=>"20/30"),
+                        array("diameter"=>"267 mm","wlc"=>"40"),
+                        array("diameter"=>"313.6 mm","wlc"=>"55/60"),
+                        array("diameter"=>"316 mm","wlc"=>"65/70/75/80/85/90/95/100")
+                            )
+                ),  
+                "brand14"=>array("brandName"=>"Faber",
+                  "dimensions"=>array(
+                        array("diameter"=>"228 mm","wlc"=>"20/30"),
+                        array("diameter"=>"267 mm","wlc"=>"40"),
+                        array("diameter"=>"313.6 mm","wlc"=>"55/60"),
+                        array("diameter"=>"316 mm","wlc"=>"65/70/75/80/85/90/95/100")
+                            )
+                ),                
+                "brand15"=>array("brandName"=>"Inflex",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"30 to 85/45 to 130/50 to 140")
+                            )
+                ),     
+                "brand16"=>array("brandName"=>"*Inpencil",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"30/40/50/55/58/60/62/other"),
+                        array("diameter"=>"273 mm","wlc"=>"30/40/50"),
+                        array("diameter"=>"280 mm","wlc"=>"55"),
+                        array("diameter"=>"340 mm","wlc"=>"50"),             
+                            )
+                ),                         
+                "brand17"=>array("brandName"=>"*Inprocil S.A",
+                  "dimensions"=>array(
+                        array("diameter"=>"273 mm","wlc"=>"40"),
+                        array("diameter"=>"280 mm","wlc"=>"55")             
+                            )
+                ), 
+                "brand18"=>array("brandName"=>"Kioshi compression",
+                  "dimensions"=>array(
+                        array("diameter"=>"280 mm","wlc"=>"55")
+                            )
+                ) ,
+             "brand19"=>array("brandName"=>"*Lizer Cylinders Limited",
+                  "dimensions"=>array(
+                        array("diameter"=>"317 mm","wlc"=>"30/50/55"),
+                        array("diameter"=>"267 mm","wlc"=>"30/50/55")
+                            )
+                ),                              
+             "brand20"=>array("brandName"=>"*M/s. International Gas Vessels Industries (IGVI)",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"40 to 80"),
+                        array("diameter"=>"232 mm","wlc"=>"18 to 30"),
+                        array("diameter"=>"273 mm","wlc"=>"40 to 80"),    
+                            )
+                ),                                                                  
+            "brand21"=>array("brandName"=>"Marutti 5000/h",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"50")
+                            )
+                ),               
+            "brand22"=>array("brandName"=>"*Maruti Koatsu Cylinder (Pvt) Ltd",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"50/55/60"),
+                        array("diameter"=>"323 mm","wlc"=>"50"),
+                        array("diameter"=>"325 mm","wlc"=>"50"),
+                            )
+                ),   
+            "brand23"=>array("brandName"=>"M/s. Mat S/A",
+                  "dimensions"=>array(
+                        array("diameter"=>"324 mm","wlc"=>"62")
+                            )
+                ),          
+            "brand24"=>array("brandName"=>"*Nitin Cylinders (Pvt) Ltd",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"41/50/55/60/62/70/90"),
+                        array("diameter"=>"273 mm","wlc"=>"41/50/55/60/62/70/90"),
+                        array("diameter"=>"280 mm","wlc"=>"41/50/55/60/62/70/90"),
+                        array("diameter"=>"325 mm","wlc"=>"30/40/41/50/55/60/62/70/90"),
+                            )
+                ),                               
+             "brand25"=>array("brandName"=>"*Rama Cylinders (Pvt) Ltd",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"40/50/55/58/60/70/90"),
+                        array("diameter"=>"280 mm","wlc"=>"50/60/90"),                  
+                        array("diameter"=>"317 mm","wlc"=>"50/90"),
+                        array("diameter"=>"323 mm","wlc"=>"50 to 140"),
+                        array("diameter"=>"340 mm","wlc"=>"20/40/41/50/55/60/75/80")
+                            )
+                ),
+             "brand26"=>array("brandName"=>"RCL",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"50/60"),
+                        array("diameter"=>"280 mm","wlc"=>"50/60"),                  
+                        array("diameter"=>"317 mm","wlc"=>"50/60"),
+                        array("diameter"=>"323 mm","wlc"=>"50/60"),
+                        array("diameter"=>"340 mm","wlc"=>"50/60")
+
+                            )
+                ),             
+             "brand27"=>array("brandName"=>"Washington Cylinder",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"30 to 85/45 to 130/50 to 140")
+                            )
+                ),   
+                  
+        );         
+
+        return $brandsDB;
+    }
     public function testcylindersdataentryform()
     {
         $usertype =Auth::user()->regtype;
         $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
 
         $countries=DB::select(DB::raw('select distinct countries from worldcountries order by countries asc'));
-                        
-        $brands=DB::select(DB::raw('select distinct brandname  from  cylinderbrand order by brandname asc;'));
 
         $email=Auth::user()->email;
-        
-        //$serialnos=DB::select('select distinct serialno  from  CodeRollsSecondary  where RegisteredCylindersRefNo is null and allotedto=? limit 100',[$email])   ;         
-            
-        
+        $brandStructures=$this->getAvailableBrands();
 
-        return view ('vehicle.InspectedCylinders',['treeitems'=>$treeitems,'countries'=>$countries,'brands'=>$brands]);
+        return view ('vehicle.InspectedCylinders',['treeitems'=>$treeitems,'countries'=>$countries,'brandStructures'=>$brandStructures]);
     }
 
 
@@ -702,7 +884,7 @@ public function showUploadFile(Request $request) {
 //https://regexr.com/
 
         $labUser =Auth::user()->email;
-        $BrandName=$request->input('brand');
+        $BrandName=$request->input('hiddenbrandname'); // $request->input('brand');
         $CountryOfOrigin=$request->input('CountryOfOrigin');        
         $this->validate($request,array(
             'CountryOfOrigin'=>'required',
@@ -719,12 +901,13 @@ public function showUploadFile(Request $request) {
             //'ocnic' =>['regex:/(^([\d]{5}-[\d]{7}-[\d])$)/'],
         ));
 
+
 $ownername=$request->input('oname');
 $vehicleRegNo=$request->input('oreg');
 $ocnic=$request->input('ocnic');
 $certificate=$request->input('certificate');
 
-
+    
 
             $Standard=$request->input('standard');
             $SerialNumber=$request->input('SerialNo');            
@@ -1743,7 +1926,8 @@ session()->flashInput($request->input());
 
         $countries=DB::select(DB::raw('select distinct countries from worldcountries order by countries asc'));
                         
-        $brands=DB::select(DB::raw('select distinct brandname  from  cylinderbrand order by brandname asc;'));
+       // $brands=DB::select(DB::raw('select distinct brandname  from  cylinderbrand order by brandname asc;'));
+      $brandStructures=$this->getAvailableBrands();
 
         $email=Auth::user()->email;
         
@@ -1755,7 +1939,7 @@ session()->flashInput($request->input());
                     ->get();            
 
 
-        return view ('vehicle.editformfortestedcylinders',['treeitems'=>$treeitems,'countries'=>$countries,'brands'=>$brands,'cylinderdetails'=>$CylinderDetails]);
+        return view ('vehicle.editformfortestedcylinders',['treeitems'=>$treeitems,'countries'=>$countries,'cylinderdetails'=>$CylinderDetails,'brandStructures'=>$brandStructures]);
         
 
     }
@@ -1764,7 +1948,8 @@ session()->flashInput($request->input());
     {
 
         $labUser =Auth::user()->email;
-        $BrandName=$request->input('brand');
+        $BrandName= $BrandName=$request->input('hiddenbrandname');
+         //$request->input('brand');
         $CountryOfOrigin=$request->input('CountryOfOrigin');            
 //dd($CountryOfOrigin);
         $this->validate($request,array(

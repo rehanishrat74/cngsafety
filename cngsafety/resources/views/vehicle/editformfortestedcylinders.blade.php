@@ -125,6 +125,30 @@
                                                             </div>
                                                         </div>
                                                     </div><!-- end of country origin -->
+<?php 
+            //$cylinderjson=Request->session()->get('cylinderdb'); 
+              // $decodedjson= json_decode($cylinderjson);
+               //print_r($decodedjson);
+
+
+        $brands=array(); 
+        $brandscount=count($brandStructures);
+        for ($i=1;$i<=$brandscount;$i++){
+            $brandNameKey='brand'.$i;       //brand1  <= store this key in list
+            $BrandName= $brandStructures[$brandNameKey]["brandName"]; // print fiber e.g
+
+            //$arrayname[$brandNameKey] = $BrandName;
+            $arrayname=array("key"=>$brandNameKey,"brandname"=>$BrandName);
+            array_push($brands,$arrayname);
+
+        }
+
+       // print_r($brands);
+       // echo '<br>'.'getting key='.$brands[0]["key"];
+       // echo '<br>'.'getting brand='.$brands[0]["brandname"];
+        //return;
+?>
+
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
@@ -133,16 +157,17 @@
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="controls">
-                                                                <select class="form-control" id ="brand" name="brand">
-                                                                    @foreach ($brands as $brand)
-                                                                    <option value="<?php echo $brand->brandname;?>"
+                            <select class="form-control pickdiameter" id ="brand" name="brand">
+                                <?php for ($i=0;$i<count($brands);$i++) {?>
+                                <option value="<?php echo $brands[$i]["key"];?>"
 
-                                                                    <?php if ($brand->brandname==
-                                                                        $cylinderdetails[0]->BrandName){echo 'selected';}?>
+                                <?php if ( $brands[$i]["brandname"]==
+                                $cylinderdetails[0]->BrandName){echo 'selected';}?>
 
-                                                                        ><?php echo $brand->brandname;?></option>
-                                                                    @endforeach
-                                                                </select>                                                                
+                                ><?php echo  $brands[$i]["brandname"];?></option>
+                                 <?php }?>
+                            </select>   
+<input type="hidden" id ="hiddenbrandname" name="hiddenbrandname" >                                                                                        
                                                             </div>                                                
                                                         </div>
                                                     </div> <!-- end of brand name -->
@@ -158,51 +183,16 @@
                                                             <div class="controls">
                                                                 <select class="form-control" id ="diameter" name="diameter">
 
-<?php 
- $diameters = array("267 mm","273 mm","280 mm","317 mm","323 mm","325 mm","340 mm","other");
-    $d=0;
-    for ($d=0;$d<8;$d++){ ?>
-
-    <option value="<?php echo $diameters[$d];?>" 
-       <?php if ($diameters[$d] == $cylinderdetails[0]->diameter){echo 'selected';}?> 
-              >
-                    <?php echo $diameters[$d];?>                            
-    </option>
-    <?php  }
-?>
+                       <option value="232 mm" >232 mm </option>
+                        <option value="232 mm" >267 mm </option>
+                        <option value="232 mm" >325 mm </option>
 
                                                                 </select>                                 
                                                             </div>          
                                                         </div>
                                                     </div> <!-- end of diameter -->
 <!--------------------------------------------------------------------------------->
-<!--
-<div class="form-group row" >
-<div class="col-6">
-<div class="controls">
-<label class="form-label" >Length</label>
-</div>
-</div>
-<div class="col-6">
-<div class="controls">
-<select class="form-control" id ="length" name="length">
 
-<xx?phpx 
- $lengths = array(730 mm,830 mm,900 mm,912 mm,1725 mm,other);
-    $l=0;
-    for($l=0;$l less6;$l++){ ?>
-          <option value="<d?phpc echo $lengths[$l];?>" lessx?phpx if ($lengths[$l] ==$cylinderdetails[0]->length ){echo 'selected';} ?> > 
-            <c?phpc cecho $lengths[$l];?>              
-          </option>
-    <x?phpxx  }
--?x->
-</select>                                 
-</div>          
-</div>
-</div>
--->
- <!-- end of length -->
-<!------------------------------->
                                                     <div class="form-group row" >
                                                         <div class="col-6">
                                                             <div class="controls">
@@ -214,14 +204,8 @@
                                                             <div class="controls">
                                                                 <select class="form-control" id ="capacity" name="capacity">
 
-<?php 
- $capacities=array("20 WLC","25 WLC","30 WLC","40 WLC","41 WLC","45 WLC","50 WLC","55 WLC","58 WLC","60 WLC","62 WLC","64 WLC","65 WLC","70 WLC","74 WLC","75 WLC","80 WLC","85 WLC","90 WLC","30-85 WLC","30-90 WLC","40-90 WLC","50-140 WLC","other");
+                                        <option value="20 WLC" >20 WLC</option>
 
-     $c=0;
-    for ($c=0;$c<22;$c++){ ?>
-        <option value="<?php echo  $capacities[$c]; ?>" <?php if ($capacities[$c] ==$cylinderdetails[0]->capacity){echo 'selected';}?>    ><?php echo $capacities[$c]; ?></option>
-    <?php  }
-?>
 
                                                                 </select>                                 
                                                             </div>          
@@ -278,53 +262,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-<!----------------------------------------------->
-<!--<div class="form-group row" >
-<div class="col-6">
-<div class="controls">
-<label class="form-label" >3rd Party Inspector</label>
-</div>
-</div>
-<div class="col-6">
-<div class="controls">
-<select class="form-control" id ="inspector" name="inspector">
-
-<x?phpx
- $inspectors = array(Lloyds, Bureau Vertas, ABS, SGS, -SGS-All Tests carried out by International Lab Powertech Inc, Canada, -Bureau Veritas,-SGS- );
-$i=0;
-for ($i=0;$iless4;$i++)
-{ -?->
-<option value ="<x-?phpx echo $inspectors[$i];?>"  -?php- if($inspectors[$i]==$cylinderdetails[0]->inspector){echo ' selected';} ?> >
-<-?-php echo $inspectors[$i]; ?></option>
-<--?php  echo $cylinderdetails[0]->inspector.'<br>'; }
-?>
-</select>                                 
-</div>          
-</div>
-</div> 
--->
-<!-- end of inspector -->
-<!------------------------------------------------->               
-                                             <!--    <div class="form-group row" >
-                                                        <div class="col-6">
-                                                            <div class="controls">
-                                                            <label class="form-label" >Date of Manufacturing</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <div class="controls">
-                                                                <input type="text" value="{{$cylinderdetails[0]->DateOfManufacture}}" class="form-control{{ $errors->has('ddmanufacture') ? ' is-invalid' : '' }}" 
-                                                                id="ddmanufacture" name="ddmanufacture" placeholder="YYYY-MM-DD" autocomplete="off" 
-                                                                >
-                                              @if ($errors->has('ddmanufacture'))
-                                                <span class="invalid-feedback" role="alert">
-                                                  <strong>{{ $errors->first('ddmanufacture') }}</strong>
-                                                </span>
-                                              @endif                                                                                                                      
-                                                            </div>
-                                                        </div>
-                                                    </div>   -->                                                                                            
-<!------------------------------------------------->
    <!-------------------------Date of manufacturing.--------->               
                                                     <div class="form-group row" >
                                                         <div class="col-6">
@@ -516,8 +453,18 @@ for ($i=0;$iless4;$i++)
                                                     <div class="form-group row">
                                                         <p>&nbsp;</p>
                                                         <div class="col-12" style="height:54em;overflow-y: auto;  background-color:#dddddd;color:black">
+       <!--                                                     
+        <div class="controls">
+            <strong>Suspended Models</strong> <br>
+                Washington Cylinder, Cidegas,Lizer Cylinders Limited,Maruti Koatsu Cylinder (Pvt) Ltd <br>
+            <strong>Deletion / Removal</strong><br>
+                M/s. Mat S/A <br>
+                <strong>Black Listed</strong> <br>
+                        Inflex,Beijing Tianhai Industrial Co (BTIC),
+                        Dalmine,Cilbras  
+        </div>     -->                                                       
                                                             <div class="controls">
-                                                                Serial nos added <br>
+                                                                <STRONG>Serial nos added</STRONG> <br>
                                                                  <?php echo  session()->get('registeredcylinders') ?>
                                                             </div>
                                                         </div>
@@ -632,7 +579,144 @@ var expiryday =document.getElementById("day");
    });
 
 
+//====================================
+
+   $(".pickdiameter").change(function() {
+
+   // var domyear =document.getElementById("domyear");
+    // var dommonth =document.getElementById("dommonth");
+    //  var domday =document.getElementById("domday");
+
+
+    if ($(this)[0].id=="brand"){
+
+        var brandName=$(this)[0].value; //brand1
+        var brandNameIndex=brandName.replace(/brand/,''); //1
+        var brandscount=<?php  echo $brandscount ;?>;   //9
+        var passedArray =  
+            <?php echo json_encode($brandStructures); ?>;
+
+
+        //console.log(brandName);
+        //console.log(brandNameIndex);        
+        //console.log(brandscount);
+        //console.log(passedArray); 
+
+        var selectedBrand=passedArray[brandName];
+        //console.log(selectedBrand["brandName"]);       //EKC
+        var ctrbrandname =document.getElementById("hiddenbrandname");
+        ctrbrandname.value=selectedBrand["brandName"];
+
+        console.log(ctrbrandname.value);
+
+        var dimensions = selectedBrand["dimensions"];
+        //console.log(dimensions);
+        
+        var diameter = document.getElementById('diameter');        
+       diameter.remove(0);  //x.remove(2);
+       diameter.options.length = 0;
+
+       //console.log(dimensions.length);
+       var singlediameter=dimensions[0];
+       //console.log(singlediameter["diameter"]);
+       //console.log(singlediameter["wlc"]);
+
+       //alert(dimensions[0].diameter);
+       var wlcArray=[];
+ 
+       var wlc = document.getElementById('capacity'); 
+       wlc.remove(0);
+       wlc.options.length=0;
+
+       for (var i =0; i < dimensions.length;i++)
+       {
+     
+diameter.options[diameter.options.length] = new Option(dimensions[i].diameter, '0', false, false); 
+
+        //wlcArray.push(generateString(dimensions[i].wlc));
+        wlcArray = wlcArray.concat(generateString(dimensions[i].wlc));
+       }
+
+// removing duplicates from array
+
+//var names = ["Mike","Matt","Nancy","Adam","Jenny","Nancy","Carl"];
+var uniqueWLC = [];
+$.each(wlcArray, function(i, el){
+    if($.inArray(el, uniqueWLC) === -1) uniqueWLC.push(el);
 });
+//-------------------------------------
+
+       uniqueWLC.sort();
+       //console.log(wlcArray);
+
+       for (var i =0; i< uniqueWLC.length; i++)
+       {
+          var   WLCname=uniqueWLC[i] + ' WLC';
+wlc.options[wlc.options.length] = new Option(WLCname, '0', false, false);        
+
+       }
+    }  
+
+   });
+  
+
+});
+
+
+
+
+    function generateString( wlcstring)
+    {
+        //echo '------------splitting wlc-(finding seperator=/)------------  <br> ';
+        //  "12 to 34"        = Array ( [0] => 12 to 34 )
+        //  12 to 34/50 to 60 = Array ( [0] => 12 to 34 [1] => 50 to 60 ...)
+        //  12/30             = Array ( [0] => 12 [1] => 30 )
+        //  12                = Array ( [0] => 12 )
+   
+         //echo $wlcstring;
+         var wlcArray=wlcstring.split("/"); //explode("/", $wlcstring);
+         //print_r($wlcArray);
+        
+         var wlcMin=0;
+         var wlcMax=0;
+         var wlcList=[]; //=array();
+         var itemindex=0;
+
+
+         for (var i=0;i<wlcArray.length;i++)
+         {
+           
+            var wlc= wlcArray[i] ;
+                //echo $wlc;  //"12", "12/13", "12 to 34"
+
+             if (wlc.search("to")>0){
+                // for 12 to 34;
+                var wlcTo = wlc.split(" to ") ;//explode(" to ",$wlc);
+                wlcMax=wlcTo[1];
+                wlcMin=wlcTo[0];
+                
+                for (var j=wlcMin;j<=wlcMax;j++)
+                {
+                    //PUSHING 12,13,14 FROM "12 TO 34"
+                    //array_push($wlcList,$j);
+                    //array_push(wlcList,$j);
+                    wlcList.push(j);
+                }
+             }
+             else
+             {
+                //PUSHING 12,13,14 FROM 12/13/14
+                //array_push($wlcList,$wlc);
+                wlcList.push(wlc);
+             }
+          
+         }  
+         
+         wlcList.sort();
+         //asort($wlcList);
+         //print_r($wlcList);
+         return wlcList;
+    }
 </script>
 
 
