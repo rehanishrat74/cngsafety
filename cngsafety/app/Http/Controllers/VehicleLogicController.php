@@ -103,13 +103,8 @@ else
 
 }
 
-
-
-
         $querystringArray = ['sort' => $sort];
         $vehicles->appends($querystringArray);
-
-
     
         return view ('vehicle.registrations',['vehicles'=>$vehicles,'treeitems'=>$treeitems])->with('page',1)
           ->with('pagesize',$recordperpage);

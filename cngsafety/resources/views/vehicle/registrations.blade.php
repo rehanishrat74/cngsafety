@@ -117,14 +117,7 @@
                             </div> <!--<br>-->
                         </form>
                         </div>
-                        <!--<div class="col-lg-3 col-md-12 col-12" >
-                            <nav aria-label="Page navigation" class="float-right">
-                                <ul class="pagination">
-                                    <li class="page-item "> <?=$vehicles->render()?> </li>
 
-                                </ul>
-                            </nav>
-                        </div>-->
                     </div>                    
 
                     <!-- ------IMPLETMENT SEARCH HERE ----->
@@ -143,16 +136,7 @@
                                     <div class="col-12">
 
 
-
-                               
-
 <!--class open creates background highlight------------------------------------>            
-                            
-                                
-                                
-                                
-                            
-
 
                                         <table class="display table table-hover table-condensed" cellspacing="0" width="100%">
                                             <!--id="example-11" draw with search controlls-->
@@ -180,7 +164,7 @@
                                                      <td>{{$vehicle->Record_no}}</td>
                                                      <!-- td starts here -->
                                                         <?php 
-                                                        if (Auth::user()->regtype=="hdipexcludee")
+                                                        if (Auth::user()->regtype=="hdip")
                                                         {?>
 
                                                      <td>

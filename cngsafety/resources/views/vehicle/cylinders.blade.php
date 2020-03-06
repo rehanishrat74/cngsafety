@@ -138,7 +138,7 @@ $dt=Carbon::today();
                         <div class="col-lg-12"  >
                                    <?php 
 
-if (Auth::User()->regtype=="workshop")        
+if (Auth::User()->regtype=="workshop" || Auth::User()->regtype=="admin")        
 {
 
 

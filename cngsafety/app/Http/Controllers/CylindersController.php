@@ -70,17 +70,17 @@ class CylindersController extends Controller
           //$this->attributes['entry_date'] = 
           return Carbon::createFromFormat(config('app.date_format'), $input)->format('Y-m-d');
     }
-    public function store(Request $request)
+    public function store(Request $cylinderRequest)
     {
 
 //echo 'here';
-
+        //dd($request);
         
         $kitfields =array('kitmnm' => 'required','kitseriano' => 'required');
         
         $cylinderfields=array();
         $cylinderfield=array();
-        $cylindernos= $request->input('cylindernos');
+        $cylindernos= $cylinderRequest->input('cylindernos');
 //echo 'cylinder nos ='.$cylindernos;
 //return;
        for ($count=1 ;$count<= $cylindernos;++$count){
@@ -94,21 +94,22 @@ class CylindersController extends Controller
         }
         
  $kitfields=array_merge($kitfields,$cylinderfields);
-$this->validate($request,$kitfields);
+$this->validate($cylinderRequest,$kitfields);
 
-            $recordid= $request->record_id;
+//dd($kitfields);
+            $recordid= $cylinderRequest->record_id;
             $location = 1; //$request->input('location');
-            $cylindernos= $request->input('cylindernos');
-            $vregno= $request->input('vregno');
-            $kitmnm = $request->input('kitmnm');
-            $kitseriano=$request->input('kitseriano');
-            $workstationid=$request->input('workstationid');
+            $cylindernos= $cylinderRequest->input('cylindernos');
+            $vregno= $cylinderRequest->input('vregno');
+            $kitmnm = $cylinderRequest->input('kitmnm');
+            $kitseriano=$cylinderRequest->input('kitseriano');
+            $workstationid=$cylinderRequest->input('workstationid');
 
-            $cylindervalve=$request->input('cylindervalve');
-            $fillingvalve=$request->input('fillingvalve');
-            $Reducer=$request->input('Reducer');
-            $hpp=$request->input('hpp');
-            $exhaustpipe=$request->input('exhaustpipe');
+            $cylindervalve=$cylinderRequest->input('cylindervalve');
+            $fillingvalve=$cylinderRequest->input('fillingvalve');
+            $Reducer=$cylinderRequest->input('Reducer');
+            $hpp=$cylinderRequest->input('hpp');
+            $exhaustpipe=$cylinderRequest->input('exhaustpipe');
 
 
             $dt1=Carbon::today();
@@ -119,49 +120,49 @@ $this->validate($request,$kitfields);
             $dt=Carbon::today();
             $expiryDate=date('Y-m-d', strtotime($dt->year.'-'.'12-31'));
 
-             $makenmodel_1=$request->input('makenmodel_C1').'';
-             $serialno_1=$request->input('serialno_C1').'';
-             $dt1=$request->input('importdate_C1').'';
+             $makenmodel_1=$cylinderRequest->input('makenmodel_C1').'';
+             $serialno_1=$cylinderRequest->input('serialno_C1').'';
+             $dt1=$cylinderRequest->input('importdate_C1').'';
              $importdate_1=date('Y-m-d', strtotime($dt1));
-             $scancode_1=$request->input('scancode_C1').'';
-             $location_1 = $request->input('location_C1');
+             $scancode_1=$cylinderRequest->input('scancode_C1').'';
+             $location_1 = $cylinderRequest->input('location_C1');
 
-             $makenmodel_2=$request->input('makenmodel_C2').'';
-             $serialno_2  =$request->input('serialno_C2').'';
-             $importdate_2=$request->input('importdate_C2').'';
+             $makenmodel_2=$cylinderRequest->input('makenmodel_C2').'';
+             $serialno_2  =$cylinderRequest->input('serialno_C2').'';
+             $importdate_2=$cylinderRequest->input('importdate_C2').'';
              $importdate_2=date('Y-m-d', strtotime($dt1));
-             $scancode_2=$request->input('scancode_C2').'';
-             $location_2 = $request->input('location_C2');
+             $scancode_2=$cylinderRequest->input('scancode_C2').'';
+             $location_2 = $cylinderRequest->input('location_C2');
 
-             $makenmodel_3=$request->input('makenmodel_C3').'';
-             $serialno_3=$request->input('serialno_C3').'';
-             $dt1=$request->input('importdate_C3').'';
+             $makenmodel_3=$cylinderRequest->input('makenmodel_C3').'';
+             $serialno_3=$cylinderRequest->input('serialno_C3').'';
+             $dt1=$cylinderRequest->input('importdate_C3').'';
              $importdate_3=date('Y-m-d', strtotime($dt1));
-             $scancode_3=$request->input('scancode_C3').'';
-             $location_3 = $request->input('location_C3');
+             $scancode_3=$cylinderRequest->input('scancode_C3').'';
+             $location_3 = $cylinderRequest->input('location_C3');
 
-             $makenmodel_4=$request->input('makenmodel_C4').'';
-             $serialno_4 =$request->input('serialno_C4').'';
-             $dt1=$request->input('importdate_C4').'';
+             $makenmodel_4=$cylinderRequest->input('makenmodel_C4').'';
+             $serialno_4 =$cylinderRequest->input('serialno_C4').'';
+             $dt1=$cylinderRequest->input('importdate_C4').'';
              $importdate_4=date('Y-m-d', strtotime($dt1));             
-             $scancode_4=$request->input('scancode_C4').'';
-             $location_4 = $request->input('location_C4');
+             $scancode_4=$cylinderRequest->input('scancode_C4').'';
+             $location_4 = $cylinderRequest->input('location_C4');
 
 
-             $makenmodel_5=$request->input('makenmodel_C5').'';
-             $serialno_5=$request->input('serialno_C5').'';
-             $dt1=$request->input('importdate_C5').'';
+             $makenmodel_5=$cylinderRequest->input('makenmodel_C5').'';
+             $serialno_5=$cylinderRequest->input('serialno_C5').'';
+             $dt1=$cylinderRequest->input('importdate_C5').'';
              $importdate_5=date('Y-m-d', strtotime($dt1));
-             $scancode_5=$request->input('scancode_C5').'';
-             $location_5 = $request->input('location_C5');
+             $scancode_5=$cylinderRequest->input('scancode_C5').'';
+             $location_5 = $cylinderRequest->input('location_C5');
 
 
-             $makenmodel_6=$request->input('makenmodel_C6').'';
-             $serialno_6=$request->input('serialno_C6').'';
-             $dt1=$request->input('importdate_C6').'';
+             $makenmodel_6=$cylinderRequest->input('makenmodel_C6').'';
+             $serialno_6=$cylinderRequest->input('serialno_C6').'';
+             $dt1=$cylinderRequest->input('importdate_C6').'';
              $importdate_6=date('Y-m-d', strtotime($dt1));
-             $scancode_6 =$request->input('scancode_C6').'';
-             $location_6 = $request->input('location_C6');
+             $scancode_6 =$cylinderRequest->input('scancode_C6').'';
+             $location_6 = $cylinderRequest->input('location_C6');
 
 
              $registeredserialno = 1;
@@ -194,9 +195,9 @@ $this->validate($request,$kitfields);
                     $extensionimgRegPlate;
                     $base64imageimgRegPlate;
 
-                    if($request->hasfile('imgRegPlate')){
+                    if($cylinderRequest->hasfile('imgRegPlate')){
 
-                        $imgRegPlate=$request->file('imgRegPlate');
+                        $imgRegPlate=$cylinderRequest->file('imgRegPlate');
                         $extensionimgRegPlate=$imgRegPlate->getClientOriginalExtension(); //image type
 
                          $imageStr = (string) Image::make( $imgRegPlate )->
@@ -215,9 +216,9 @@ $this->validate($request,$kitfields);
                     $extensionimgWndScreen;
                     $base64imageextensionimgWndScreen;
 
-                    if($request->hasfile('imgWndScreen')){
+                    if($cylinderRequest->hasfile('imgWndScreen')){
 
-                        $imgWndScreen=$request->file('imgWndScreen');
+                        $imgWndScreen=$cylinderRequest->file('imgWndScreen');
                         $extensionimgWndScreen=$imgWndScreen->getClientOriginalExtension(); //image type
 
                          $imageStr = (string) Image::make( $imgWndScreen )->

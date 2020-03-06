@@ -1017,4 +1017,359 @@ switch ($totalcylinders ) {
         echo 'hello';
 
     }
+    public function getAvailableBrands()
+    {
+        $brandsDB=array(
+            "brand1"=>array("brandName"=>"Associate High Pressure Technologies Pvt
+Ltd (India)",
+                  "dimensions"=>array(
+                        array("diameter"=>"232 mm","wlc"=>"22/30"),
+                        array("diameter"=>"267 mm","wlc"=>"40/50"),
+                        array("diameter"=>"325 mm","wlc"=>"55/60")
+                            )
+                ),
+             "brand2"=>array("brandName"=>"EKC",
+                  "dimensions"=>array(
+                        array("diameter"=>"267 mm","wlc"=>"30/37/40/45/50/55/60/65/70/80/90/95/100"),
+                    array("diameter"=>"316 mm","wlc"=>"40/45/50/55/60/65/70/75/80/85/90/95/100/110/120/130/140"),
+                    array("diameter"=>"356 mm","wlc"=>"55/58/60/62/64/65/70/73/80/85/90/95/100/110/120/130/145/152")
+                            )
+                ),          
+              "brand3"=>array("brandName"=>"Euro, India cylinders ltd",
+                  "dimensions"=>array(
+                        array("diameter"=>"232 mm","wlc"=>"20/22"),
+                        array("diameter"=>"267 mm","wlc"=>"40/50/55/60/80"),
+                        array("diameter"=>"316 mm","wlc"=>"50/55/60")
+                            )
+                ),                
+            
+              "brand4"=>array("brandName"=>"Everest Kanto Cylinder Ltd",
+                  "dimensions"=>array(
+                        array("diameter"=>"232 mm","wlc"=>"21.5/22/24/25/28/30/35/40/45/50/55/60/65/70/75/80"),
+                        array("diameter"=>"267 mm","wlc"=>"30/34/40/48/49/50/55/60/65/70/75/80/85/90/95/100")
+                       )
+                ),  
+             "brand5"=>array("brandName"=>"Faber Industries",
+                  "dimensions"=>array(
+                        array("diameter"=>"228 mm","wlc"=>"20/30"),
+                        array("diameter"=>"267 mm","wlc"=>"40"),
+                        array("diameter"=>"313.6 mm","wlc"=>"55/60"),
+                        array("diameter"=>"316 mm","wlc"=>"*")
+                            )
+                ),  
+             "brand6"=>array("brandName"=>"Inprocil S.A",
+                  "dimensions"=>array(
+                        array("diameter"=>"273 mm","wlc"=>"40"),
+                        array("diameter"=>"280 mm","wlc"=>"55")             
+                            )
+                ), 
+             "brand7"=>array("brandName"=>"Kioshi compression",
+                  "dimensions"=>array(
+                        array("diameter"=>"280 mm","wlc"=>"55")
+                            )
+                ) ,             
+             "brand8"=>array("brandName"=>"M/s. International Gas Vessels Industries
+(IGVI)",
+                  "dimensions"=>array(
+                        array("diameter"=>"232 mm","wlc"=>"18 to 30"),
+                        array("diameter"=>"273 mm","wlc"=>"40 to 80")               
+                            )
+                ),                                                                     
+             "brand9"=>array("brandName"=>"Rama Cylinders (Pvt) Ltd",
+                  "dimensions"=>array(
+                        array("diameter"=>"317 mm","wlc"=>"50/60"),
+                        array("diameter"=>"","wlc"=>""),
+                        array("diameter"=>"","wlc"=>"")
+                            )
+                )  
+                  
+        );         
+
+        return $brandsDB;
+    }
+    public function testArray()
+    {
+/*
+        $brandStructures=array(
+            "brand1"=>array("brandName"=>"fiber",
+                  "dimensions"=>array(
+                        array("diameter"=>"dimArray111fiber","wlc"=>"1/1/1"),
+                        array("diameter"=>"dimArray222fiber","wlc"=>"2/2/2")
+                            )
+                ),
+            "brand2"=>array("brandName"=>"kioshi",
+                  "dimensions"=>array(
+                        array("diameter"=>"dimArray333kioshi","wlc"=>"3/3/3"),
+                        array("diameter"=>"dimArray444kioshi","wlc"=>"4/4/4")
+                            )
+                 ),
+            "brand3"=>array("brandName"=>"ekc",
+                  "dimensions"=>array(
+                        array("diameter"=>"dimArray333ekc","wlc"=>"5/5/5"),
+                        array("diameter"=>"dimArray444ekc","wlc"=>"6/6/6")
+                            )
+                 ),
+            "brand4"=>array("brandName"=>"india",
+                  "dimensions"=>array(
+                        array("diameter"=>"dimArray333ekc","wlc"=>"7/7/7"),
+                        array("diameter"=>"dimArray444ekc","wlc"=>"8/8/8")
+                            )
+                 ),
+            "brand5"=>array("brandName"=>"pakistan",
+                  "dimensions"=>array(
+                        array("diameter"=>"dimArray555ggg","wlc"=>"9/9/9"),
+                        array("diameter"=>"dimArray666ggg","wlc"=>"10/10/10")
+                            )
+                 )                                         
+        ); 
+*/        
+      $brandStructures=$this->getAvailableBrands();
+        echo "<br>";
+
+        //printing brand names?
+        echo '-------brand names------------  <br>';
+        for ($i=1;$i<=5;$i++){
+            $brandNameKey='brand'.$i;       //brand1  <= store this key in list
+            echo $brandStructures[$brandNameKey]["brandName"]; // print fiber e.g
+            echo '<br>';
+
+        }
+        echo '-----------selecting single brand--------------------- <br> ';
+        //executing onclick e.g "brand1". it will load the dia and wlc as
+        $brand= $this->getBrand($brandStructures,1,5); //brand range is 1-5
+        print_r($brand);
+
+        echo '<br> ----------getting diameter by index number-------------------  <br>';
+        $brandDimensions=count($brand);
+        for ($i=0;$i<=$brandDimensions;$i++)
+        {   
+            //store the value of i in the list
+           echo "diameter=".$brand["brand1"]["dimensions"][$i]["diameter"]."<br>";
+           echo "<br>";
+        }
+
+        echo '----------getting wlc by index number-----------------   <br> ';
+        //printing wlc e.g of diameter0. using the value of i.
+         echo "wlc of diameter index 0 =".$brand["brand1"]["dimensions"][0]["wlc"]."<br>";
+         echo "<br>";
+
+
+
+         echo '------------splitting wlc-(seperator=/)------------  <br> ';
+
+
+         $wlcstring="1/2/3".'<br>';
+         echo $wlcstring ;
+         $wlc=explode("/",$wlcstring);
+         //print_r($wlc);
+         for($i=0 ;$i<count($wlc);$i++){
+           echo  $wlc[$i].'<br>';
+         }
+
+         echo '------------splitting wlc-(seperator=to)------------  <br> ';
+         $wlcstring="12 to 34";
+         $wlc=explode(" to ",$wlcstring);  
+         for ($i=$wlc[0];$i <= $wlc[1];$i++)
+         {
+            echo $i.'<br>';
+         }
+        
+        echo '<br>=======calling genearate string=from 12/13/14========== <br>';
+        $this->generateString("12/13/14");
+
+
+        echo '<br>======now genearating WLC string= 12 to 34/50 to 60========== <br>';
+        $this->generateString("12 to 34/50 to 60");
+
+    }
+
+    function generateString($wlcstring)
+    {
+        //echo '------------splitting wlc-(finding seperator=/)------------  <br> ';
+        //  "12 to 34"        = Array ( [0] => 12 to 34 )
+        //  12 to 34/50 to 60 = Array ( [0] => 12 to 34 [1] => 50 to 60 ...)
+        //  12/30             = Array ( [0] => 12 [1] => 30 )
+        //  12                = Array ( [0] => 12 )
+   
+         //echo $wlcstring;
+         $wlcArray=explode("/", $wlcstring);
+         //print_r($wlcArray);
+        
+         $wlcMin=0;
+         $wlcMax=0;
+         $wlcList=array();
+         $itemindex=0;
+
+
+         for ($i=0;$i<count($wlcArray);$i++)
+         {
+           
+            $wlc= $wlcArray[$i] ;
+                //echo $wlc;  //"12", "12/13", "12 to 34"
+             if (strpos($wlc,"to",0)>0){
+                // for 12 to 34;
+                $wlcTo = explode(" to ",$wlc);
+                $wlcMax=$wlcTo[1];
+                $wlcMin=$wlcTo[0];
+                
+                for ($j=$wlcMin;$j<=$wlcMax;$j++)
+                {
+                    //PUSHING 12,13,14 FROM "12 TO 34"
+                    array_push($wlcList,$j);
+                }
+             }
+             else
+             {
+                //PUSHING 12,13,14 FROM 12/13/14
+                array_push($wlcList,$wlc);
+             }
+          
+         }  
+         
+
+         asort($wlcList);
+         print_r($wlcList);
+    }
+
+    function getBrand($brandStructures,$index,$count)  //5
+    {
+        $holding=array();
+        $arraykey=array();        
+        $i=0;
+        $init=0;        
+        $returnindex=0;
+
+        echo 'index='.$index;
+        echo '<br>';
+        echo 'count='.$count;
+        echo '<br>';
+
+        switch($index){
+            case 0:
+                // Code to be executed if n=label1
+                $returnindex=0;        
+//                return array_slice($brandStructures, 0,1); // brand1
+                break;
+
+            default:
+                // Code to be executed if n is different from all labels
+                for ($i=$count-1;$i>0;$i--)
+                {            
+                    $arraykey = array($init => $i * -1 );
+                    array_push($holding, $arraykey);
+                    $init++;
+                }
+
+/*
+                echo '0';                       //0 => brand1
+
+
+                                                //   -4     brand2
+                print_r($holding);
+                $tempArray=$holding[0];
+                echo '<br><br>';
+                print_r($tempArray);
+                echo '<br>';
+                echo $tempArray[0];
+                echo '<br><br>';
+                
+
+                $tempArray=$holding[1]; //-3        brand3
+                echo '<br><br>';
+                print_r($tempArray);
+                echo '<br>';
+                echo $tempArray[1];                
+                echo '<br><br>';
+
+
+
+                $tempArray=$holding[2];     //-2    brand 4
+                echo '<br><br>';
+                print_r($tempArray);
+                echo '<br>';
+                echo $tempArray[2];                
+                echo '<br><br>';                
+                
+
+
+
+                $tempArray=$holding[3]; //-1    brand 5
+                echo '<br><br>';
+                print_r($tempArray);
+                echo '<br>';
+                echo $tempArray[3];                
+                echo '<br><br>';                  
+
+
+
+            echo '<br> ------------------------------------ <br> ';*/
+
+
+            if ($index==1){
+                return array_slice($brandStructures, 0,1); 
+            }
+            else
+            {
+                $returnindex= $holding[$index-2][$index-2];
+                return array_slice($brandStructures, $returnindex,1);                
+            }
+
+
+
+        }
+
+    }
+        function arem($array,$value){
+            $holding=array();
+            foreach($array as $k => $v){
+                if($value!=$v){
+                    $holding[$k]=$v;
+                }
+            }   
+            return $holding;
+        }
+
+        function akrem($array,$key){
+            $holding=array();
+            foreach($array as $k => $v){
+                if($key=$k){
+                    $holding[$k]=$v;
+                }
+            }   
+            return $holding;
+        }
+
+
+
+        public function url()
+        {
+        
+       if ($vehicle->formid==0)
+            {
+                if ($inspectionExpired==0)
+                    {
+                        echo route('newcylinderreg',$vehicle->Registration_no.'?recordid='.$vehicle->Record_no.'&stationno='.$vehicle->stationno);
+                    }
+            }
+        else
+            {
+                if ($vehicle->Inspection_Status=='completed')
+                    {
+                        if($inspectionExpired==1)
+                            {
+                                echo route('newcylinderreg',$vehicle->Registration_no.'?recordid='.$vehicle->Record_no.'&stationno='.$vehicle->stationno);
+                            }
+                        else{
+                            echo route('showcylinder',$vehicle->formid);
+                            }
+                    }
+                else
+                    {
+                        echo route('editcylinder',$vehicle->formid);
+                    }
+            }
+                                                        
+        }
+
+
 }

@@ -82,7 +82,7 @@ class NewVehicleController extends Controller
     {
         //
         //print_r($request);
-//validation will be put later
+        //validation will be put later
         $stationno=$request->input('stationno');
         $Stickerno=$request->input('Stickerno');
         $ocnic =$request->input('cnic');
@@ -91,37 +91,37 @@ class NewVehicleController extends Controller
         $workstationParams = array('stationno' => $stationno,'Stickerno'=>$Stickerno);
         $vehicleParams= array('cnic' => $ocnic,'vehicle'=>$vehicle);
 
-$request->validate([
+        $request->validate([
 
-//'scancode' => 'required',
-'maketype' => 'required',
-'Stickerno'=> ['required',new ValidStickerForWorkstation($workstationParams)],
-'registrationNo' => 'required', 
-'chasisno' => 'required',
-'engineNo' => 'required',
-'oname' => 'required',
-//'cnic' => array('required','regex:/(^([\d]{5}-[\d]{7}-[\d])$)/'),
-'cnic' => ['required','regex:/(^([\d]{5}-[\d]{7}-[\d])$)/',new Cnic($vehicleParams)],
-'cellno' => array('required','regex:/(^([\d]{4}-[\d]{3}-[\d]{4})$)/'),
-'address' => 'required|min:3',
-//'stationno' => ['required','regex:/(^([a-zA-Z]{3}-[\d]+)$)/',new workstationno($stationno)],
-'stationno' => ['required','regex:/(^([a-zA-Z]{3}-[\d]+)$)/',new workstationno($workstationParams)],
-//'stationno' => ['required',new workstationno($stationno)],
+            //'scancode' => 'required',
+        'maketype' => 'required',
+        'Stickerno'=> ['required',new ValidStickerForWorkstation($workstationParams)],
+        'registrationNo' => 'required', 
+        'chasisno' => 'required',
+        'engineNo' => 'required',
+        'oname' => 'required',
+        //'cnic' => array('required','regex:/(^([\d]{5}-[\d]{7}-[\d])$)/'),
+        'cnic' => ['required','regex:/(^([\d]{5}-[\d]{7}-[\d])$)/',new Cnic($vehicleParams)],
+        'cellno' => array('required','regex:/(^([\d]{4}-[\d]{3}-[\d]{4})$)/'),
+        'address' => 'required|min:3',
+        //'stationno' => ['required','regex:/(^([a-zA-Z]{3}-[\d]+)$)/',new workstationno($stationno)],
+        'stationno' => ['required','regex:/(^([a-zA-Z]{3}-[\d]+)$)/',new workstationno($workstationParams)],
+        //'stationno' => ['required',new workstationno($stationno)],
 
-]);
+        ]);
 
+        $case="init_insert";
+        //dd('break');
 
-//dd('break');
+        //'SerialNo'=>['required',new workstationno($request->input('stationno')) ],
 
-//'SerialNo'=>['required',new workstationno($request->input('stationno')) ],
-
-/*$this->validate(request(), [
-    'projectName' => 
-        array(
-            'required',
-            'regex:/(^([a-zA-Z]+)(\d+)?$)/u'
-        )
-];*/
+        /*$this->validate(request(), [
+            'projectName' => 
+                array(
+                        'required',
+                        'regex:/(^([a-zA-Z]+)(\d+)?$)/u'
+                )
+        ];*/
 
 
 
@@ -153,24 +153,24 @@ $request->validate([
         $stationno=$request->input('stationno');
         $Stickerno=$request->input('Stickerno');
 
-$sortby="Record_no"; // to make compatible with vehiclelogiccontroller at the end of this function
+        $sortby="Record_no"; // to make compatible with vehiclelogiccontroller at the end of this function
 
         $currentdt = Carbon::now();
         // get the current time  - 2015-12-19 10:10:54
         $current = Carbon::now();
         $current = new Carbon();
+        $insertedrecordno=0;
 
-
-//dd('break2');
+        //dd('break2');
 
 
         $dt1=Carbon::today();
         $created_at=date('Y-m-d', strtotime($dt1));
 
-//$Stickerno=$request->input('Stickerno');
+        //$Stickerno=$request->input('Stickerno');
         // $dt->format('Y-m-d H:i:s');
         if (!is_null($cnic) && !empty($cnic) && isset($cnic) && !is_null($registrationNo) && !empty($registrationNo) && isset($registrationNo)  && !is_null($Stickerno) && !empty($Stickerno) && isset($Stickerno)
-    )
+            )
         {
                 
                     $results = DB::select('select count(cnic) as owners from owner__particulars where cnic = ? and owner__particulars.VehicleReg_No=? and StickerSerialNo=?', [$cnic,$registrationNo,$Stickerno]);
@@ -190,6 +190,7 @@ $sortby="Record_no"; // to make compatible with vehiclelogiccontroller at the en
                                         'cnic' => $cnic,
                                         'vehicleRegNo' => $registrationNo
                                         ]);                           
+
                     }
 
                    // $vresults = DB::select('select count(Record_no) as vehiclecount from vehicle_particulars where Registration_no = ? and OwnerCnic=? and StickerSerialNo=?', [$registrationNo,$cnic,$Stickerno]);
@@ -199,7 +200,13 @@ $sortby="Record_no"; // to make compatible with vehiclelogiccontroller at the en
                     
 
                     if (!$countvehicles >=1) {
-                        DB::insert('insert into vehicle_particulars (Registration_no ,Chasis_no,Engine_no,Vehicle_catid,Make_type ,OwnerCnic,created_at,businesstype,stationno,StickerSerialNo ) values (?, ?, ?,?,?,?,?,?,?,?)',[$registrationNo,$chasisno,$engineNo,$vcat,$maketype,$cnic,$created_at,$businesstype,$stationno,$Stickerno]);
+                        $insertedrecordno=DB::insert('insert into vehicle_particulars (Registration_no ,Chasis_no,Engine_no,Vehicle_catid,Make_type ,OwnerCnic,created_at,businesstype,stationno,StickerSerialNo ) values (?, ?, ?,?,?,?,?,?,?,?)',[$registrationNo,$chasisno,$engineNo,$vcat,$maketype,$cnic,$created_at,$businesstype,$stationno,$Stickerno]);
+                        $case="complete_insert";
+
+                       $vehicle= DB::select('select * from vehicle_particulars where Registration_no=? and StickerSerialNo=?',[$registrationNo,$Stickerno]);
+                            $insertedrecordno=$vehicle[0]->Record_no;        
+                            $recordid =$vehicle[0]->Record_no;
+                            $id=$registrationNo;
                     }
                 
 
@@ -223,17 +230,48 @@ $sortby="Record_no"; // to make compatible with vehiclelogiccontroller at the en
         }
 
 
-
-
-
-        //$treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);            
         $treeitems =$this->getTree();
 
+        
+        $targetroute = route('newcylinderreg',$registrationNo.'?recordid='.$insertedrecordno.'&stationno='.$stationno);
+
+
+        //http://cngsafety.test/newcylinderreg/KZ66%20ZYT?recordid=23&stationno=PFJ-1
+        
+        if ($case=="complete_insert" ){             
+
+
+        $usertype =Auth::user()->regtype;
+        $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
+
+
+        $results = DB::SELECT('select Location_id,Location_name FROM cylinder_locations order by Location_id;');        
+        //$newvehicle=array([$id]);
+        
+
+        
+        $stationno=DB::SELECT('select stationno,stickerSerialNo FROM vehicle_particulars where Record_no=?',[$recordid]);
 
 
             
-        return view ('vehicle.registrations',compact('vehicles','treeitems'))->with('page',1);
 
+      //echo '<br> recordid='.$recordid;
+      //echo '<br> id'.$id;
+      //print_r($stationno);
+
+           // ----------------return view('vehicle.cylinders',['cylinder_locations'=>$results,'newvehicle'=>$id,'treeitems'=>$treeitems,'stationno'=>$stationno ]);        
+
+        return redirect()->to($targetroute)->with('cylinder_locations',$results)
+                                                    ->with('newvehicle',$id)
+                                                   ->with('treeitems',$treeitems)
+                                                    ->with('stationno',$stationno);
+            
+
+            } else {
+
+            return view ('vehicle.registrations',compact('vehicles','treeitems'))->with('page',1);
+        }
+        
 
 
 
@@ -264,7 +302,7 @@ $sortby="Record_no"; // to make compatible with vehiclelogiccontroller at the en
         //$usertype =Auth::user()->regtype;
         $treeitems =$this->getTree(); 
         // DB::select('select * from AccessRights where regtype =?',[$usertype]);    
-        
+  /*      
         $vehicles = DB::table('vehicle_particulars')
                     ->leftjoin('owner__particulars', function($join){
                       $join->on('vehicle_particulars.OwnerCnic','=','owner__particulars.CNIC');
@@ -274,6 +312,20 @@ $sortby="Record_no"; // to make compatible with vehiclelogiccontroller at the en
         'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo' , 'vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno')
                     ->where ('vehicle_particulars.Record_no','=',$id)
                     ->get();   
+*/
+
+        $vehicles =  DB::table('vehicle_particulars')
+                    ->leftjoin('owner__particulars', function($join){
+                      $join->on('vehicle_particulars.OwnerCnic','=','owner__particulars.CNIC');
+                      $join->on('vehicle_particulars.Registration_no','=','owner__particulars.VehicleReg_No');
+                    })
+                    ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
+                    ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
+        'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','cng_kit.InspectionDate','cng_kit.InspectionExpiry')            
+                    ->where ('vehicle_particulars.Record_no','=',$id)
+                    ->get(); 
+
+
         return view ('vehicle.editVehicle',compact('vehicles','treeitems'));         
     }
 
@@ -371,7 +423,7 @@ $request->validate([
                     })
                     ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
                     ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-        'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','cng_kit.InspectionDate')
+        'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','cng_kit.InspectionDate','cng_kit.InspectionExpiry')
                     ->where('vehicle_particulars.stationno','=',Auth::user()->stationno) //this is the only diff
                     ->orderby($sortby,'desc')            
                     ->paginate($pagesize); 
@@ -384,7 +436,7 @@ $request->validate([
                     })
                     ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
                     ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-        'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','cng_kit.InspectionDate')            
+        'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','cng_kit.InspectionDate','cng_kit.InspectionExpiry')            
                     ->orderby($sortby,'desc')            
                     ->paginate($pagesize); 
         }

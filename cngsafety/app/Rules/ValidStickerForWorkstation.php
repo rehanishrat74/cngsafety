@@ -55,6 +55,7 @@ $registeredWs= DB::table('users')
                 ->where('coderollssecondary.serialno','=',$this->Stickerno)
                 ->groupby ('coderollssecondary.vehicleRegNo','cnic','serialno')
                 ->get();
+                //->toSql();
 
 
 
