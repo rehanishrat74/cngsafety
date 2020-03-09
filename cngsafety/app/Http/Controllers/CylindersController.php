@@ -1576,6 +1576,15 @@ $sortby="Record_no";
     public function listlabtestedcylinders()
     {
 
+        $pagesize=10;
+        if  (Cookie::get('pagesize') !== null)
+        {
+            
+            $pagesize = Cookie::get('pagesize');
+
+        }
+        else
+        {$pagesize=10;}
 
 
             $sort=Request('sort');
@@ -1601,7 +1610,7 @@ $sortby="Record_no";
                         'Date', 'InspectionExpiryDate' ,   'RegisteredCylinders.stickerSerialNo','method',
                         'vehicle_particulars.Registration_no',DB::Raw('@row:=@row+1 as row_number'))
                     ->orderby($sort,'desc')    
-                    ->paginate(10);            
+                    ->paginate($pagesize);            
 
                 $labs=DB::table('users')                    
                     ->select ('id','Labname')
@@ -1622,7 +1631,7 @@ $sortby="Record_no";
 
                     ->where ('LabUser','=',$labUser)
                     ->orderby($sort,'desc')                   
-                    ->paginate(10);  
+                    ->paginate($pagesize);  
 
                 $labs=DB::table('users')                    
                     ->select ('id','Labname')
@@ -1647,7 +1656,7 @@ $sortby="Record_no";
 
 $testedcylinders->appends($querystringArray);
 
-    return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1);
+    return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1)->with('pagesize',$pagesize);
         /*$content = view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1);
 
         return response($content)->withHeaders(['Set-Cookie'=> "Secure;SameSite=None"]);*/
@@ -1674,7 +1683,23 @@ response.AddHeader("Set-Cookie", "HttpOnly;Secure;SameSite=Strict");*/
         $searchvalue=$request->input('searchvalue');
         $labName =$request->input('lab');
 
+        $pagesize=10;
+        if  (Cookie::get('pagesize') !== null)
+        {
+            
+            $pagesize = Cookie::get('pagesize');
 
+        }
+        else
+        {$pagesize=10;}
+
+
+            $sort=Request('sort');
+            if (!isset($sort)){
+                //$sort='id';
+                $sort='row_number';
+
+            }
 
         
         if ($searchby=="Date" ) {
@@ -1834,7 +1859,8 @@ $testedcylinders->appends($querystringArray);
 
 session()->flashInput($request->input());
 
-    return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1);
+    return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems,'labs'=>$labs])->with('page',1)
+                                                ->with('pagesize',$pagesize);
     
 
     }

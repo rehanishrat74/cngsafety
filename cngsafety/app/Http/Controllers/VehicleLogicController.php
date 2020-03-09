@@ -26,12 +26,7 @@ class VehicleLogicController extends Controller
      */
     public function index()
     {
-        //
-        //$owners=Owner_Particulars::all();
-        //$vehicles = VehicleParticulars::all();
-        //$categories = vehicleCategory::all();
-        //return view ('vehicle.registrations',compact('owners','vehicles','categories'));
-      
+   
       
       $usertype =Auth::user()->regtype;
       $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
@@ -68,10 +63,22 @@ class VehicleLogicController extends Controller
 
     $recordperpage = 10;
     $pagesize=10;
-   if(request()->cookie('pagesize'))
+   /*if(request()->cookie('pagesize'))
       { $pagesize =request()->cookie('pagesize');
         $recordperpage =$pagesize;
-      }
+      }*/
+
+
+        $pagesize=10;
+        if  (Cookie::get('pagesize') !== null)
+        {            
+            $pagesize = Cookie::get('pagesize');
+            $recordperpage=$pagesize;
+        }
+        else
+        {$pagesize=10;$recordperpage;}
+
+
 
 //$stationno=Auth::user()->stationno;
 if ($usertype =='workshop')
@@ -107,18 +114,17 @@ else
         $vehicles->appends($querystringArray);
     
         return view ('vehicle.registrations',['vehicles'=>$vehicles,'treeitems'=>$treeitems])->with('page',1)
-          ->with('pagesize',$recordperpage);
-      
+          ->with('pagesize',$pagesize)
+          ->with('businessType','N/A')
+          ->with('inspectionType','N/A')
+          ->with('searchby','N/A')
+          ;
+
+
     }
 
 
-    /*
-    sample
-    $querystringArray = ['sort' => $sort];
 
-    $testedcylinders->appends($querystringArray);
-    return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems])->with('page',1);
-    */
 
     /**
      * Show the form for creating a new resource.
@@ -144,14 +150,17 @@ else
         echo '<br>searchby'.$request->input('searchby');
         echo '<br>searchvalue'.$request->input('searchvalue');*/
 
-
-
-        $pagesize=$request->input('pagesize');
+        //$pagesize=$request->input('pagesize');
         $searchby=$request->input('searchby');
-        $searchvalue=$request->input('searchvalue');
-        
-        Cookie::queue('pagesize', $pagesize, 120);
-        $request->session()->put('pagesize',$pagesize);
+        $searchvalue=$request->input('searchvalue');        
+$whereArray=[];
+$values_array=[];
+//$whereArray=array($searchby,'=',$searchvalue);
+
+//1-----------
+
+$keys_array=[];
+$values_array=[];
 
         if ($searchby=="created_at" ) {
             if (!isset($searchvalue)){
@@ -166,57 +175,101 @@ else
 
 
         if ($searchby=="serialno" && isset($searchvalue)){
-            /*
-            //if cylinder serial no is entered, we find corresponding vehicle.
-            $formid = DB::select('select formid FROM kit_cylinders where Cylinder_SerialNo=? order by formid desc limit 1',[$searchvalue]);
-            //print_r($formid);
-
-            $Registration_no=DB::select('select VehiclerRegistrationNo from cng_kit 
-               where formid =? order by formid desc limit 1',[$formid[0]->formid]);
-
-            $searchby="Registration_no"; 
-            $searchvalue=$Registration_no[0]->VehiclerRegistrationNo; //vechicle found
-          */
+      
             $searchby="vehicle_particulars.StickerSerialNo"; 
 
         }
 
 
+
+if ($searchby!="All")
+{
+
+$keys_array=array($searchby);
+$values_array=array($searchvalue);
+
+} 
+
+        $pagesize=10;
+        if  (Cookie::get('pagesize') != null)
+        {            
+            $pagesize = Cookie::get('pagesize');
+            Cookie::queue('pagesize', $pagesize, 120);
+            $request->session()->put('pagesize',$pagesize);
+        }
+        else
+        {$pagesize=10;
+            Cookie::queue('pagesize', $pagesize, 120);
+            $request->session()->put('pagesize',$pagesize);
+
+        }
+
+        
+      
+        if  (Cookie::get('registrations_businessType') != null)
+        {
+            $registrations_businessType = Cookie::get('registrations_businessType');
+            if ($registrations_businessType !='All')
+            {
+             
+              if (count($keys_array)>0 && $registrations_businessType!="All") {
+                array_push($keys_array, "businesstype");
+                array_push($values_array, $registrations_businessType);
+              } else
+              {
+                if ($registrations_businessType!="All") {
+                $keys_array=array("businesstype");
+                $values_array=array($registrations_businessType);                  
+                }
+
+              }
+
+
+            }
+        }else {$registrations_businessType="All";}
+
+        if  (Cookie::get('registrations_inspectionType') != null)
+        {
+            $registrations_inspectionType = Cookie::get('registrations_inspectionType');
+  
+            //pending / completed
+            if (count($keys_array)>0 && $registrations_inspectionType !="All" ) {
+            array_push($keys_array, "vehicle_particulars.Inspection_Status");
+            array_push($values_array, $registrations_inspectionType);
+            }else
+              {
+                if ($registrations_inspectionType !="All"){
+                $keys_array=array("vehicle_particulars.Inspection_Status");
+                $values_array=array($registrations_inspectionType);                  
+                }
+
+              }
+
+        } else {  $registrations_inspectionType="All";}
+
+
       $usertype =Auth::user()->regtype;
       $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
 
-
-    
-/*      $cng_kit =DB::table('cng_kit')
-        ->select(DB::raw('IF(ISNULL(Inspection_Status), "pending", Inspection_Status) as Inspection_Status'),
-            'VehiclerRegistrationNo', DB::raw('IF(ISNULL(formid), 0,formid) as formid'))
-        ->orderby('formid','desc');
-
-
-$vehicles = DB::table('vehicle_particulars')
-            ->leftjoin('owner__particulars','owner__particulars.CNIC','=','vehicle_particulars.OwnerCnic')
-              ->joinSub($cng_kit,'cng_kit',function($leftjoin){
-                $leftjoin->on('vehicle_particulars.Registration_no','=','cng_kit.VehiclerRegistrationNo');
-            })
-            ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.Scan_code','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno','cng_kit.VehiclerRegistrationNo','cng_kit.Inspection_Status','cng_kit.formid','vehicle_particulars.created_at')
-            ->where($searchby,'=',$searchvalue)
-            ->orderby('Record_no','desc')  
-            ->paginate($pagesize);*/
-
-/*$vehicles = DB::table('vehicle_particulars')
-            ->leftjoin('owner__particulars','owner__particulars.CNIC','=','vehicle_particulars.OwnerCnic')
-
-            ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.Scan_code','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at')
-            ->where($searchby,'=',$searchvalue)
-            ->orderby('Record_no','desc')  
-            ->paginate($pagesize);            
-*/
             $sortby="Record_no";
 
-if ($usertype=="workshop")
-{
+if ($usertype=="workshop"){
+
+  if (count($keys_array)>0) {
+    array_push($keys_array, "vehicle_particulars.stationno");
+    array_push($values_array, Auth::user()->stationno);
+  } else
+  {
+      $keys_array=array("vehicle_particulars.stationno");
+      $values_array=array(Auth::user()->stationno);
+  }
+
+
+}            
+$whereArray=array_combine( $keys_array, $values_array );
+
+
+
 $vehicles = DB::table('vehicle_particulars')
             ->leftjoin('owner__particulars', function($join){
               $join->on('vehicle_particulars.OwnerCnic','=','owner__particulars.CNIC');
@@ -226,50 +279,19 @@ $vehicles = DB::table('vehicle_particulars')
             ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
             ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
 'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry')
-            ->where('vehicle_particulars.stationno','=',Auth::user()->stationno)
-            ->where($searchby,'=',$searchvalue)
-            ->orderby($sortby,'desc')            
+            ->where($whereArray)
+            ->orderby($sortby,'desc')              
             ->paginate($pagesize);
-}
-else
-{
-$vehicles = DB::table('vehicle_particulars')
-            ->leftjoin('owner__particulars', function($join){
-              $join->on('vehicle_particulars.OwnerCnic','=','owner__particulars.CNIC');
-              $join->on('vehicle_particulars.Registration_no','=','owner__particulars.VehicleReg_No');
 
-            })
-            ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
-            ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry')            
-            ->where($searchby,'=',$searchvalue)
-            ->orderby($sortby,'desc')            
-            ->paginate($pagesize);                   
-}
+ 
 
 
         return view ('vehicle.registrations',compact('vehicles','treeitems'))->with('page',1)
-                                                                              ->with('pagesize',$pagesize);
-
-
-
-
-/*  Registration no</option> Registration_no
-    CNIC</option>            CNIC
-    Owner</option>           Owner_name
-    Station no</option>  stationno
-    type</option>            businesstype
-
-    date</option>            =>?created_at
-    Serial no</option>  ?serialno
-
-
-            $dt1=Carbon::today();            
-            $inspectiondate = date('Y-m-d', strtotime($dt1));
-            $dt1 = Carbon::today()->addMonths(12);
-            $expiryDate=date('Y-m-d', strtotime($dt1));
-
-    $location = $request->input('location');*/
+                                                                              ->with('pagesize',$pagesize)
+                                                                              ->with('businessType',$registrations_businessType)
+                                                                              ->with('inspectionType',$registrations_inspectionType)
+                                                                              ->with('searchby',$searchvalue)
+                                                                              ;
 
 
     }

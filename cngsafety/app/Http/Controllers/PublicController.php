@@ -118,7 +118,19 @@ class PublicController extends Controller
       return response()->json($cities, 200);
   }
 
+public function setCookie(Request $request){
 
+  
+    $cname=$request["post"]["cname"];//pagesize,vehicleType,inspectionType
+    $cvalue=$request["post"]["cvalue"];//pagesize value
+    $expiry=$request["post"]["exdays"];//expiry
+
+
+    
+    $response=response('created')->withCookie(cookie($cname, $cvalue, $expiry));
+
+    return $response;
+}
 /*public function dologinaccess(Request $data){
     
      $id =str_replace("act_","",$data->id);

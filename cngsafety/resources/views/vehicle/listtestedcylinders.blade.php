@@ -67,24 +67,27 @@
                             <form attr.id="searchvehicle" method="POST" class="myform" action="{{route('testedcylinders-search')}}">
                                 {{ csrf_field() }}
 
-
+<?php 
+//echo 'pagesize=';
+//echo $pagesize;
+?>
                                
                             <div class="input-group primary">
-                                        <select class="form-control" attr.id="pagesize" name="pagesize">
+                                        <select class="form-control pagesize" attr.id="pagesize" name="pagesize">
                                                 <option value="10" 
-                                                  <?php if (old("pagesize")=="10") {echo "selected";}?>
+                                                  <?php if (old("pagesize")=="10" || $pagesize=="10") {echo "selected";}?>
                                                 >Page size 10</option>
                                                 <option value="50"
-                                                  <?php if (old("pagesize")=="50") {echo "selected";}?>
+                                                  <?php if (old("pagesize")=="50"  || $pagesize=="50") {echo "selected";}?>
                                                 >Page size 50</option>
                                                 <option value="100"
-                                                  <?php if (old("pagesize")=="100") {echo "selected";}?>
+                                                  <?php if (old("pagesize")=="100"  || $pagesize=="100") {echo "selected";}?>
                                                 >Page size 100</option>
                                                 <option value="500"
-                                                  <?php if (old("pagesize")=="500") {echo "selected";}?>
+                                                  <?php if (old("pagesize")=="500"  || $pagesize=="500") {echo "selected";}?>
                                                 >Page size 500</option>
                                                 <option value="1000"
-                                                    <?php if (old("pagesize")=="1000") {echo "selected";}?>
+                                                    <?php if (old("pagesize")=="1000"  || $pagesize=="1000" ) {echo "selected";}?>
                                                 >Page size 1000</option>
 
                                         </select>                                                                            
@@ -158,7 +161,7 @@
                     <div class="col-xl-12">
                         <section class="box ">
                             <header class="panel_header">
-                                <h2 class="title float-left">List</h2>
+                                <h2 class="title float-left">List </h2>
                                 <div class="actions panel_actions float-right">
                                     <a class="box_toggle fa fa-chevron-down"></a>
                                     <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
@@ -310,11 +313,68 @@ $(document).ready(function(){
   });
 
 
+  $(".pagesize").change(function(){
+
+    var cname, cvalue, exdays
+    cname="pagesize";
+    cvalue=$(this).val();
+    exdays=1;
+    setCookie(cname,cvalue,exdays);
+
+  });
    
-});
+}); // end of ready function
 
+    function setCookie(cname,cvalue,exdays)
+    {
 
+            var cookiexpire = new Date();
+            cookiexpire.setTime(cookiexpire.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            
 
+            var $post = {};
+            $post.cname=cname;
+            $post.cvalue=cvalue;
+            $post.exdays=cookiexpire.toUTCString();            
+            $post._token = document.getElementsByName("_token")[0].value;
+
+            $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                    });
+            $.ajax({
+           
+                url: 'setCookie',
+                type: 'POST',
+                method: 'POST',                
+                data: $post,
+                data:  {'post' : $post },  
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",         
+                // above content type must for php. must not be json       
+                async: true,
+                datatype: "json",
+
+                success: responseOut,
+                failure: function (message) {
+                    alert("failure");         
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error");
+                    alert(errorThrown);
+                }
+
+            });
+
+            function responseOut(responseD) {
+                
+                // the function is expected to receive "created"
+                //var data = responseD.d;                
+                //console.log(responseD);
+                //nothing is not done
+                }
+
+    }
 </script>
 
 
