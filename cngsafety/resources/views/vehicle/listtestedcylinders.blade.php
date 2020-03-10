@@ -62,16 +62,22 @@
                     <!-- MAIN CONTENT AREA STARTS -->
                     <!--------------------------form-control-lg----->
 
-                    <div class="row margin-0">
-                        <div class="col-lg-9 col-md-12 col-12" >
-                            <form attr.id="searchvehicle" method="POST" class="myform" action="{{route('testedcylinders-search')}}">
+                    <div class="col-xl-12">
+                        <section class="box ">
+                            <header class="panel_header">
+                                <h2 class="title float-left">Search</h2>
+                                <div class="actions panel_actions float-right">
+                                    <a class="box_toggle fa fa-chevron-down"></a>
+                                    <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
+                                    <a class="box_close fa fa-times"></a>
+                                </div>
+                            </header>
+                            <div class="content-body">   
+                                <div class="row" >
+                                    <div class ="col-12">
+                             <form attr.id="searchvehicle" method="POST" class="myform" action="{{route('testedcylinders-search')}}">
                                 {{ csrf_field() }}
-
-<?php 
-//echo 'pagesize=';
-//echo $pagesize;
-?>
-                               
+                              
                             <div class="input-group primary">
                                         <select class="form-control pagesize" attr.id="pagesize" name="pagesize">
                                                 <option value="10" 
@@ -101,16 +107,7 @@
                                                   <?php if (old("lab")=="$lab->Labname") {echo "selected";}?>
                                                     >{{$lab->Labname}}</option>
                                                 @endforeach 
-                                          
-
                                         </select>       
-
-
-
-
-
-
-
 
                                       <select class="form-control searchpicker" attr.id="searchby" name="searchby" 
                                         >
@@ -118,12 +115,6 @@
                                                 <option value="*" <?php if (old("searchby")=="*") {echo "selected";}?> >* (All Cylinders)</option>
                                                 <option value="BrandName" <?php if (old("searchby")=="BrandName") {echo "selected";}?> >Brand Name</option>
                                                 <option value="Standard" <?php if (old("searchby")=="Standard") {echo "selected";}?> >Standard</option>
-
-
-
-
-
-
                                                 
                                                 <option value="SerialNumber" <?php if (old("searchby")=="SerialNumber") {echo "selected";}?> >Serial no</option>
 
@@ -134,17 +125,7 @@
                                                 <option value="stickerSerialNo" <?php if (old("searchby")=="stickerSerialNo") {echo "selected";}?>>Sticker No</option>
                                         </select>
 
-
-                    
-
-
                                 <input type="text" class="form-control search-page-input" placeholder="Search" value="" placeholder="Search" autocomplete="off" attr.id="searchvalue" name="searchvalue" disabled>
-                               <!-- <span class="input-group-addon" 
-                                onclick="event.preventDefault(); document.getElementById('searchvehicle').submit();">   
-                                    <span class="arrow"></span>
-                                    <i class="fa fa-search"></i>
-                                </span>   -->                            
-
                                <span class="input-group-addon submitbutton">   
                                     <span class="arrow"></span>
                                     <i class="fa fa-search"></i>
@@ -152,9 +133,12 @@
 
                             </div> <!--<br>-->
                         </form>
-                        </div>
-
-                    </div>                    
+                                     
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>                 
 
                     <!-- ------IMPLETMENT SEARCH HERE ----->
           
