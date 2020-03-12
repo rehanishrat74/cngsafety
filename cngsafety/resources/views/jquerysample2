@@ -1,0 +1,53 @@
+always use in head section 
+ <meta name="csrf-token" content="{{ csrf_token() }}">
+
+-----ajax with post sample -------------------------
+
+    function setCookie(cname,cvalue,exdays)
+    {
+
+            var cookiexpire = new Date();
+            cookiexpire.setTime(cookiexpire.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            
+
+            var $post = {};
+            $post.cname=cname;
+            $post.cvalue=cvalue;
+            $post.exdays=cookiexpire.toUTCString();            
+            $post._token = document.getElementsByName("_token")[0].value;
+
+            $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                    });
+            $.ajax({
+           
+                url: 'setCookie',
+                type: 'POST',
+                method: 'POST',                
+                data: $post,
+                data:  {'post' : $post },  
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",         
+                // above content type must for php. must not be json       
+                async: true,
+                datatype: "json",
+
+                success: responseOut,
+                failure: function (message) {
+                    alert("failure");         
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error");
+                    alert(errorThrown);
+                }
+
+            });
+
+            function responseOut(responseD) {
+               
+                //var data = responseD.d;                
+                console.log(responseD);
+                }
+
+    }

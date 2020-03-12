@@ -16,6 +16,7 @@ class apiController extends Controller
     public function __construct() {
         $this->API_KEY = '0J1wuM7aCPjdYhraeZR6abnVlvRHKfdT';
     }
+
     // upload files
     public function uploadFiles(Request $r) {
         if($r['API_Key'] != $this->API_KEY) {
@@ -26,17 +27,23 @@ class apiController extends Controller
                 $user_id = $r['user_id'];
                 $scan_code = $r['scan_code'];
                 $stationno = $r['stationno']; //Additional Field
-                // vars needs to be rewrite
                 $o_cnic = $r['o_cnic']; //Additional field
                 $registration_no = $r['registration_no']; //Additional field
+
                 $finalResponse = "invalid";
                 $msg="x";
                 $trace="getting file";
                 $file = $r->file('file');
+                
                 $name = $file->getClientOriginalName();
                 $extension=$file->getClientOriginalExtension();  //image type
-                $imgStr = (string) Image::make( $file )->resize( 300, null, function ( $c ) { $c->aspectRatio(); })->encode( $extension );
-                $base64img = base64_encode( $imgStr );
+                $img = Image::make($file->getRealPath());
+                $img->resize(300, null, function ($c) { $c->aspectRatio(); });
+                $img->encode($extension);
+                $image = $img->stream();
+                $imgStr = (string)$image;
+                //$imgStr = Image::make( $file )->resize( 300, null, function ( $c ) { $c->aspectRatio(); })->encode( $extension );
+                $base64img = base64_encode($imgStr);
                 $trace=$trace."/ base64 encoded";
                 $trace=$trace."/ fileype=".$type;
                 if($type == 'wind-screen') {
@@ -53,16 +60,28 @@ class apiController extends Controller
                     );
                 }
                 $trace=$trace."/ finding last inspection.";
-                $inspection = DB::SELECT('SELECT count(vehicle_particulars.record_no) as recordfound, beta.Record_no FROM vehicle_particulars where vehicle_particulars.stickerSerialNo=? and Inspection_Status="pending" and vehicle_particulars.OwnerCnic=? and vehicle_particulars.Registration_no=?',[$scan_code,$o_cnic,$registration_no]);
+
+                
+                    $inspection = DB::table('vehicle_particulars')
+                 ->select( DB::raw('count(vehicle_particulars.record_no) as recordfound'),
+                    'Record_no','lastinspectionid')
+                 ->groupBy('Record_no','lastinspectionid')
+                 ->where ('stickerSerialNo','=',$scan_code)
+                 ->where ('OwnerCnic','=',$o_cnic)
+                 ->where ('Registration_no','=',$registration_no)
+                 ->get();
+                
+                
                 if ($inspection[0]->recordfound ==1)
                 {
                     $trace=$trace."/ last inspection found.";
-                    $where = array('scan_code' => $scan_code,
-                        'Record_no' =>$inspection[0]->Record_no
+                    $where = array(
+                        'formid' => $inspection[0]->lastinspectionid,
+                        'VehicleRecordNo' =>$inspection[0]->Record_no
                     );
                     DB::table('cng_kit')->where($where)->update($image);
                     $finalResponse = "valid";
-                    $msg="File Uploaded";            
+                    $msg="Images Successfully Uploaded and Inspection is Completed Successfully, Click Ok to view Inspection Details";            
                 }
                 $response = array();
                 $response['response'] = strtolower($finalResponse);
@@ -80,7 +99,7 @@ class apiController extends Controller
         } else {
             //if(Agent::isMobile()) {
                 $response = array();
-                $email = $r['email'];      
+                $email = $r['email'];
                 $user_code = $r['email'];
                 $password = $r['pass'];
                 $cred = array(
@@ -173,7 +192,16 @@ class apiController extends Controller
                 $message = "Greetings from iBex Your OTP Code is " . $pin . " enter this code to verify";
                 //sending sms
                 $post = "sender=".urlencode($sender)."&mobile=".urlencode($mobile)."&message=".urlencode($message)."";
-                $url = "https://sendpk.com/api/sms.php?username=923065353533&password=4619";
+                $url = "https://sendpk.com/api/sms.php?username=".env('SMS_User')."&password=".env('SMS_Pwd');
+
+                $dt1=Carbon::today();
+                $created_at=date('Y-m-d', strtotime($dt1));  
+                
+                if (env('LOG_API')==1) {
+                DB::insert('insert into doGeneratePin (userid,mobile,url,created_at ) values (?,?,?)',[$userid,$mobile,$url,$created_at]);
+                }
+
+                
                 $ch = curl_init();
                 $timeout = 30; // set to zero for no timeout
                 curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
@@ -234,6 +262,11 @@ class apiController extends Controller
                 {
                     $isproduction =$r['isproduction'];
                 }
+
+                if (env('LOG_API')==1)
+                {
+                    DB::insert('insert into logdoverifycode(stationno,code) values (?,?)',[$stationno,$scan_code]);
+                }                
                 //$dbsticker = DB::SELECT('SELECT count(CodeRollsSecondary.batchid) as validShopSticker ,ifnull(beta.cnic,0) as cnic,ifnull(beta.vehicleRegNo,0) as vehicleRegNo FROM CodeRollsSecondary LEFT JOIN users on CodeRollsSecondary.allotedto = users.email LEFT JOIN CodeRollsSecondary beta on CodeRollsSecondary.serialno=beta.serialno WHERE CodeRollsSecondary.serialno = ? and users.stationno=?',[$scan_code,$stationno]);
                 $validShopsticker =DB::SELECT('SELECT count(CodeRollsSecondary.batchid) as validShopSticker from CodeRollsSecondary WHERE CodeRollsSecondary.serialno = ?',[$scan_code]);
                 if (empty($validShopsticker ))
@@ -326,6 +359,7 @@ class apiController extends Controller
                 $user_id = $r['user_id'];  //instead i need station no.
                 $scan_code = $r['scan_code'];
                 $stationno = $r['stationno']; //Additional fields
+
                     //echo 'userid';
                     //echo  intval($user_id);    
                     //echo is_numeric($user_id);
@@ -337,6 +371,7 @@ class apiController extends Controller
                 }*/
                 //$inspection = array('ResponseMsg'=>"Record not found");
                 $vehicle = collect(DB::SELECT('SELECT Registration_no, Chasis_no, Engine_no, Make_type, Inspection_Status, users.id,businesstype,vehicle_particulars.lastinspectionid, vehicle_particulars.stationno, vehicle_particulars.stickerSerialNo, vehicle_particulars.Record_no, vehicle_categories.category_name, owner__particulars.Owner_name, owner__particulars.CNIC, owner__particulars.Cell_No, owner__particulars.Address, vehicle_particulars.lastinspectionid, users.name as "workshopname",users.address as "workshopaddress" FROM vehicle_particulars LEFT JOIN vehicle_categories on vehicle_particulars.Vehicle_catid=vehicle_categories.category_id LEFT JOIN owner__particulars on vehicle_particulars.Registration_no = owner__particulars.VehicleReg_No and vehicle_particulars.OwnerCnic = owner__particulars.CNIC and vehicle_particulars.stickerSerialNo = owner__particulars.StickerSerialNo LEFT JOIN users on vehicle_particulars.stationno= users.stationno  where vehicle_particulars.stickerSerialNo =?  and vehicle_particulars.stationno=? and users.id=?',[$scan_code,$stationno,$user_id]))->first();
+                $inspectionStatus = $vehicle->Inspection_Status;
                 //print_r($vehicle);
                 if (!empty($vehicle)) {
                     $inspectionid  = $vehicle->lastinspectionid;  
@@ -386,6 +421,7 @@ class apiController extends Controller
                     $response['ck_is_exhaust_pipe'] = $cngKit->ExhaustPipe;
                     $response['wind_screen_image'] = $cngKit->WindScreen_Pic;
                     $response['number_plate_image'] = $cngKit->RegistrationPlate_Pic;
+                    $response['inspection_status'] = $inspectionStatus;
                 } else {
                     $response['response'] = 'invalid';                     
                     $response['message'] = 'vehicle not found against this sticker';
@@ -462,10 +498,12 @@ class apiController extends Controller
                 $vehicleRecordNo=0;
                 $isvalid="Invalid";
                 $duplicate="false";
+                $isproduction=0;
                  if ($r['isproduction'] )
                 {
                     $isproduction =$r['isproduction'];
                 }
+                
 if (env('LOG_API')==1) {
                 DB::insert('insert into logparticulars (code,vehicleCategory,businesstype,stationno ,user_id ,make_n_type,chasis_no ,engine_no ,vehicle_name,o_name ,o_cnic ,registration_no ,o_cell_no,o_address ,isproduction ,rectime ) values (?,?,?,?,?,?,? ,? ,?,? ,?,?,?,?,? ,?)',[$scan_code,$vcat,$businesstype,$stationno,$userid,$make_n_type,$chasis_no,$engine_no,$vehicle_name,$o_name,$o_cnic,$registration_no,$o_cell_no,$o_address,$isproduction,$created_at]);
 }                
@@ -658,7 +696,12 @@ if (env('LOG_API')==1) {
                                         $response['owner'] =$ownermsg;
                                         $response['response'] = $isvalid;
                 }
-               if ($isvalid="valid"){$response['message'] = "Your inspection particulars updated successfully";}
+               if ($isvalid="valid"){
+                    $response['message'] = "Your Inspection Particulars Updated Successfully";
+                    $expirydate = date('Y-n-j', strtotime('31 Dec'));
+                    $response['expirydate'] = $expirydate;
+                    $response['cellno'] = $o_cell_no;
+                }
                 echo json_encode($response);
         }
     }
@@ -806,7 +849,8 @@ if (env('LOG_API')==1) {
                                         $msg ="CngKit for inspection ".$formid." updated";
                                         $response['response']="valid";
                                         //$response['message'] ="inspection ".$formid." updated.";
-                                        $response['message'] ="Your inspection details for CNG Kit successfully updated";
+                                        $response['message'] ="Your Inspection details for CNG Kit Successfully Updated";
+                                        $response['expirydate'] = $expiryDate;
                                         echo json_encode($response);
                                         return;                                                                                                                        
                                     } // end of cngkit_update                 

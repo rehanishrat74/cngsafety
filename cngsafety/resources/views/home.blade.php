@@ -104,13 +104,15 @@
                                                 if (Auth::user()->activated==1){
                                             ?>                                        
                                                 <script>
-                                                 //window.location.href = '{{route("view-records")}}'; 
+                                             
                                                  window.location.href = '{{route($targetroute)}}'; 
 
 
-                                                 //using a named route
+                                               
                                                 </script>
-                                            <?php }?>
+                                            <?php } 
+
+                                            ?>
 
                                     </div>
                                 </div>

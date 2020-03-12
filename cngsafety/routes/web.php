@@ -10,8 +10,15 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/testArray','Test@testArray');
+Route::get('/testimage','Test@testImage');
+Route::get('/testwhere','Test@testWhere');
+Route::get('/testsql','Test@testSql');
+Route::get('/testCookie','Test@testCookie');
+Route::get('/getCookie','Test@getCookie');
+Route::get('/do-update-particulars_test', 'Test@doUpdateParticulars');
 
-
+Route::get('/testcylinders','Test@doUpdateCylinders');
 /*-----------------------------*/
 Route::post('/do-login', 'apiController@doLogin');
 Route::post('/do-generate-pin', 'apiController@doGeneratePin');
@@ -62,21 +69,29 @@ Route::get('/searchSticker/{stickerNo}','PublicController@searchSticker')->name(
 //Route::get('/dologinaccess/{id}','PublicController@EnableLoginAccess')->name('enableuserget');
 
 Route::post('/dologindenied','PublicController@DisableLoginAccess')->name('disableuser');
-
 Route::get('/searchkccode','PublicController@searchKCcode')->name('searchkccode');
+Route::post('/setCookie','PublicController@setCookie')->name('setCookie');
+
+
 Auth::routes();
 
 
 
 Route::group(['middleware' => ['auth', 'admin']], function() {
     // your routes
+
+
+
     Route::post('/getmsg','UserViewController@search')->name('search');
+    Route::post('/searchuserregistration','UserViewController@searchuserregistration')->name('searchuserregistration');
+
     Route::get('/view-records','UserViewController@index')->name('view-records');
     Route::post('/getajax','UserViewController@AjaxSearch')->name('searchajax');
     Route::get('/showlabs','UserViewController@HDIPusers')->name('showlabs');
     Route::post('/deleteuser','UserViewController@delete')->name('deleteuser');
     Route::post('/dologinaccess','UserViewController@dologinaccess')->name('dologinaccess');
     Route::get('/dodisplaypswd/{id}','UserViewController@dodisplaypswd')->name('dodisplaypswd');
+      Route::get('/displayProfile','UserViewController@profile')->name('displayProfile');
   //Route::get('/ajax','UserViewController@AjaxSearch')->name('view-records');
 
 
@@ -85,6 +100,13 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     //Route::post('/categories','vehicleCategoryController@index')->name('view-categoires');
     Route::get('/registrations','VehicleLogicController@index')->name('registrations');    
     Route::post('/registrations','VehicleLogicController@search')->name('registrations-search');
+
+    Route::get('/Workshops','VehicleLogicController@Workshops')->name('Workshops'); 
+    Route::post('/WorkshopSearch','VehicleLogicController@WorkshopSearch')->name('workshop-search'); 
+
+    Route::post('/getProvinceCities','VehicleLogicController@getProvinceCities')->name('province-search'); 
+    Route::post('/getCityStations','VehicleLogicController@getCityStations')->name('city-search'); 
+
 
     Route::post('/newvehicle','NewVehicleController@store')->name('reg-vehicle');    
     Route::get('/newvehicle','NewVehicleController@index')->name('new-vehicle');
@@ -116,7 +138,7 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
 
     Route::post('/showUploadFile','CylindersController@showUploadFile')->name('showUploadFile');    
 
-
+    Route::get('/printCylinders','printController@cylinders');
 
     //Route::get('sendbasicemail','MailController@basic_email');
     //Route::get('/sendhtmlemail','MailController@html_email');

@@ -11,8 +11,9 @@ use Intervention\Image\Facades\Image;
 use App\User as User;
 use Carbon\Carbon;
 use DB;
-
-
+//use Response;
+use Illuminate\Http\Response;
+use Cookie;
 
 
 class Test extends Controller
@@ -105,7 +106,21 @@ class Test extends Controller
         $stickerCnic="0";
         $stickervehicle="0";
         $vehicleRecordNo=0;
-        
+                      $stickerCount=0;
+                      $isproduction=0;
+                $stickerCnic="0";
+                $stickervehicle="0";
+                $vehicleRecordNo=0;
+                $isvalid="Invalid";
+                $duplicate="false";
+                 if ($r['isproduction'] )
+                {
+                    $isproduction =$r['isproduction'];
+                }
+if (env('LOG_API')==1) {
+ 
+                DB::insert('insert into logparticulars (code,vehicleCategory,businesstype,stationno ,user_id ,make_n_type,chasis_no ,engine_no ,vehicle_name,o_name ,o_cnic ,registration_no ,o_cell_no,o_address ,isproduction ,rectime ) values (?,?,?,?,?,?,? ,? ,?,? ,?,?,?,?,? ,?)',[$scan_code,$vcat,$businesstype,$stationno,$userid,$make_n_type,$chasis_no,$engine_no,$vehicle_name,$o_name,$o_cnic,$registration_no,$o_cell_no,$o_address,$isproduction,$created_at]);
+}     
         //---------------code below-------------------------------------------
 	   $vechicle = DB::SELECT('select IFNULL(count(id),0) as recordfound from users where id=? and stationno =?',[$userid,$stationno]);
 		if (!empty($vechicle))
@@ -1182,7 +1197,53 @@ Ltd (India)",
         $this->generateString("12 to 34/50 to 60");
 
     }
+    function testSql()
+    {
+        echo 'test sql';
+       
+        $scan_code='ZA5DVII43';
+        $o_cnic='65543-7437892-7';
+        $registration_no ='f-785';
 
+
+        /*                $inspection = DB::SELECT('SELECT count(vehicle_particulars.record_no) as recordfound, beta.Record_no,beta.lastinspectionid FROM vehicle_particulars where vehicle_particulars.stickerSerialNo=? and Inspection_Status="pending" and vehicle_particulars.OwnerCnic=? and vehicle_particulars.Registration_no=?',[$scan_code,$o_cnic,$registration_no]);*/
+
+                    $image = array(
+                        'WindScreen_Pic' => 'xy34',
+                        'WindScreen_Pic_imagetype' => 'bmp',
+                    );
+                    $where = array(
+                        'formid' => 12,
+                        'VehicleRecordNo' =>16
+                    );
+                    DB::table('cng_kit')->where($where)->update($image);
+
+      echo 'kit updated';
+    }
+
+    function testCookie()
+    {
+    
+    $pagesize='pagesize';
+    $pagevalue=20;
+    $expiry=2000000;
+
+
+    echo 'user='.env('SMS_User');    
+    $response=response('hello')->withCookie(cookie($pagesize, $pagevalue, $expiry));   
+    return $response;      
+
+    }
+
+   public function getCookie() {
+    if  (Cookie::get('pagesize') !== null)
+    {echo 'cooke is set <br> ';
+        echo Cookie::get('pagesize');
+    }
+    else
+    {echo 'cookie isnt set';}
+
+}
     function generateString($wlcstring)
     {
         //echo '------------splitting wlc-(finding seperator=/)------------  <br> ';
@@ -1371,5 +1432,46 @@ Ltd (India)",
                                                         
         }
 
+//setting cookie
+//document.cookie = "username=John Doe; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+//reading cookie
+//var x = document.cookie;
+//document.cookie will return all cookies in one string much like: cookie1=value; cookie2=value; cookie3=value;        
 
+//-----------------------------------
+/*function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}*/
+
+/*function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}*/
+
+/*function checkCookie() {
+  var user = getCookie("username");
+  if (user != "") {
+    alert("Welcome again " + user);
+  } else {
+    user = prompt("Please enter your name:", "");
+    if (user != "" && user != null) {
+      setCookie("username", user, 365);
+    }
+  }
+}*/
+
+//--------------end of cookie---------------------        
 }

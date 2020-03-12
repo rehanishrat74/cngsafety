@@ -126,7 +126,9 @@ public function setCookie(Request $request){
     $expiry=$request["post"]["exdays"];//expiry
 
 
-    
+    if ($cname=='pagesize') {
+        session()->put('pagesize')==$cvalue;
+    }
     $response=response('created')->withCookie(cookie($cname, $cvalue, $expiry));
 
     return $response;

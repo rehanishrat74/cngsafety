@@ -202,9 +202,6 @@ B     for balochistan.
 
              $stationno=$stationcode.'-'.$workshopstationid;   //SKI-3
 
-//echo 'stationno='.$stationno;
-//dd($stationno);
-//return;
 
             $user= User::create([
                 'name' => $data['nickname'],
@@ -323,7 +320,7 @@ $url = "https://sendpk.com/api/sms.php?username=".env('SMS_User')."&password=".e
                 curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-            //    $result = curl_exec($ch); 
+                $result = curl_exec($ch); 
                // $response['response'] = 'valid';        
 
         return $user;

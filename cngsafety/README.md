@@ -143,3 +143,27 @@ to debug sql in laravel
                     ->toSql();
 
                     dd($cylinders);
+##======================================
+ 'ocnic'=>'nullable|regex:/(^([\d]{5}-[\d]{7}-[\d])$)/',
+              'ocnic'=>'nullable|regex:/(^([\d]{5}-[\d]{7}-[\d])$)/',
+            'ddmanufacture'=>['required'],
+            //'ddmanufacture'=>['required','regex:/(^(19|20)\d\d-0[1-9]|1[012]-(0[1-9]|[12][0-9]|3[01])$)/'],
+            //'ocnic' =>['regex:/(^([\d]{5}-[\d]{7}-[\d])$)/'],
+
+##============================================
+   if(request()->cookie('pagesize'))
+      { $pagesize =request()->cookie('pagesize');
+        $recordperpage =$pagesize;
+      }
+
+##=================================================
+            return redirect()->to($targetroute)->with('cylinder_locations',$results)
+                                                    ->with('newvehicle',$id)
+                                                    ->with('treeitems',$treeitems)
+                                                    ->with('stationno',$stationno);
+
+##==================================================
+views->jqeurysample.php
+
+HTTP->controllers-Test.php =>cookie example
+##=================================================      
