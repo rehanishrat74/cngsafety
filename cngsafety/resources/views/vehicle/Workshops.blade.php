@@ -88,7 +88,7 @@
 <!--  ==============================================  -->
                                 <div class="row" >
                                     <div class ="col-12">
-                                        <form id="searchworkshop" method="POST" action="{{route('workshop-search')}}">
+                                        <form id="searchvehicle" method="POST" action="{{route('workshop-search')}}">
                                         {{ csrf_field() }}
 
                                          <div class="row" >
@@ -98,7 +98,7 @@
                                                 <option value="All">* (All Provinces)</option>
                                                         @foreach ($provinces as $province)
                                                 <option value="{{$province->province}}"
-                                                <?php if (old('province')==$province->province) { echo 'selected';}?>
+                                                <?php if (!empty($hiddenprovince)){if ($hiddenprovince==$province->province){echo 'selected';}}?>
                                                     > {{$province->province}} </option>
                                                         @endforeach 
 
@@ -116,7 +116,7 @@
                                             <div class="col-4">
                                                 <div class="input-group primary" >
                                                     <select class="form-control stations" id="stations" name="stations">
-                                                    <option>* (All Stations)</option>
+                                                    <option value="All">* (All Stations)</option>
                                                     </select>        
                                                                                
                                                 </div>        
@@ -124,7 +124,7 @@
 
                                         </div>
 
-                                        </form>
+
                                     </div>                                        
                                 </div>
 
@@ -140,9 +140,6 @@
                                 <div class="row" >
                                     <div class ="col-12">
                                 <!----------------------------->
-                            <form id="searchvehicle" method="POST" action="{{route('workshop-search')}}">
-                                {{ csrf_field() }}
-
                               
                             <div class="input-group primary" >
 

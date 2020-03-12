@@ -442,10 +442,12 @@ $vehicles = DB::table('vehicle_particulars')
 
         $searchby=$request->input('searchby');
         $searchvalue=$request->input('searchvalue');        
-        $stationno=$request->input('hiddenStation');  
-        $hiddenProvince=$request->input('hiddenProvince');  
-        $hiddenCity=$request->input('hiddenCity');   
+        $stationno=$request->input('stations');  
+        $hiddenProvince=$request->input('province');  
+        $hiddenCity=$request->input('cities');   
 
+//dd($request);
+//echo 'in wsearch='.$hiddenProvince.'<br>';
 
 $whereArray=[];
 $values_array=[];
@@ -550,49 +552,251 @@ $values_array=array($searchvalue);
 
             $sortby="Record_no";
 
+ if (count($keys_array)>0) {
+      if(!empty($stationno) && $stationno !='All'){
+            array_push($keys_array, "users.stationno");
+            array_push($values_array, $stationno);
+      }
+  } else {
+
+          if ($stationno!="All"){
+            $keys_array=array("users.stationno");
+            $values_array=array($stationno);            
+            }
+         }  
+
+
   if (count($keys_array)>0) {
+      if(!empty($hiddenProvince) && $hiddenProvince !="All"){
+            array_push($keys_array, "users.province");
+            array_push($values_array, $hiddenProvince);
+        }
+  } else {
 
-    array_push($keys_array, "vehicle_particulars.stationno");
-    array_push($values_array, Auth::user()->stationno);
-  } else
-  {
-      if(!empty($stationno)){
-      $keys_array=array("vehicle_particulars.stationno");
-      $values_array=array($stationno);}
-  }
+        if($hiddenProvince!="All"){
+            $keys_array=array("users.province");
+            $values_array=array( $hiddenProvince);          
+          }
+
+      }  
 
 
-         
+
+  if (count($keys_array)>0) {
+      if(!empty($hiddenCity) && $hiddenCity !="All"){
+            array_push($keys_array, "users.city");
+            array_push($values_array, $hiddenCity);
+      }
+  } else {
+          if ($hiddenCity!="All"){
+                $keys_array=array("users.city");
+                $values_array=array( $hiddenCity);
+              }
+
+        }
+
+
 $whereArray=array_combine( $keys_array, $values_array );
 
-print_r($whereArray);
 
 $vehicles = DB::table('vehicle_particulars')
             ->leftjoin('owner__particulars', function($join){
               $join->on('vehicle_particulars.OwnerCnic','=','owner__particulars.CNIC');
               $join->on('vehicle_particulars.Registration_no','=','owner__particulars.VehicleReg_No');
-
             })
             ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
+            ->leftjoin('users','users.stationno','=','vehicle_particulars.stationno')
             ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry')
+'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry','users.province','users.city')
             ->where($whereArray)
             ->orderby($sortby,'desc')              
             ->paginate($pagesize);
 
  
 
+      $vehicles->appends(['searchby' => $searchby,'searchvalue'=>$searchvalue,
+        'hiddenStation'=>$stationno,'hiddenprovince'=>$hiddenProvince,'hiddenCity'=>$hiddenCity,
+        'pagesize'=>$pagesize,'businessType'=>$registrations_businessType,
+        'inspectionType'=>$registrations_inspectionType,
+      ])->links();
+
 
         return view ('vehicle.Workshops',compact('vehicles','treeitems'))->with('page',1)
-                                                                              ->with('pagesize',$pagesize)
-                                                                              ->with('businessType',$registrations_businessType)
-                                                                              ->with('inspectionType',$registrations_inspectionType)
-                                                                              ->with('searchby',$searchvalue)
-                                                                              ->with('provinces',$proivnce)
-                                                                              ->with ('hiddenprovince',$hiddenProvince)
-                                                                              ->with ('hiddenCity',$hiddenCity)
-                                                                              ->with ('hiddenStation',$stationno)
+                                                        ->with('pagesize',$pagesize)
+                                                        ->with('businessType',$registrations_businessType)
+                                                      ->with('inspectionType',$registrations_inspectionType)
+                                                        ->with('searchby',$searchvalue)
+                                                      ->with('provinces',$proivnce)
+                                                      ->with ('hiddenprovince',$hiddenProvince)
+                                                        ->with ('hiddenCity',$hiddenCity)
+                                                          ->with ('hiddenStation',$stationno)
                                                                               ;
+
+
+    }
+
+    public function WorkshopSearchpaginated()
+    {
+        $page=$_GET['page'];
+        $searchby=$_GET['searchby'];
+           
+        $searchvalue="";
+        if (!empty($_GET['searchvalue'])){
+          $searchvalue=$_GET['searchvalue'];
+        }
+
+        
+        $stationno=$_GET['hiddenStation'];
+        $hiddenProvince=$_GET['hiddenprovince'];
+        $hiddenCity=$_GET['hiddenCity'];
+        $registrations_businessType=$_GET['businessType'];
+        $pagesize=$_GET['pagesize'];
+        $registrations_inspectionType=$_GET['inspectionType'];
+
+
+$whereArray=[];
+$values_array=[];
+
+$keys_array=[];
+$values_array=[];
+
+   $proivnce=DB::Select('SELECT DISTINCT province FROM `users` WHERE province is not null order by province');
+
+  if ($searchby!="All")
+    {
+
+      $keys_array=array($searchby);
+      $values_array=array($searchvalue);
+
+    }    
+
+
+  if (count($keys_array)>0 && $registrations_businessType!="All") {
+                array_push($keys_array, "businesstype");
+                array_push($values_array, $registrations_businessType);
+  }else {
+
+           if ($registrations_businessType!="All") {
+                $keys_array=array("businesstype");
+                $values_array=array($registrations_businessType);                  
+                }
+        }
+
+
+
+      
+  if (count($keys_array)>0 && $registrations_inspectionType !="All" ) {
+        array_push($keys_array, "vehicle_particulars.Inspection_Status");
+        array_push($values_array, $registrations_inspectionType);
+  }else {
+      if ($registrations_inspectionType !="All"){
+                $keys_array=array("vehicle_particulars.Inspection_Status");
+                $values_array=array($registrations_inspectionType);                  
+                }
+        }
+
+
+ if (count($keys_array)>0) {
+      if(!empty($stationno) && $stationno !='All'){
+            array_push($keys_array, "users.stationno");
+            array_push($values_array, $stationno);
+      }
+  } else {
+
+          if ($stationno!="All"){
+            $keys_array=array("users.stationno");
+            $values_array=array($stationno);            
+            }
+         }  
+
+
+  if ($searchby=="created_at" ) {
+        if (!isset($searchvalue)){
+            $searchvalue='01/01/1900'; //default value if provided date is empty
+            }
+            $searchvalue=date('Y-m-d', strtotime($searchvalue));
+            $searchby='vehicle_particulars.created_at';
+            //converting date from mdy to YMD
+        }
+
+        if ($searchby=="serialno" && isset($searchvalue)){
+      
+            $searchby="vehicle_particulars.StickerSerialNo"; 
+
+        }
+
+  if (count($keys_array)>0) {
+      if(!empty($hiddenProvince) && $hiddenProvince !="All"){
+            array_push($keys_array, "users.province");
+            array_push($values_array, $hiddenProvince);
+        }
+  } else 
+    {
+
+        if($hiddenProvince!="All"){
+            $keys_array=array("users.province");
+            $values_array=array( $hiddenProvince);          
+          }      
+    }
+
+
+
+  if (count($keys_array)>0) {
+      if(!empty($hiddenCity) && $hiddenCity !="All"){
+            array_push($keys_array, "users.city");
+            array_push($values_array, $hiddenCity);
+      }
+  } else {
+          if ($hiddenCity!="All"){
+                $keys_array=array("users.city");
+                $values_array=array( $hiddenCity);
+              }
+
+        }
+
+      $usertype =Auth::user()->regtype;
+      $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
+
+            $sortby="Record_no";
+
+
+
+
+$whereArray=array_combine( $keys_array, $values_array );
+
+
+$vehicles = DB::table('vehicle_particulars')
+            ->leftjoin('owner__particulars', function($join){
+              $join->on('vehicle_particulars.OwnerCnic','=','owner__particulars.CNIC');
+              $join->on('vehicle_particulars.Registration_no','=','owner__particulars.VehicleReg_No');
+            })
+            ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
+            ->leftjoin('users','users.stationno','=','vehicle_particulars.stationno')
+            ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
+'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry','users.province','users.city')
+            ->where($whereArray)
+            ->orderby($sortby,'desc')              
+            ->paginate($pagesize);
+
+ 
+
+      $vehicles->appends(['searchby' => $searchby,'searchvalue'=>$searchvalue,
+        'hiddenStation'=>$stationno,'hiddenprovince'=>$hiddenProvince,'hiddenCity'=>$hiddenCity,
+        'pagesize'=>$pagesize,'businessType'=>$registrations_businessType,
+        'inspectionType'=>$registrations_inspectionType,
+      ])->links();
+
+
+       return view ('vehicle.Workshops',compact('vehicles','treeitems'))->with('page',$page)
+                                                        ->with('pagesize',$pagesize)
+                                                        ->with('businessType',$registrations_businessType)
+                                                      ->with('inspectionType',$registrations_inspectionType)
+                                                        ->with('searchby',$searchvalue)
+                                                      ->with('provinces',$proivnce)
+                                                      ->with ('hiddenprovince',$hiddenProvince)
+                                                        ->with ('hiddenCity',$hiddenCity)
+                                                          ->with ('hiddenStation',$stationno);
+ 
 
 
     }

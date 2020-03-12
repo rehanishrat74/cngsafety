@@ -56,4 +56,33 @@ $vehicles = DB::table('vehicle_particulars')
     return view ('vehicle.listtestedcylinders',['testedcylinders'=>$testedcylinders,'treeitems'=>$treeitems])->with('page',1);
     */
 ------------------------------------------------------------------
-                  
+ $users=DB::table('users')->where('name', 'like', '%'.$data->name.'%')
+                                  ->where('category_id', 1)
+                                  ->where('city_id', 1)
+                                  ->get();*/
+                //$users = User::where('name','LIKE',"%{$$data->name}%")->get();
+                //echo' data'.$data->name;
+                  //$msg = "This is a simple message.";
+                 //$querry ='select * from users where name like ';
+
+                 //echo $querry;
+                  //$users = DB::select();
+                //DB::table('users')->where('name', 'LIKE','%', $data->name,'%')->get();
+
+            /*$term = $data->name;
+            $query = User::where('name', 'LIKE', '%' . $term . '%');
+            $username=$query->getBindings();
+            $querryWithLikeSyntax ='select * from users where name like '.$username[0].'';
+            echo $querryWithLikeSyntax;*/
+            //$users=dd($query->toSql(), $query->getBindings());
+            //$users=$query->toSql();
+
+/*$search = 'hdtopi';
+
+$user = User::where('name','LIKE',"%{$search}%")->get();
+DB::table('job_details')->where('job_title', 'like', '%officer%')
+                      ->where('category_id', 1)
+                      ->where('city_id', 1)
+                      ->get();
+
+$query = User::where('name', 'LIKE', '%' . $term . '%');                  

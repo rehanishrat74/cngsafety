@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 
 use Illuminate\Support\Facades\Validator;
-
+use Session;
 class UserViewController extends Controller
 {
   public function __construct() {
@@ -372,7 +372,7 @@ $url = "https://sendpk.com/api/sms.php?username=".env('SMS_User')."&password=".e
 
    }
 
-   public function searchuserregistration(Request $request) {
+public function searchuserregistration(Request $request) {
 
     
 $regtype= $request->input("user_regtype");
@@ -381,6 +381,7 @@ $city= $request->input("cities");
 $search= $request->input("searchvalue");
 $pagesize= $request->input("pagesize");
 
+if (empty($pagesize)){$pagesize=10;}
 $keys_array=[];
 $values_array=[];
 
@@ -408,15 +409,14 @@ if ($province!="All")
 }
 
 if ($city!="All"){
-    //array_push($whereArray, array('city','=',$city));
+
     array_push($keys_array, "city");
     array_push($values_array, $city);     
 }
 
 
 if (!empty($search)){
-    //array_push($whereArray, array('email','=',$search));
-    //array_push($whereArray, array('name','like',$search));
+
     array_push($emailkey_array, "email");
     array_push($emailname_array, $search);     
 
@@ -428,11 +428,10 @@ if (!empty($search)){
 $whereEmailArray=array_combine($emailkey_array,$emailname_array);
 $whereNameArray=array_combine($namekey_array,$namevalue_array);
 
-//print_r($whereEmailArray);
-//print_r($whereNameArray);
+
 
 $whereArray=array_combine($keys_array,$values_array);
-//print_r($whereArray);
+
 
     if (Auth::user()->regtype =='admin')
     {
@@ -444,15 +443,10 @@ $whereArray=array_combine($keys_array,$values_array);
         ->orWhere($whereNameArray)
         ->orderby('id','desc')
         ->paginate($pagesize);
-//print_r( $users);
+
     }else if (Auth::user()->regtype =='hdip' || Auth::user()->regtype =='apcng')
     {
-        /*$users = DB::table('users')
-        ->select('users.*')
-        ->where('deleted','!=',1)
-        ->where('regtype','=','laboratory')
-        ->orderby('id','desc')
-        ->paginate($pagesize);*/
+
       $users = DB::table('users')
         ->select('users.*')
         ->where('deleted','!=',1)
@@ -467,6 +461,11 @@ $whereArray=array_combine($keys_array,$values_array);
       $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
       $provinces=DB::Select('SELECT DISTINCT province FROM `users` WHERE province is not null order by province');
 
+//$users->appends(['user_regtype' => $regtype])->links();
+      $users->appends(['user_regtype' => $regtype,'province'=>$province,'cities'=>$city,'pagesize'=>$pagesize])->links();
+
+
+
       return view('user.user_view',['users'=>$users,'treeitems'=>$treeitems])->with('page',1)
             ->with('provinces',$provinces)
             ->with('selectedRegType',$regtype)
@@ -475,6 +474,78 @@ $whereArray=array_combine($keys_array,$values_array);
             ;
    }
 
+function searchuserregistrationpaged() {
 
+$page=$_GET['page'];
+
+$regtype= $_GET['user_regtype'];
+$province= $_GET['province'];
+$city= $_GET['cities'];
+$pagesize=$_GET['pagesize'];
+
+
+if (empty($pagesize)){$pagesize=10;}
+$keys_array=[];
+$values_array=[];
+
+$emailkey_array=[];
+$emailname_array=[];
+
+$namekey_array=[];
+$namevalue_array=[];
+
+
+$whereArray=[];
+    
+if ($regtype!="All")
+{
+  //$whereArray=['regtype','=',$regtype];
+    array_push($keys_array, "regtype");
+    array_push($values_array, $regtype);  
+} 
+
+if ($province!="All")
+{
+    //array_push($whereArray, array('province','=',$province));
+    array_push($keys_array, "province");
+    array_push($values_array, $province);   
+}
+
+if ($city!="All"){
+
+    array_push($keys_array, "city");
+    array_push($values_array, $city);     
+}
+
+
+$whereArray=array_combine($keys_array,$values_array);
+
+
+
+      $users = DB::table('users')
+        ->select('users.*')
+        ->where('deleted','!=',1)
+        ->where($whereArray)
+        ->orderby('id','desc')
+        ->paginate($pagesize);
+    
+            
+      $usertype =Auth::user()->regtype;
+      $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
+      $provinces=DB::Select('SELECT DISTINCT province FROM `users` WHERE province is not null order by province');
+
+      $users->appends(['user_regtype' => $regtype,'province'=>$province,'cities'=>$city,'pagesize'=>$pagesize])->links();
+
+
+      return view('user.user_view',['users'=>$users,'treeitems'=>$treeitems])->with('page',$page)
+            ->with('provinces',$provinces)
+            ->with('selectedRegType',$regtype)
+            ->with('selectedProvince',$province)
+            ->with('selectedCity',$city)
+            ;
+
+
+
+    }
 }
 

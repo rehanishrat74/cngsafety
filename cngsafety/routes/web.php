@@ -84,6 +84,8 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
 
     Route::post('/getmsg','UserViewController@search')->name('search');
     Route::post('/searchuserregistration','UserViewController@searchuserregistration')->name('searchuserregistration');
+    Route::get('/searchuserregistration','UserViewController@searchuserregistrationpaged')->name('searchuserregistration');
+
 
     Route::get('/view-records','UserViewController@index')->name('view-records');
     Route::post('/getajax','UserViewController@AjaxSearch')->name('searchajax');
@@ -103,6 +105,7 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
 
     Route::get('/Workshops','VehicleLogicController@Workshops')->name('Workshops'); 
     Route::post('/WorkshopSearch','VehicleLogicController@WorkshopSearch')->name('workshop-search'); 
+    Route::get('/WorkshopSearch','VehicleLogicController@WorkshopSearchpaginated')->name('workshop-search'); 
 
     Route::post('/getProvinceCities','VehicleLogicController@getProvinceCities')->name('province-search'); 
     Route::post('/getCityStations','VehicleLogicController@getCityStations')->name('city-search'); 
