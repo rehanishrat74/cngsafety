@@ -86,6 +86,9 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::post('/searchuserregistration','UserViewController@searchuserregistration')->name('searchuserregistration');
     Route::get('/searchuserregistration','UserViewController@searchuserregistrationpaged')->name('searchuserregistration');
 
+   Route::post('/searchforhdip','UserViewController@searchforhdip')->name('searchforhdip');
+   Route::get('/searchforhdip','UserViewController@searchforhdippaged')->name('searchforhdip');
+
 
     Route::get('/view-records','UserViewController@index')->name('view-records');
     Route::post('/getajax','UserViewController@AjaxSearch')->name('searchajax');

@@ -25,18 +25,27 @@ class UserViewController extends Controller
    public function index() {
       
 
+if (!empty($_GET['page']))
+  {$page=$_GET['page'];}else{$page=1;}
+if (empty($pagesize)){$pagesize=10;}
+
+$CalculatedRow= $pagesize * ($page -1) ;
+$rowSql='set @row:='.$CalculatedRow;
+
     if (Auth::user()->regtype =='admin')
     {
+      DB::statement(DB::raw($rowSql));
       $users = DB::table('users')
-        ->select('users.*')
+        ->select('users.*',DB::Raw('@row:=@row+1 as row_number'))
         ->where('deleted','!=',1)
         ->orderby('id','desc')
         ->paginate(10);
 
     }else if (Auth::user()->regtype =='hdip' || Auth::user()->regtype =='apcng')
     {
+        DB::statement(DB::raw($rowSql));
         $users = DB::table('users')
-        ->select('users.*')
+        ->select('users.*',DB::Raw('@row:=@row+1 as row_number'))
         ->where('deleted','!=',1)
         ->where('regtype','=','laboratory')
         ->orderby('id','desc')
@@ -237,25 +246,300 @@ class UserViewController extends Controller
 
       }
 
-
         return redirect()->back()->with('message', 'Record Updated');
 
+    }
+
+public function searchforhdippaged(){
+
+if (!empty($_GET['page']))
+  {
+    $page=$_GET['page'];
+  }else
+  {
+    $page=1;
+  }
+
+if (!empty($_GET['user_regtype'])) 
+  {
+    $regtype= $_GET['user_regtype'];
+  } else 
+  {
+    $regtype='laboratory';
+  }
+
+if (!empty($_GET['province'])) 
+  {
+    $province= $_GET['province'];
+  } else 
+  {
+    $province='All';
+  }
+
+if (!empty($_GET['cities']))
+  {
+    $city= $_GET['cities'];
+  } else 
+  {
+    $city='All';
+  }
+
+//$pagesize=$_GET['pagesize'];
 
 
+if (empty($_GET['pagesize']))
+  {
+    $pagesize=10;
+  }
+else
+{
+  $pagesize=$_GET['pagesize'];
+}
+$keys_array=[];
+$values_array=[];
+
+$emailkey_array=[];
+$emailname_array=[];
+
+$namekey_array=[];
+$namevalue_array=[];
+
+
+$whereArray=[];
+    
+if ($regtype!="All")
+{
+    array_push($keys_array, "regtype");
+    array_push($values_array, $regtype);  
+} 
+
+if ($province!="All")
+{
+    array_push($keys_array, "province");
+    array_push($values_array, $province);   
+}
+
+if ($city!="All"){
+
+    array_push($keys_array, "city");
+    array_push($values_array, $city);     
+}
+
+
+$whereArray=array_combine($keys_array,$values_array);
+$CalculatedRow= $pagesize * ($page -1) ;
+$rowSql='set @row:='.$CalculatedRow;
+
+  DB::statement(DB::raw($rowSql));
+      $users = DB::table('users')
+        ->select('users.*',DB::Raw('@row:=@row+1 as row_number'))
+        ->where('deleted','!=',1)
+        ->where($whereArray)
+        ->orderby('id','desc')
+        ->paginate($pagesize);
+    
+            
+      $usertype =Auth::user()->regtype;
+      $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
+      $provinces=DB::Select('SELECT DISTINCT province FROM `users` WHERE province is not null order by province');
+
+      $users->appends(['user_regtype' => $regtype,'province'=>$province,'cities'=>$city,'pagesize'=>$pagesize])->links();
+
+
+      return view('user.hdip_labs',['users'=>$users,'treeitems'=>$treeitems])->with('page',$page)
+            ->with('provinces',$provinces)
+            ->with('selectedRegType',$regtype)
+            ->with('selectedProvince',$province)
+            ->with('selectedCity',$city)
+            ;
+
+
+}
+    public function searchforhdip (Request $request) {
+
+    $regtype= $request->input("user_regtype");
+    $province=$request->input("province");
+    $city=$request->input("cities"); 
+    $search=$request->input("searchvalue");
+    $pagesize= $request->input("pagesize");
+
+
+if (!empty($_GET['page']))
+  {$page=$_GET['page'];}else{$page=1;}
+
+
+if (empty($pagesize)){$pagesize=10;}
+$keys_array=[];
+$values_array=[];
+
+$emailkey_array=[];
+$emailname_array=[];
+
+$namekey_array=[];
+$namevalue_array=[];
+
+
+$whereArray=[];
+    
+if ($regtype!="All")
+{
+    array_push($keys_array, "regtype");
+    array_push($values_array, $regtype);  
+} 
+
+if ($province!="All")
+{
+    array_push($keys_array, "province");
+    array_push($values_array, $province);   
+}
+
+if ($city!="All"){
+
+    array_push($keys_array, "city");
+    array_push($values_array, $city);     
+}
+
+
+if (!empty($search)){
+
+    array_push($emailkey_array, "email");
+    array_push($emailname_array, $search);     
+
+
+    array_push($namekey_array, "name");
+    array_push($namevalue_array, $search);    
+}
+
+$whereArray=array_combine($keys_array,$values_array);
+$whereEmailArray=array_combine($emailkey_array,$emailname_array);
+$whereNameArray=array_combine($namekey_array,$namevalue_array);
+
+
+
+
+    if (!empty($_GET['page']))
+        {$page=$_GET['page'];}else{$page=1;}
+    if (empty($pagesize)){$pagesize=10;}
+
+$CalculatedRow= $pagesize * ($page -1) ;
+$rowSql='set @row:='.$CalculatedRow;
+ DB::statement(DB::raw($rowSql));
+    $users = DB::table('users')
+        ->select('users.*',DB::Raw('@row:=@row+1 as row_number'))
+        ->where('regtype','=',$regtype)
+        ->where($whereArray)
+        ->orWhere($whereEmailArray)
+        ->orWhere($whereNameArray)
+        ->paginate($pagesize);
+
+
+$users->appends(['user_regtype' => $regtype,'province'=>$province,'cities'=>$city,'pagesize'=>$pagesize])->links();
+
+
+
+      $usertype =Auth::user()->regtype;
+      $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
+      $provinces=DB::Select('SELECT DISTINCT province FROM `users` WHERE province is not null order by province');
+
+      return view('user.hdip_labs',['users'=>$users,'treeitems'=>$treeitems])->with('page',1)
+            ->with('provinces',$provinces)
+            ->with('selectedRegType',$regtype)
+            ->with('selectedProvince',$province)
+            ->with('selectedCity',$city)
+            ;
 
     }
 
    public function HDIPusers()
    {
+
+
+
+$regtype='laboratory';
+$province='All'; 
+$city='All'; 
+$search=''; 
+$pagesize=10; 
+
+
+if (!empty($_GET['page']))
+  {$page=$_GET['page'];}else{$page=1;}
+
+
+if (empty($pagesize)){$pagesize=10;}
+$keys_array=[];
+$values_array=[];
+
+$emailkey_array=[];
+$emailname_array=[];
+
+$namekey_array=[];
+$namevalue_array=[];
+
+
+$whereArray=[];
+    
+if ($regtype!="All")
+{
+    array_push($keys_array, "regtype");
+    array_push($values_array, $regtype);  
+} 
+
+if ($province!="All")
+{
+    array_push($keys_array, "province");
+    array_push($values_array, $province);   
+}
+
+if ($city!="All"){
+
+    array_push($keys_array, "city");
+    array_push($values_array, $city);     
+}
+
+
+if (!empty($search)){
+
+    array_push($emailkey_array, "email");
+    array_push($emailname_array, $search);     
+
+
+    array_push($namekey_array, "name");
+    array_push($namevalue_array, $search);    
+}
+
+$whereArray=array_combine($keys_array,$values_array);
+$whereEmailArray=array_combine($emailkey_array,$emailname_array);
+$whereNameArray=array_combine($namekey_array,$namevalue_array);
+
+
+
+
+    if (!empty($_GET['page']))
+        {$page=$_GET['page'];}else{$page=1;}
+    if (empty($pagesize)){$pagesize=10;}
+
+$CalculatedRow= $pagesize * ($page -1) ;
+$rowSql='set @row:='.$CalculatedRow;
+ DB::statement(DB::raw($rowSql));
     $users = DB::table('users')
-        ->select('users.*')
+        ->select('users.*',DB::Raw('@row:=@row+1 as row_number'))
         ->where('regtype','=','laboratory')
+        ->where($whereArray)
+        ->orWhere($whereEmailArray)
+        ->orWhere($whereNameArray)
         ->paginate(10);
 
       $usertype =Auth::user()->regtype;
       $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
+      $provinces=DB::Select('SELECT DISTINCT province FROM `users` WHERE province is not null order by province');
 
-      return view('user.hdip_labs',['users'=>$users,'treeitems'=>$treeitems])->with('page',1);
+      return view('user.hdip_labs',['users'=>$users,'treeitems'=>$treeitems])->with('page',1)
+            ->with('provinces',$provinces)
+            ->with('selectedRegType',$regtype)
+            ->with('selectedProvince',$province)
+            ->with('selectedCity',$city)
+            ;
 
    }
 
@@ -380,6 +664,11 @@ $province= $request->input("province");
 $city= $request->input("cities");
 $search= $request->input("searchvalue");
 $pagesize= $request->input("pagesize");
+//$page=$_GET['page'];
+
+if (!empty($_GET['page']))
+  {$page=$_GET['page'];}else{$page=1;}
+
 
 if (empty($pagesize)){$pagesize=10;}
 $keys_array=[];
@@ -431,12 +720,15 @@ $whereNameArray=array_combine($namekey_array,$namevalue_array);
 
 
 $whereArray=array_combine($keys_array,$values_array);
+$CalculatedRow= $pagesize * ($page -1) ;
+$rowSql='set @row:='.$CalculatedRow;
 
 
     if (Auth::user()->regtype =='admin')
     {
+        DB::statement(DB::raw($rowSql));
       $users = DB::table('users')
-        ->select('users.*')
+        ->select('users.*',DB::Raw('@row:=@row+1 as row_number'))
         ->where('deleted','!=',1)
         ->where($whereArray)
         ->orWhere($whereEmailArray)
@@ -446,9 +738,9 @@ $whereArray=array_combine($keys_array,$values_array);
 
     }else if (Auth::user()->regtype =='hdip' || Auth::user()->regtype =='apcng')
     {
-
+        DB::statement(DB::raw($rowSql));
       $users = DB::table('users')
-        ->select('users.*')
+        ->select('users.*',DB::Raw('@row:=@row+1 as row_number'))
         ->where('deleted','!=',1)
         ->where($whereArray)
         ->orWhere($whereEmailArray)
@@ -476,7 +768,9 @@ $whereArray=array_combine($keys_array,$values_array);
 
 function searchuserregistrationpaged() {
 
-$page=$_GET['page'];
+
+if (!empty($_GET['page']))
+  {$page=$_GET['page'];}else{$page=1;}
 
 $regtype= $_GET['user_regtype'];
 $province= $_GET['province'];
@@ -499,14 +793,12 @@ $whereArray=[];
     
 if ($regtype!="All")
 {
-  //$whereArray=['regtype','=',$regtype];
     array_push($keys_array, "regtype");
     array_push($values_array, $regtype);  
 } 
 
 if ($province!="All")
 {
-    //array_push($whereArray, array('province','=',$province));
     array_push($keys_array, "province");
     array_push($values_array, $province);   
 }
@@ -519,11 +811,12 @@ if ($city!="All"){
 
 
 $whereArray=array_combine($keys_array,$values_array);
+$CalculatedRow= $pagesize * ($page -1) ;
+$rowSql='set @row:='.$CalculatedRow;
 
-
-
+  DB::statement(DB::raw($rowSql));
       $users = DB::table('users')
-        ->select('users.*')
+        ->select('users.*',DB::Raw('@row:=@row+1 as row_number'))
         ->where('deleted','!=',1)
         ->where($whereArray)
         ->orderby('id','desc')

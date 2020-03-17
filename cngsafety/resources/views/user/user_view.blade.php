@@ -68,7 +68,7 @@
                     </div>
                     <div class="clearfix"></div>
                     <!-- MAIN CONTENT AREA STARTS -->
-<!------------------>
+<!-------search bar starts here----------->
                     <div class="col-xl-12">
                         <section class="box ">
                             <header class="panel_header">
@@ -183,7 +183,7 @@
 
                         </section>
                     </div>
-<!--------------------->
+<!---------searchbar ends here------------>
                     <div class="col-xl-12">
                         <section class="box ">
                             <header class="panel_header">
@@ -220,7 +220,7 @@
                                                    @foreach ($users as $user)
                                                    <tr>
                                                     <?php if(Auth::user()->regtype  =="admin"){ ?>
-                                                     <td><a href="{{route('showuser',$user->id)}}" > {{ $user->id }}</a></td>
+                                                     <td><a href="{{route('showuser',$user->id)}}" > {{ $user->row_number }}</a></td>
                                                      <td><a href="{{route('showuser',$user->id)}}" ><?php echo $user->name.'<br>'.$user->contactno;?></a></td>
                                                     <?php } else { ?>
 
