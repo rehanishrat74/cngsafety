@@ -50,13 +50,13 @@ class apiController extends Controller
                     $image = array(
                         'WindScreen_Pic' => $base64img,
                         'WindScreen_Pic_imagetype' => $extension,
-                        'updated_at' => time()
+                      //  'updated_at' => time()
                     );
                 } else if($type == 'number-plate') {
                     $image = array(
                         'RegistrationPlate_Pic' => $base64img,
                         'RegistrationPlate_Pic_imagetype' => $extension,
-                        'updated_at' => time()
+                       // 'updated_at' => time()
                     );
                 }
                 $trace=$trace."/ finding last inspection.";
@@ -267,7 +267,7 @@ class apiController extends Controller
                 {
                     DB::insert('insert into logdoverifycode(stationno,code) values (?,?)',[$stationno,$scan_code]);
                 }                
-                //$dbsticker = DB::SELECT('SELECT count(CodeRollsSecondary.batchid) as validShopSticker ,ifnull(beta.cnic,0) as cnic,ifnull(beta.vehicleRegNo,0) as vehicleRegNo FROM CodeRollsSecondary LEFT JOIN users on CodeRollsSecondary.allotedto = users.email LEFT JOIN CodeRollsSecondary beta on CodeRollsSecondary.serialno=beta.serialno WHERE CodeRollsSecondary.serialno = ? and users.stationno=?',[$scan_code,$stationno]);
+   
                 $validShopsticker =DB::SELECT('SELECT count(CodeRollsSecondary.batchid) as validShopSticker from CodeRollsSecondary WHERE CodeRollsSecondary.serialno = ?',[$scan_code]);
                 if (empty($validShopsticker ))
                 {
@@ -300,27 +300,57 @@ class apiController extends Controller
                         $responsemsg="valid sticker to register new vehicle.";
                     }
                     if ($dbsticker[0]->cnic!="0"){
-                        $dbstickerstatus = DB::SELECT('SELECT Inspection_Status FROM vehicle_particulars WHERE stickerserialno=? and stationno = ?',[$scan_code,$stationno]);
+                        $dbstickerstatus = DB::SELECT('SELECT Inspection_Status, Make_type,Registration_no,Chasis_no,Engine_no,businesstype,Vehicle_catid,Owner_name,CNIC,Cell_No,Address,VehicleName FROM `vehicle_particulars` LEFT JOIN owner__particulars on vehicle_particulars.Registration_no = owner__particulars.VehicleReg_No and vehicle_particulars.OwnerCnic = owner__particulars.CNIC WHERE  vehicle_particulars.stickerSerialNo=? and vehicle_particulars.stationno=?',[$scan_code,$stationno]);
+                        
                         if ($dbstickerstatus[0]->Inspection_Status =="completed") {
                             $responsecode ="valid";
                             $responsemsg="no-reissue-completed";
+                			$response['response'] = $responsecode;
+                			$response['message'] = $responsemsg;
+$response['Inspection_Status'] = $dbstickerstatus[0]->Inspection_Status;
+$response['Make_type']= $dbstickerstatus[0]->Make_type;
+$response['Registration_no']= $dbstickerstatus[0]->Registration_no;
+$response['Chasis_no']= $dbstickerstatus[0]->Chasis_no;
+$response['Engine_no']= $dbstickerstatus[0]->Engine_no;
+$response['businesstype']= $dbstickerstatus[0]->businesstype;
+$response['Vehicle_catid']= $dbstickerstatus[0]->Vehicle_catid;
+$response['Owner_name']= $dbstickerstatus[0]->Owner_name;
+$response['CNIC']= $dbstickerstatus[0]->CNIC;
+$response['Cell_No']= $dbstickerstatus[0]->Cell_No;
+$response['Address']= $dbstickerstatus[0]->Address;
+$response['VehicleName']= $dbstickerstatus[0]->VehicleName;                			
+                			echo json_encode($response);
+                			return;                            
                         }
                         else {
                             $responsecode ="valid";
                             $responsemsg="no-reissue-pending";
+               				
+               				$response['response'] = $responsecode;
+                			$response['message'] = $responsemsg;               
+$response['Inspection_Status'] = $dbstickerstatus[0]->Inspection_Status;
+$response['Make_type']= $dbstickerstatus[0]->Make_type;
+$response['Registration_no']= $dbstickerstatus[0]->Registration_no;
+$response['Chasis_no']= $dbstickerstatus[0]->Chasis_no;
+$response['Engine_no']= $dbstickerstatus[0]->Engine_no;
+$response['businesstype']= $dbstickerstatus[0]->businesstype;
+$response['Vehicle_catid']= $dbstickerstatus[0]->Vehicle_catid;
+$response['Owner_name']= $dbstickerstatus[0]->Owner_name;
+$response['CNIC']= $dbstickerstatus[0]->CNIC;
+$response['Cell_No']= $dbstickerstatus[0]->Cell_No;
+$response['Address']= $dbstickerstatus[0]->Address;
+$response['VehicleName']= $dbstickerstatus[0]->VehicleName;                			
+                			echo json_encode($response);
+                			return;                                 
                         }
                         //$responsemsg="valid sticker to retrieve details of the vehicle.";
                     }
                 }
-                //$response = array('responsecode'=>$responsecode,'responsemsg'=>$responsemsg);  
+              
                 $response['response'] = $responsecode;
-                $response['message'] = $responsemsg;
-                //if ($isproduction==1) {
-                //}
+                $response['message'] = $responsemsg;               
                 echo json_encode($response);
-            // } else {
-            //     echo 'Inspection API is available for only Mobile Apps';
-            // }
+
         }
     }
     // get codes
@@ -482,7 +512,7 @@ class apiController extends Controller
                 $registration_no = $r['registration_no'];
                 $o_cell_no = $r['o_cell_no'];
                 $o_address = $r['o_address'];
-                $maketype = $vehicle_name.' '.$make_n_type;
+                $maketype = $make_n_type;
                 $update_at = time();
                 $dt1=Carbon::today();
                 $created_at=date('Y-m-d', strtotime($dt1));    
@@ -599,7 +629,8 @@ if (env('LOG_API')==1) {
                                     }
                                     else {
                                     //sticker not allocated to vehicle. we can allocate it.
-                                    DB::insert('insert into vehicle_particulars (Registration_no ,Chasis_no,Engine_no,Vehicle_catid,Make_type ,OwnerCnic,created_at,businesstype,stationno,stickerSerialNo,Inspection_Status ) values (?, ?, ?,?,?,?,?,?,?,?,?)',[$registration_no,$chasis_no,$engine_no,$vcat,$maketype,$o_cnic,$created_at,$businesstype,$stationno,$scan_code,"pending"]);
+                                    DB::insert('insert into vehicle_particulars (Registration_no ,Chasis_no,Engine_no,Vehicle_catid,Make_type ,OwnerCnic,created_at,businesstype,stationno,stickerSerialNo,Inspection_Status,VehicleName ) values (?, ?, ?,?,?,?,?,?,?,?,?,?)',[$registration_no,$chasis_no,$engine_no,$vcat,$maketype,$o_cnic,$created_at,$businesstype,$stationno,$scan_code,"pending",$vehicle_name]);
+                                
                                     //updating sticker status in CodeRollsSecondary to avoid reuse of sticker
                                     DB::table('CodeRollsSecondary')
                                     ->where(['serialno'=> $scan_code])
@@ -623,8 +654,10 @@ if (env('LOG_API')==1) {
                                     'Engine_no' => $engine_no,
                                     'Vehicle_catid' => $vcat,
                                         'Make_type'=> $maketype,
-                                        'businesstype'=> $businesstype
+                                        'businesstype'=> $businesstype,
+                                        'VehicleName' => $vehicle_name
                                         ]); 
+                                
                                 $vehicleParticularMsg ="Vehicle Record Updated.";       
                                 $isvalid="valid"; 
                             }   // end of update vechicle
@@ -1283,6 +1316,8 @@ switch ($totalcylinders ) {
         $brandsWhereData=$brandsWhereData1;
         break;
 }
+ $dt1=Carbon::today(); 
+ $todaydate = date('Y-m-d', strtotime($dt1)); 
 //dd($cylindersWhereData);
  $Cylinders=DB::Table('kit_cylinders')
                     ->leftjoin('RegisteredCylinders',function($join){
