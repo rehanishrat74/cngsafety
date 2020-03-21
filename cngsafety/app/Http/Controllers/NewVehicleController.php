@@ -12,6 +12,7 @@ use Carbon\Carbon;    //for date time
 use App\Rules\workstationno;
 use App\Rules\ValidStickerForWorkstation;
 use App\Rules\Cnic;
+use Cookie;
 //use App\vehicleCategory; //donot need model
 
 
@@ -91,12 +92,15 @@ class NewVehicleController extends Controller
         $workstationParams = array('stationno' => $stationno,'Stickerno'=>$Stickerno);
         $vehicleParams= array('cnic' => $ocnic,'vehicle'=>$vehicle);
 
+        $VehicleName=$request->input('VehicleName');
+
         $request->validate([
 
             //'scancode' => 'required',
         'maketype' => 'required',
         'Stickerno'=> ['required',new ValidStickerForWorkstation($workstationParams)],
         'registrationNo' => 'required', 
+        'VehicleName' => 'required',
         'chasisno' => 'required',
         'engineNo' => 'required',
         'oname' => 'required',
@@ -200,7 +204,7 @@ class NewVehicleController extends Controller
                     
 
                     if (!$countvehicles >=1) {
-                        $insertedrecordno=DB::insert('insert into vehicle_particulars (Registration_no ,Chasis_no,Engine_no,Vehicle_catid,Make_type ,OwnerCnic,created_at,businesstype,stationno,StickerSerialNo ) values (?, ?, ?,?,?,?,?,?,?,?)',[$registrationNo,$chasisno,$engineNo,$vcat,$maketype,$cnic,$created_at,$businesstype,$stationno,$Stickerno]);
+                        $insertedrecordno=DB::insert('insert into vehicle_particulars (Registration_no ,Chasis_no,Engine_no,Vehicle_catid,Make_type ,OwnerCnic,created_at,businesstype,stationno,StickerSerialNo,VehicleName ) values (?, ?, ?,?,?,?,?,?,?,?,?)',[$registrationNo,$chasisno,$engineNo,$vcat,$maketype,$cnic,$created_at,$businesstype,$stationno,$Stickerno,$VehicleName]);
                         $case="complete_insert";
 
                        $vehicle= DB::select('select * from vehicle_particulars where Registration_no=? and StickerSerialNo=?',[$registrationNo,$Stickerno]);
@@ -321,7 +325,7 @@ class NewVehicleController extends Controller
                     })
                     ->leftjoin('cng_kit','cng_kit.formid','=','vehicle_particulars.lastinspectionid')
                     ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
-        'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','cng_kit.InspectionDate','cng_kit.InspectionExpiry')            
+        'vehicle_particulars.Vehicle_catid','vehicle_particulars.VehicleName','vehicle_particulars.Make_type','vehicle_particulars.StickerSerialNo','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','cng_kit.InspectionDate','cng_kit.InspectionExpiry')            
                     ->where ('vehicle_particulars.Record_no','=',$id)
                     ->get(); 
 
@@ -366,12 +370,13 @@ class NewVehicleController extends Controller
          $sticker=$request->input('hidden_StickerSerialNo');
          $vehicle=$request->input('hidden_Registration_no');
          $cnic=$request->input('hidden_cnic');
-
+ $VehicleName=$request->input('VehicleName');
 $request->validate([
 
 //'scancode' => 'required',
     //station code, cnic and reg no are commented because in edit mode the fields are disabled
 'maketype' => 'required',
+'VehicleName' => 'required',
 //'Stickerno'=> ['required',new ValidStickerForWorkstation($workstationParams)],
 //'registrationNo' => 'required', 
 'chasisno' => 'required',
@@ -386,6 +391,19 @@ $request->validate([
 //'stationno' => ['required',new workstationno($stationno)],
 
 ]);
+        $sort="Recordno";
+         $sortby="Record_no";
+
+        $pagesize=10;
+        if  (Cookie::get('pagesize') !== null)
+        {            
+            $pagesize = Cookie::get('pagesize');
+            $recordperpage=$pagesize;
+        }
+        else
+        {$pagesize=10;$recordperpage;}
+
+
         DB::table('owner__particulars')                       
                         ->where(['CNIC'=> $cnic])
                         ->where(['VehicleReg_No'=> $vehicle])                        
@@ -400,12 +418,28 @@ $request->validate([
                                   'Engine_no' => $engineNo,
                                   'Vehicle_catid' =>$vcat,
                                   'Make_type' => $maketype,
-                                  'businesstype' =>$businesstype
+                                  'businesstype' =>$businesstype,
+                                  'VehicleName'=>$VehicleName
                                 ]); 
         $treeitems = $this->getTree();
         $vehicles = $this->getVehiclesForListing("Record_no",10);
        //echo 'here';
-        return view ('vehicle.registrations',compact('vehicles','treeitems'))->with('page',1);                        
+
+        $querystringArray = ['sort' => $sort];
+        $vehicles->appends($querystringArray);
+
+
+        $querystringArray = ['sort' => $sort];
+        $vehicles->appends($querystringArray);
+
+
+      //  return view ('vehicle.registrations',compact('vehicles','treeitems'))->with('page',1);   
+        return view ('vehicle.registrations',['vehicles'=>$vehicles,'treeitems'=>$treeitems])->with('page',1)
+          ->with('pagesize',$pagesize)
+          ->with('businessType','N/A')
+          ->with('inspectionType','N/A')
+          ->with('searchby','N/A')
+          ;                             
 
     }
     protected function getVehiclesForListing($sortby,$pagesize)

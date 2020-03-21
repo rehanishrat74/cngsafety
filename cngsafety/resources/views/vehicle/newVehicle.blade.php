@@ -221,17 +221,24 @@
                                               @endif                                                        
 
                                       </div>
+                                      <div class="col-lg-3">
+                                              <label for="Stickerno">Vehicle Name</label>
+                                              <input type="text" class="form-control{{ $errors->has('VehicleName') ? ' is-invalid' : '' }}" 
+                                              name="VehicleName" id="VehicleName" placeholder="Enter Vehicle Name" autocomplete="off" value="{{ old('VehicleName') }}">
+                                              @if ($errors->has('VehicleName'))
+                                                <span class="invalid-feedback" role="alert">
+                                                  <strong>{{ $errors->first('VehicleName') }}</strong>
+                                                </span>
+                                              @endif 
+                                      </div>                                      
                                     </div>
 
+                                  <div class="form-group row">
+
+                                    </div>
                                     <!--<div class="form-group row" >
                                         
 
-                                    </div>-->
-
-                                    <!--<div class="form-group row" >
-                                      <div class="col-lg-12" style="text-align: center;">
-                                          <p> &nbsp; </p>
-                                      </div>
                                     </div>-->
                                     <p> &nbsp; </p>
                                     <div class="form-group row  " >
