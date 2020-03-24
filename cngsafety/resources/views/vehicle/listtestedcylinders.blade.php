@@ -184,7 +184,7 @@
                                                  <th><a href="/listlabtestedcylinders/?sort=CountryOfOrigin">Country</a></th>
                                                  <th><a href="/listlabtestedcylinders/?sort=Date">Date</a></th>
                                                  <th><a href="/listlabtestedcylinders/?sort=InspectionExpiryDate">Expiry</a></th>
-                                                 <th><a href="/listlabtestedcylinders/?sort=stickerSerialNo">Sticker</a></th>
+                                                 
                                                </tr>
 
                                             </thead>
@@ -232,15 +232,7 @@ if($date > $cylinder->InspectionExpiryDate)
 <?php } ?>
 
                                                      </td>
-                                                     <td>
-
-                                                      {{$cylinder->stickerSerialNo}}
-                                                      
-<?php 
-if (isset($cylinder->stickerSerialNo)){echo '<br>RegNo: '.$cylinder->Registration_no.'</br>';}
-?>                                                     
-
-                                                     </td>
+                                                    
 
 
                                                    </tr>

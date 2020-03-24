@@ -1532,7 +1532,16 @@ $certificate=$request->input('certificate');
 
 
 $sortby="Record_no";
-
+    $recordperpage = 10;
+    $pagesize=10;
+    $pagesize=10;
+        if  (Cookie::get('pagesize') !== null)
+        {            
+            $pagesize = Cookie::get('pagesize');
+            $recordperpage=$pagesize;
+        }
+        else
+        {$pagesize=10;$recordperpage;}
 
 
         if ($usertype =='workshop')
@@ -1547,7 +1556,7 @@ $sortby="Record_no";
         'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.Scan_code','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry')
                     ->where('vehicle_particulars.stationno','=',Auth::user()->stationno)
                     ->orderby($sortby,'desc')            
-                    ->paginate(10);                        
+                    ->paginate($pagesize);                        
         }
         else
         {
@@ -1560,16 +1569,26 @@ $sortby="Record_no";
                     ->select('owner__particulars.CNIC','owner__particulars.Owner_name','owner__particulars.CNIC','owner__particulars.Cell_No','owner__particulars.Address', 'vehicle_particulars.Record_no','vehicle_particulars.Registration_no','vehicle_particulars.Chasis_no','vehicle_particulars.Engine_no',
         'vehicle_particulars.Vehicle_catid','vehicle_particulars.Make_type','vehicle_particulars.Scan_code','vehicle_particulars.OwnerCnic','vehicle_particulars.businesstype','vehicle_particulars.stationno',DB::raw('IF(ISNULL(vehicle_particulars.Inspection_Status), "pending", vehicle_particulars.Inspection_Status) as Inspection_Status'),DB::raw('IF(ISNULL(vehicle_particulars.lastinspectionid), 0,vehicle_particulars.lastinspectionid) as formid'),'vehicle_particulars.created_at','vehicle_particulars.StickerSerialNo','cng_kit.InspectionDate','cng_kit.InspectionExpiry')            
                     ->orderby($sortby,'desc')            
-                    ->paginate(10);                        
+                    ->paginate($pagesize);                        
 
         }
 
-
+       $querystringArray = ['sort' => $sortby];
+        $vehicles->appends($querystringArray);
 
 
         $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
 
-        return view ('vehicle.registrations',compact('vehicles','treeitems'));            
+
+$targetroute=route('registrations');
+return redirect()->to($targetroute)->with('vehicles',$vehicles)
+                            ->with('treeitems',$treeitems)
+                            ->with('page',1)
+                            ->with('pagesize',$pagesize)
+                            ->with('businessType','N/A')
+                            ->with('inspectionType','N/A')
+                            ->with('searchby','N/A');
+                               
 
     }
 
