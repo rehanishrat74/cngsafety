@@ -161,7 +161,7 @@ to debug sql in laravel
                                                     ->with('newvehicle',$id)
                                                     ->with('treeitems',$treeitems)
                                                     ->with('stationno',$stationno);
-
+E:\xampp\htdocs\laravel\cngsafety\app\Http\Controllers\NewVehicleController.php:
 ##==================================================
 views->jqeurysample.php
 
