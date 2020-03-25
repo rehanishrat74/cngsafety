@@ -109,7 +109,7 @@
                 <div class='float-right'>
                     <ul class="info-menu right-links list-inline list-unstyled">
                         <li class="profile list-inline-item">
-                            <a href="#" data-toggle="dropdown" class="toggle">
+                            <a href="/displayProfile" data-toggle="dropdown" class="toggle">
                                 <img src="../data/profile/profile.jpg" alt="user-image" class="rounded-circle img-inline">
                                 <span>{{ Auth::user()->name }} <i class="fa fa-angle-down"></i></span>
                             </a>
@@ -121,7 +121,7 @@
                                     </a>
                                 </li>
                                 <li class="dropdown-item">
-                                    <a href="#profile">
+                                    <a href="/displayProfile">
                                         <i class="fa fa-user"></i>
                                         Profile
                                     </a>
@@ -133,10 +133,15 @@
                                     </a>
                                 </li>
                                 <li class="last dropdown-item">
-                                    <a href="ui-login.html">
+                                    <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
                                         <i class="fa fa-lock"></i>
-                                        Logout
+                                        {{ __('Logout') }}
+                                        
                                     </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                          {{ csrf_field() }}
+                                    </form>
                                 </li>
                             </ul>
                         </li>
@@ -160,7 +165,7 @@
                     <div class="profile-info row">
 
                         <div class="profile-image col-4">
-                            <a href="ui-profile.html">
+                            <a href="/displayProfile">
                                 <img alt="" src="../data/profile/profile.jpg" class="img-fluid rounded-circle">
                             </a>
                         </div>
@@ -168,7 +173,32 @@
                         <div class="profile-details col-8">
 
                             <h3>
-                                <a href="ui-profile.html">Admin</a>
+                                <?php 
+                                    
+                                    $display ="Admin";
+                                    if (Auth::user()->regtype=="admin" )
+                                    {
+                                        $display ="Admin";
+
+                                    }else if (Auth::user()->regtype=="workshop" )
+                                    {                                        
+                                        if (Auth::user()->email =="4StarCNG@gmail.com")
+                                        {
+                                            $display='Demo Shop '.Auth::user()->stationno;    
+
+                                        }   
+                                        else {
+                                        $display='Workshop '.Auth::user()->stationno;    
+                                        }                         
+                                    }else if (Auth::user()->regtype=="laboratory" )
+                                    {
+                                        $display=Auth::user()->labname;
+                                    }
+
+                                ?>
+                                <a href="/displayProfile">{{$display}}</a>
+                                
+                                <!--href = ui-profile.html-->
 
                                 <!-- Available statuses: online, idle, busy, away and offline -->
                                 <span class="profile-status online"></span>
@@ -561,9 +591,9 @@
                         <h4 class="modal-title">Section Settings</h4>
                     </div>
                     <div class="modal-body">
-                                    
-                                        @yield('content')
-                                    
+
+                        Body goes here...
+
 
                     </div>
                     <div class="modal-footer">

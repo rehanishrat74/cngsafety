@@ -350,8 +350,9 @@ $(document).ready(function(){
             $post._token = document.getElementsByName("_token")[0].value;          
                                         
                 $(this).closest('tr').remove();
-            $(this).hide();
-                        $.ajax({
+                $(this).hide();
+                
+                $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -360,13 +361,10 @@ $(document).ready(function(){
                 data: $post,
                 cache: false,
                 success: function (data) {
-                        alert(data);
-
-                   
+                        alert(data);                   
                         return data;
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    
                     console.log(textStatus);                    
                 }
             }); //end of ajax

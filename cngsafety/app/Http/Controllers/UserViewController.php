@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers;
 use Auth;
-use Illuminate\Http\Request;
 
+use App\User;
+
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\user;
-//use  App\Http\Controllers\Auth;
+
+use Illuminate\Support\Str;
 
 use App\Mail\WelcomeMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 
-use Illuminate\Support\Facades\Validator;
+
 use Session;
+
+
 class UserViewController extends Controller
 {
   public function __construct() {
@@ -124,7 +131,7 @@ $rowSql='set @row:='.$CalculatedRow;
 
       return view ('user.showuser',['treeitems'=>$treeitems,'userdetails'=>$userdetails]);
     }
-    public function dodisplaypswd($user)
+        public function dodisplaypswd($user)
     {
           $credentials=DB::table('users')
           ->select(['email','encpwd','regtype','name','cellnoforinspection','mobileno'])
@@ -135,7 +142,46 @@ $rowSql='set @row:='.$CalculatedRow;
              //return response()->json("password is ", 200);
         return response()->json($pwd, 200);
     }
+    public function dochangepswd(Request $post)
+    {
 
+          $oldPassword=$post['oldpassword'];
+          $newPassword=$post['newpassword'];
+          $msg="NAK";
+          $response=[];
+
+          $id=Auth::user()->id;
+          $credentials=DB::table('users')
+          ->select(['email','encpwd','regtype','name','cellnoforinspection','mobileno'])
+          ->where(['id'=>$id ])
+          ->get();               
+
+          if (!empty($credentials)){
+
+            if (!empty($credentials->encpwd)){
+              $pwdDb= Crypt::decryptString($credentials[0]->encpwd);
+              if ($pwdDb!=$oldPassword){$msg='Invalid Password';}
+              else {$response['ACK']=$this->commitPassword($id,$newPassword);  $msg="newpassword set";}
+            } else {$response['ACK']=$this->commitPassword($id,$newPassword);$msg="empty password reset";}
+
+          }
+          
+          $response['msg']=$msg;
+
+        //$pwd= Crypt::decryptString($credentials[0]->encpwd);
+             //return response()->json("password is ", 200);
+        return response()->json($response, 200);
+    }
+
+    public function commitPassword($userid,$newpassword) {
+       $encryptedpwd= Crypt::encryptString($newpassword);
+        $hashForPwd= Hash::make($newpassword);
+
+        DB::table('users')
+       ->where ('id','=',$userid)
+       ->update(['password'=>$hashForPwd,'encpwd'=>$encryptedpwd]);
+       return 'ACK';
+    }
     public function edituser(Request $data)
     {
       

@@ -9,6 +9,7 @@
          * This file is part of Complete Admin Theme.
         -->
 
+ <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- a css for datatables -->
         <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
         <meta charset="utf-8" />
@@ -136,7 +137,7 @@
                 <div class='float-right'>
                     <ul class="info-menu right-links list-inline list-unstyled">
                         <li class="profile list-inline-item">
-                            <a href="#" data-toggle="dropdown" class="toggle">
+                            <a href="/displayProfile" data-toggle="dropdown" class="toggle">
                                 <img src="../data/profile/profile.jpg" alt="user-image" class="rounded-circle img-inline">
                                 <span>{{ Auth::user()->name }} <i class="fa fa-angle-down"></i></span>
                             </a>
@@ -148,7 +149,7 @@
                                     </a>
                                 </li>
                                 <li class="dropdown-item">
-                                    <a href="#profile">
+                                    <a href="/displayProfile">
                                         <i class="fa fa-user"></i>
                                         Profile
                                     </a>
@@ -206,8 +207,7 @@
                     <div class="profile-info row">
 
                         <div class="profile-image col-4">
-
-                            <a href="#ui-profile">
+                            <a href="/displayProfile">
                                 <img alt="" src="../data/profile/profile.jpg" class="img-fluid rounded-circle">
                             </a>
                         </div>
@@ -239,7 +239,8 @@
                                     }
 
                                 ?>
-                                <a href="#">{{$display}}</a>
+                                <a href="/displayProfile">{{$display}}</a>
+                                
                                 <!--href = ui-profile.html-->
 
                                 <!-- Available statuses: online, idle, busy, away and offline -->
@@ -358,9 +359,9 @@
                         <h4 class="modal-title">Section Settings</h4>
                     </div>
                     <div class="modal-body">
-                                    
-                                        @yield('content-temp')
-                                    
+
+                        Body goes here...
+
 
                     </div>
                     <div class="modal-footer">

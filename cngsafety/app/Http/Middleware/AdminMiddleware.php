@@ -84,7 +84,7 @@ class AdminMiddleware
 
         if ($regtype=='workshop')
         {
-            if ( $route=='registrations' || $route=='registrations-search'  ||  $route=='new-vehicle' || $route== 'reg-vehicle' || $route== 'cylinders' || $route== 'showcylinder' || $route== 'editcylinder' || $route=='newcylinderreg'  || $route=='logout' || $route=='displayProfile') {
+            if ( $route=='registrations' || $route=='registrations-search'  ||  $route=='new-vehicle' || $route== 'reg-vehicle' || $route== 'cylinders' || $route== 'showcylinder' || $route== 'editcylinder' || $route=='newcylinderreg'  || $route=='logout' || $route=='displayProfile' ) {
                     $isauthorise=true;
             }
             if ($route=='new-vehicle' || $route=='edit-vehicle' || $route='update-vehicle'  || $route=='displayProfile'){
