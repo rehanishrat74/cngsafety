@@ -105,7 +105,8 @@ class AdminMiddleware
         {
 
            if ($route=='showlabs' || $route=='listlabtestedcylinders' || $route=='testedcylinders-search' || $route=='editformfortestedcylinders' || $route =='updateformfortestedcylinders' || $route=='deleteuser' || $route=='view-records'  
-                || $route=='logout'  || $route=='displayProfile' || $route=='setCookie' || $route=='province-search' || $route=='searchuserregistration' || $route=='searchuserregistrationpaged' || $route=='Workshops'  || $route=='workshop-search' || $route=='city-search' || $route='searchforhdip'){
+                || $route=='logout'  || $route=='displayProfile' || $route=='setCookie' || $route=='province-search' || $route=='searchuserregistration' || $route=='searchuserregistrationpaged' || $route=='Workshops'  || $route=='workshop-search' || $route=='city-search' || $route='searchforhdip' ||
+                     $route=='printCylinders' || $route=='printCylinderIndex'){
                 $isauthorise=true;
                 if (Auth::user()->readonly ==1 && ($route=='deleteuser' || $route=='editformfortestedcylinders' || $route =='updateformfortestedcylinders' || $route=='searchuserregistrationpaged' ))
                 {

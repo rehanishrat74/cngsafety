@@ -166,4 +166,9 @@ E:\xampp\htdocs\laravel\cngsafety\app\Http\Controllers\NewVehicleController.php:
 views->jqeurysample.php
 
 HTTP->controllers-Test.php =>cookie example
+reading querystring: $page=$_GET['page'];
+
 ##=================================================      
+
+composer require barryvdh/laravel-dompdf
+

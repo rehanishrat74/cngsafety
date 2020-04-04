@@ -1,0 +1,36 @@
+calling controllers:
+use App\Http\Controllers\VehicleLogicController;
+$Vehicle= new VehicleLogicController();
+$Vehicle->vehicleDB($printOrderBy,$paginate);
+
+
+
+---------------------
+
+index
+Workshops
+search
+WorkshopSearch
+WorkshopSearchpaginated
+
+
+
+                                <span class="input-group-addon" 
+                                onclick="event.preventDefault(); document.getElementById('searchvehicle').submit();">   
+                                    <span class="arrow"></span>
+                                    <i class="fa fa-print"></i>
+                                </span>  
+
+session()->get('key');
+
+
+               <?php 
+
+echo session()->get('printWhere').'<br>';
+echo session()->get('printOrderBy').'<br>';
+echo session()->get('printPaginate').'<br>';
+               ?> 
+
+
+
+

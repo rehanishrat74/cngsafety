@@ -2,16 +2,7 @@
 @section('lefttree')
                     <ul class='wraplist'>   
 
-                        <!--<li class='menusection'>Main</li>
-
-                    <?php if (Auth::user()->regtype!="hdip") {?>
-                        <li class=""> 
-                            <a href="{{ route('dashboard') }}">
-                                <i class="fa fa-dashboard"></i>
-                                <span class="title">Dashboard</span>
-                            </a>
-                        </li>
-                    <?php }?>   -->                  
+            
 
                         <li class='menusection'>Applications</li>
                         
@@ -88,8 +79,8 @@
                                 <h2 class="title float-left">Search</h2>
                                 <div class="actions panel_actions float-right">
                                     <a class="box_toggle fa fa-chevron-down"></a>
-                                    <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
-                                    <a class="box_close fa fa-times"></a>
+                                    <!--<a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
+                                    <a class="box_close fa fa-times"></a>-->
                                 </div>
                             </header>
                             <div class="content-body">   
@@ -139,7 +130,7 @@
 
 
                                 <input type="text" class="form-control search-page-input" placeholder="Search" value="" placeholder="Search" autocomplete="off" id="searchvalue" name="searchvalue">
-                                
+                
                                 <span class="input-group-addon" 
                                 onclick="event.preventDefault(); document.getElementById('searchvehicle').submit();">   
                                     <span class="arrow"></span>
@@ -163,11 +154,31 @@
                     <div class="col-xl-12">
                         <section class="box ">
                             <header class="panel_header">
-                                <h2 class="title float-left">List</h2>
+                                <h2 class="title float-left">List 
+
+                                </h2>
                                 <div class="actions panel_actions float-right">
+                                <?php
+                                $params="";
+                                $params=$params.'printWhere='.session()->get('printWhere');
+                                $params=$params.'&printOrderBy='.session()->get('printOrderBy');
+                                $params=$params.'&printPaginate='.session()->get('printPaginate');
+                                $params=$params.'&function='.session()->get('function');                                
+
+
+                                    $loc=route('printVehicles').'/?'.$params;
+                                 ?>
+
+<span class="input-group-addon" onclick="window.open('{{$loc}}'); return false;" >
+
+
+                                    <span class="arrow"></span>
+                                    <i class="fa fa-print"></i>
+                                </span>  
+
                                     <a class="box_toggle fa fa-chevron-down"></a>
-                                    <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
-                                    <a class="box_close fa fa-times"></a>
+                                    <!--<a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
+                                    <a class="box_close fa fa-times"></a>-->
                                 </div>
                             </header>
                             <div class="content-body">    
@@ -352,7 +363,6 @@ function setplaceholder() {
             $post.cvalue=cvalue;
             $post.exdays=cookiexpire.toUTCString();            
             $post._token = document.getElementsByName("_token")[0].value;
-
             $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -400,8 +410,4 @@ function setplaceholder() {
 </script>
 
 @endsection
-
-
-
---------------------------------------
 

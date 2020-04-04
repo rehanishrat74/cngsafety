@@ -145,7 +145,11 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
 
     Route::post('/showUploadFile','CylindersController@showUploadFile')->name('showUploadFile');    
 
-    Route::get('/printCylinders','printController@cylinders');
+    //this page will load paged screen.
+    Route::get('/printCylinders','printController@cylinders')->name('printCylinders');
+    Route::get('/printCylinders/{rowbegin}','printController@cylindersPrintIndex')->name('printCylinderIndex');
+
+    Route::get('/printVehicles','printController@vehicles')->name('printVehicles');
 
     //Route::get('sendbasicemail','MailController@basic_email');
     //Route::get('/sendhtmlemail','MailController@html_email');

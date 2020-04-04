@@ -225,3 +225,5 @@ array_push($keys_array, "vehicle_particulars.Inspection_Status");
 array_push($values_array, $registrations_inspectionType);
 
 $whereArray=array_combine( $keys_array, $values_array );
+
+http://phillihp.com/toolz/php-array-beautifier/php-beautifier-v2/

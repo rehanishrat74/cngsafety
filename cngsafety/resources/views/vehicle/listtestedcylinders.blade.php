@@ -144,14 +144,45 @@
           
                     <div class="col-xl-12">
                         <section class="box ">
-                            <header class="panel_header">
+                            <!--<header class="panel_header">
                                 <h2 class="title float-left">List </h2>
                                 <div class="actions panel_actions float-right">
                                     <a class="box_toggle fa fa-chevron-down"></a>
                                     <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
                                     <a class="box_close fa fa-times"></a>
                                 </div>
-                            </header>
+                            </header>-->
+                            <header class="panel_header">
+                                <h2 class="title float-left">List 
+
+                                </h2>
+                                <div class="actions panel_actions float-right">
+                                <?php
+                                /*$params="";
+                                $params=$params.'printWhere='.session()->get('printWhere');
+                                $params=$params.'&printOrderBy='.session()->get('printOrderBy');
+                                $params=$params.'&printPaginate='.session()->get('printPaginate');
+                                $params=$params.'&function='.session()->get('function');
+                                    $loc=route('printVehicles').'/?'.$params; */
+                                    $loc=route('printCylinders');;
+                                 ?>
+
+              <?php 
+               if ((Auth::user()->regtype=="hdip" || Auth::user()->regtype=="admin") )
+               {
+              ?>
+        <span class="input-group-addon" onclick="window.open('{{$loc}}'); return false;" >
+
+
+                                    <span class="arrow"></span>
+                                    <i class="fa fa-print"></i>
+                                   </span>  
+              <?php }?>
+                                    <a class="box_toggle fa fa-chevron-down"></a>
+                                    <!--<a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
+                                    <a class="box_close fa fa-times"></a>-->
+                                </div>
+                            </header>                            
                             <div class="content-body" style="font-size: 12px;">    <div class="row">
                                     <div class="col-12">
 
@@ -191,7 +222,6 @@
 
 
                                             <tbody>
-
 
                                                  @foreach ($testedcylinders as $cylinder)                               
                                                    <tr>
