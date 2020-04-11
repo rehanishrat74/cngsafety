@@ -17,7 +17,7 @@ class printController extends Controller
         $treeitems =DB::select('select * from AccessRights where regtype =?',[$usertype]);
 
       $cylinders=$this->cylindersDB($row);
-
+      //print_r($cylinders);
     //http://phillihp.com/toolz/php-array-beautifier/php-beautifier-v2/
      /*$pdf=PDF::loadView('Print.cylindersReport',['cylinders'=>$cylinders])->setPaper('a4', 'landscape');
       return $pdf->download('cylinders.pdf');*/
@@ -56,9 +56,10 @@ class printController extends Controller
 
     }
     public function cylindersDB($row){
-     $rowSql='set @row:='.$row;
+    // $rowSql='set @row:='.$row;
     
-      DB::statement(DB::raw($rowSql));      
+
+      //DB::statement(DB::raw($rowSql));      
         $cylinders=DB::table('registeredcylinders')
             ->leftjoin('users',function($join){
               $join->on('registeredcylinders.LabUser','=','users.email');
@@ -74,10 +75,15 @@ class printController extends Controller
              ->orderBy('registeredcylinders.diameter','desc')
              ->orderBy('registeredcylinders.capacity','desc')
              ->orderBy('registeredcylinders.SerialNumber','desc')
-            ->paginate(500);
+             ->skip($row-1)
+             ->take($row+500)
+             ->get();
+            //->paginate(500);
+            // print_r($cylinders);
             //->where('registeredcylinders.LabUser','=','Friends.engineeringmultan@yahoo.com')
             //->whereIn('registeredcylinders.LabUser',['Friends.engineeringmultan@yahoo.com','saye.cngtesting@gmail.com'])
             //->where('registeredcylinders.BrandName','=','Beijing Tianhai Industrial Co (BTIC)')            
+            //print_r($cylinders);
             return $cylinders;
     }
 

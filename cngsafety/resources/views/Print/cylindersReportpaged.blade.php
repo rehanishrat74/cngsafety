@@ -132,7 +132,7 @@ $pageloop=1;
                                    	 		</div>
                                    	 		 <div class="col-lg-1" >
 												
-                            <a href="{{route('printCylinderIndex',$CalculatedRow)}}">
+                            <a href="{{route('printCylinderIndex',$CalculatedRow)}}"  target="_blank">
                             <img id='windscreen'  src="../assets/images/Printer.png" width="50px;" height="30px" >    
                             </a> 	
                                    	  		</div>
